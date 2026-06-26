@@ -121,12 +121,12 @@ Alpine.data('planner', () => ({
     },
     // Toggleable expansions only: Classic (base game, 0) and Special (99) aren't eras you pick.
     togglableExpansions() {
-        return this.expansions.filter((e) => e.id >= 1 && e.id <= 19);
+        return this.expansions.filter((e) => e.id >= 1 && e.id < 99);
     },
     // Human description of a server's era for the era popover (Classic is the base, not counted).
     expansionSummary(server) {
         if (!server.expansions) { return 'Pick the expansions below'; }
-        const real = server.expansions.filter((id) => id >= 1 && id <= 19);
+        const real = server.expansions.filter((id) => id >= 1 && id < 99);
         if (real.length === 0) { return 'Base game · no expansions'; }
         // Name the latest enabled expansion rather than claiming "all" — the catalog stops at the
         // newest era we support, so "through <latest>" stays honest as more get added.

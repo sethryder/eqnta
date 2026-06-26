@@ -130,6 +130,23 @@ class RoutingTest extends TestCase
         }
     }
 
+    public function test_route_flags_legs_into_post_rof_expansions_as_incomplete(): void
+    {
+        config(['eqrouter.graph_path' => __DIR__.'/../Fixtures/postrof_graph.json']);
+
+        // A leg into a post-RoF (client-sourced, best-effort) zone is flagged so the UI can disclose it.
+        $post = $this->getJson('/api/route?from=qeynos2&to=newzone&server=live');
+        $post->assertOk();
+        $post->assertJsonPath('incomplete', true);
+        $post->assertJsonPath('steps.0.incomplete', true);
+
+        // A route that stays in PEQ-covered expansions carries no incomplete flag on its steps.
+        $old = $this->getJson('/api/route?from=qeynos2&to=oldzone&server=live');
+        $old->assertOk();
+        $old->assertJsonPath('incomplete', false);
+        $this->assertArrayNotHasKey('incomplete', $old->json('steps.0'));
+    }
+
     public function test_safest_mode_prefers_boats_over_a_shorter_overland_walk(): void
     {
         config(['eqrouter.graph_path' => __DIR__.'/../Fixtures/safest_graph.json']);

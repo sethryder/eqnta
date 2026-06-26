@@ -2769,6 +2769,9 @@
         "frontiermtns": [
             445
         ],
+        "frontiermtnsb": [
+            445
+        ],
         "gfaydark": [
             106,
             246,
@@ -2924,6 +2927,9 @@
         "overthere": [
             441
         ],
+        "overtheretwo": [
+            441
+        ],
         "paineel": [
             265
         ],
@@ -3075,6 +3081,7 @@
         "charasis": 48,
         "chardok": 53,
         "chardokb": 58,
+        "chardoktwo": 53,
         "citymist": 42,
         "cobaltscar": 40,
         "codecay": 61,
@@ -3104,6 +3111,7 @@
         "dreadlands": 36,
         "dreadspire": 73,
         "droga": 50,
+        "drogab": 50,
         "dulak": 41,
         "eastkarana": 14,
         "eastkorlach": 58,
@@ -3125,10 +3133,13 @@
         "freportn": 2,
         "freportw": 2,
         "frontiermtns": 31,
+        "frontiermtnsb": 31,
         "frozenshadow": 63,
+        "frozenshadowtwo": 63,
         "fungusgrove": 48,
         "gfaydark": 4,
         "greatdivide": 48,
+        "greatdividetwo": 48,
         "griegsend": 55,
         "grimling": 37,
         "grobb": 2,
@@ -3159,6 +3170,7 @@
         "innothuleb": 3,
         "jaggedpine": 42,
         "kael": 65,
+        "kaeltwo": 65,
         "kaesora": 33,
         "karnor": 45,
         "katta": 65,
@@ -3199,6 +3211,7 @@
         "najena": 16,
         "natimbi": 50,
         "necropolis": 49,
+        "necropolistwo": 49,
         "nedaria": 28,
         "nektulos": 7,
         "neriakc": 50,
@@ -3212,6 +3225,7 @@
         "oldkurn": 13,
         "oot": 38,
         "overthere": 34,
+        "overtheretwo": 34,
         "paineel": 5,
         "paludal": 14,
         "paw": 39,
@@ -3256,8 +3270,11 @@
         "sharvahl": 4,
         "sirens": 52,
         "skyfire": 45,
+        "skyfiretwo": 45,
         "skyshrine": 44,
+        "skyshrinetwo": 44,
         "sleeper": 66,
+        "sleepertwo": 66,
         "sncrematory": 60,
         "snlair": 62,
         "snplant": 63,
@@ -3283,6 +3300,7 @@
         "takd": 42,
         "takg": 38,
         "templeveeshan": 62,
+        "templeveeshantwo": 62,
         "tenebrous": 34,
         "thedeep": 51,
         "thegrey": 46,
@@ -3306,7 +3324,9 @@
         "veeshan": 64,
         "veksar": 56,
         "velketor": 49,
+        "velketortwo": 49,
         "vexthal": 61,
+        "vexthaltwo": 61,
         "vxed": 65,
         "wakening": 38,
         "wallofslaughter": 65,
@@ -3314,6 +3334,7 @@
         "warslikswood": 15,
         "westkorlach": 66,
         "westwastes": 52,
+        "westwastestwo": 52,
         "yxtta": 66
     }
 }

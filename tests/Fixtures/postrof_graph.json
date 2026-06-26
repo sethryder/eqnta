@@ -1,0 +1,13 @@
+{
+    "zones": [
+        { "id": 2, "short": "qeynos2", "long": "North Qeynos" },
+        { "id": 900, "short": "oldzone", "long": "An Old Zone" },
+        { "id": 901, "short": "newzone", "long": "A Post-RoF Zone" }
+    ],
+    "edges": [
+        { "from": "qeynos2", "to": "oldzone", "type": "walk", "expansion": 0 },
+        { "from": "oldzone", "to": "qeynos2", "type": "walk", "expansion": 0 },
+        { "from": "qeynos2", "to": "newzone", "type": "teleport", "expansion": 20 },
+        { "from": "newzone", "to": "qeynos2", "type": "teleport", "expansion": 20 }
+    ]
+}

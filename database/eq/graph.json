@@ -2409,6 +2409,416 @@
             "id": 450,
             "short": "dragonscalea",
             "long": "Tinmizers Wunderwerks"
+        },
+        {
+            "id": 772,
+            "short": "ethernere",
+            "long": "Ethernere Tainted West Karana"
+        },
+        {
+            "id": 770,
+            "short": "bixiewarfront",
+            "long": "Bixie Warfront"
+        },
+        {
+            "id": 771,
+            "short": "deadhills",
+            "long": "The Dead Hills"
+        },
+        {
+            "id": 775,
+            "short": "towerofrot",
+            "long": "Tower of Rot"
+        },
+        {
+            "id": 776,
+            "short": "arginhiz",
+            "long": "Argin-Hiz"
+        },
+        {
+            "id": 778,
+            "short": "arxmentis",
+            "long": "Arx Mentis"
+        },
+        {
+            "id": 779,
+            "short": "brotherisland",
+            "long": "Brother Island"
+        },
+        {
+            "id": 780,
+            "short": "kattacastrumb",
+            "long": "Katta Castrum: Deluge"
+        },
+        {
+            "id": 781,
+            "short": "dredge",
+            "long": "Combine Dredge"
+        },
+        {
+            "id": 782,
+            "short": "endlesscaverns",
+            "long": "Caverns of Endless Song"
+        },
+        {
+            "id": 783,
+            "short": "thuliasaur",
+            "long": "Thuliasaur Island"
+        },
+        {
+            "id": 784,
+            "short": "degmar",
+            "long": "Degmar, the Lost Castle"
+        },
+        {
+            "id": 785,
+            "short": "tempesttemple",
+            "long": "Tempest Temple"
+        },
+        {
+            "id": 777,
+            "short": "exalted",
+            "long": "Sul Vius: Demiplane of Life"
+        },
+        {
+            "id": 795,
+            "short": "cosul",
+            "long": "Crypt of Sul"
+        },
+        {
+            "id": 796,
+            "short": "codecayb",
+            "long": "Ruins of Lxanvom"
+        },
+        {
+            "id": 797,
+            "short": "exaltedb",
+            "long": "Sul Vius: Demiplane of Decay"
+        },
+        {
+            "id": 798,
+            "short": "pohealth",
+            "long": "The Plane of Health"
+        },
+        {
+            "id": 788,
+            "short": "drogab",
+            "long": "The Temple of Droga"
+        },
+        {
+            "id": 790,
+            "short": "scorchedwoods",
+            "long": "The Scorched Woods"
+        },
+        {
+            "id": 791,
+            "short": "frontiermtnsb",
+            "long": "Frontier Mountains"
+        },
+        {
+            "id": 793,
+            "short": "korshaext",
+            "long": "Gates of Kor-Sha"
+        },
+        {
+            "id": 794,
+            "short": "lceanium",
+            "long": "Lceanium"
+        },
+        {
+            "id": 799,
+            "short": "korshaint",
+            "long": "Kor-Sha Laboratory"
+        },
+        {
+            "id": 800,
+            "short": "chardoktwo",
+            "long": "Chardok"
+        },
+        {
+            "id": 789,
+            "short": "charasisb",
+            "long": "Sathir's Tomb"
+        },
+        {
+            "id": 792,
+            "short": "gorowyn",
+            "long": "Gorowyn"
+        },
+        {
+            "id": 813,
+            "short": "charasistwo",
+            "long": "Howling Stones"
+        },
+        {
+            "id": 814,
+            "short": "skyfiretwo",
+            "long": "The Skyfire Mountains"
+        },
+        {
+            "id": 815,
+            "short": "overtheretwo",
+            "long": "The Overthere"
+        },
+        {
+            "id": 787,
+            "short": "gnomemtn",
+            "long": "Gnome Memorial Mountain"
+        },
+        {
+            "id": 817,
+            "short": "trialsofsmoke",
+            "long": "Plane of Smoke"
+        },
+        {
+            "id": 818,
+            "short": "stratos",
+            "long": "Stratos: Zephyr's Flight"
+        },
+        {
+            "id": 819,
+            "short": "aalishai",
+            "long": "Aalishai: Palace of Embers"
+        },
+        {
+            "id": 820,
+            "short": "empyr",
+            "long": "Empyr: Realms of Ash"
+        },
+        {
+            "id": 821,
+            "short": "esianti",
+            "long": "Esianti: Palace of the Winds"
+        },
+        {
+            "id": 822,
+            "short": "mearatas",
+            "long": "Mearatas: The Stone Demesne"
+        },
+        {
+            "id": 824,
+            "short": "eastwastestwo",
+            "long": "The Eastern Wastes"
+        },
+        {
+            "id": 825,
+            "short": "frozenshadowtwo",
+            "long": "The Tower of Frozen Shadow"
+        },
+        {
+            "id": 826,
+            "short": "crystaltwoa",
+            "long": "The Ry`Gorr Mines"
+        },
+        {
+            "id": 827,
+            "short": "greatdividetwo",
+            "long": "The Great Divide"
+        },
+        {
+            "id": 828,
+            "short": "velketortwo",
+            "long": "Velketor's Labyrinth"
+        },
+        {
+            "id": 829,
+            "short": "kaeltwo",
+            "long": "Kael Drakkel"
+        },
+        {
+            "id": 830,
+            "short": "crystaltwob",
+            "long": "Crystal Caverns"
+        },
+        {
+            "id": 831,
+            "short": "sleepertwo",
+            "long": "The Sleeper's Tomb"
+        },
+        {
+            "id": 832,
+            "short": "necropolistwo",
+            "long": "Dragon Necropolis"
+        },
+        {
+            "id": 833,
+            "short": "cobaltscartwo",
+            "long": "Cobalt Scar"
+        },
+        {
+            "id": 834,
+            "short": "westwastestwo",
+            "long": "The Western Wastes"
+        },
+        {
+            "id": 835,
+            "short": "skyshrinetwo",
+            "long": "Skyshrine"
+        },
+        {
+            "id": 836,
+            "short": "templeveeshantwo",
+            "long": "The Temple of Veeshan"
+        },
+        {
+            "id": 843,
+            "short": "maidentwo",
+            "long": "Maiden's Eye"
+        },
+        {
+            "id": 844,
+            "short": "umbraltwo",
+            "long": "Umbral Plains"
+        },
+        {
+            "id": 845,
+            "short": "akhevatwo",
+            "long": "Ka Vethan"
+        },
+        {
+            "id": 846,
+            "short": "vexthaltwo",
+            "long": "Vex Thal"
+        },
+        {
+            "id": 847,
+            "short": "shadowvalley",
+            "long": "Shadow Valley"
+        },
+        {
+            "id": 848,
+            "short": "basilica",
+            "long": "Basilica of Adumbration"
+        },
+        {
+            "id": 851,
+            "short": "shadowhaventwo",
+            "long": "Ruins of Shadow Haven"
+        },
+        {
+            "id": 852,
+            "short": "sharvahltwo",
+            "long": "Shar Vahl, Divided"
+        },
+        {
+            "id": 853,
+            "short": "paludaltwo",
+            "long": "Paludal Depths"
+        },
+        {
+            "id": 854,
+            "short": "shadeweavertwo",
+            "long": "Shadeweaver's Tangle"
+        },
+        {
+            "id": 855,
+            "short": "darklightcaverns",
+            "long": "Darklight Caverns"
+        },
+        {
+            "id": 856,
+            "short": "deepshade",
+            "long": "Deepshade"
+        },
+        {
+            "id": 857,
+            "short": "firefallpass",
+            "long": "Firefall Pass"
+        },
+        {
+            "id": 859,
+            "short": "laurioninn",
+            "long": "Laurion Inn"
+        },
+        {
+            "id": 860,
+            "short": "ankexfen",
+            "long": "Ankexfen Keep"
+        },
+        {
+            "id": 861,
+            "short": "pallomen",
+            "long": "Pal'Lomen"
+        },
+        {
+            "id": 862,
+            "short": "herosforge",
+            "long": "The Hero's Forge"
+        },
+        {
+            "id": 863,
+            "short": "moorsofnokk",
+            "long": "Moors of Nokk"
+        },
+        {
+            "id": 864,
+            "short": "unkemptwoods",
+            "long": "Unkempt Woods"
+        },
+        {
+            "id": 865,
+            "short": "timorousfalls",
+            "long": "Timorous Falls"
+        },
+        {
+            "id": 870,
+            "short": "hodstock",
+            "long": "Hodstock Hills"
+        },
+        {
+            "id": 871,
+            "short": "toe",
+            "long": "The Theater of Eternity"
+        },
+        {
+            "id": 872,
+            "short": "aureatecovert",
+            "long": "Aureate Covert"
+        },
+        {
+            "id": 873,
+            "short": "harbingerscradle",
+            "long": "The Harbinger's Cradle"
+        },
+        {
+            "id": 874,
+            "short": "puissance",
+            "long": "The Chambers of Puissance"
+        },
+        {
+            "id": 875,
+            "short": "gildedspire",
+            "long": "The Gilded Spire"
+        },
+        {
+            "id": 879,
+            "short": "candlemakers",
+            "long": "Candlemaker's Workshop"
+        },
+        {
+            "id": 880,
+            "short": "embattledpogrowth",
+            "long": "Scarred Grove"
+        },
+        {
+            "id": 881,
+            "short": "arcstoneruins",
+            "long": "Arcstone, Shattered Isles"
+        },
+        {
+            "id": 882,
+            "short": "ruinedrelic",
+            "long": "Ruined Relic"
+        },
+        {
+            "id": 883,
+            "short": "vortex",
+            "long": "The Vortex"
+        },
+        {
+            "id": 884,
+            "short": "spite",
+            "long": "Labyrinth of Spite"
         }
     ],
     "edges": [
@@ -16061,6 +16471,1188 @@
             "to": "oasis",
             "type": "boat",
             "expansion": 1
+        },
+        {
+            "from": "qey2hh1",
+            "to": "ethernere",
+            "type": "teleport",
+            "expansion": 20
+        },
+        {
+            "from": "ethernere",
+            "to": "qey2hh1",
+            "type": "teleport",
+            "expansion": 20
+        },
+        {
+            "from": "ethernere",
+            "to": "bixiewarfront",
+            "type": "teleport",
+            "expansion": 20
+        },
+        {
+            "from": "bixiewarfront",
+            "to": "ethernere",
+            "type": "teleport",
+            "expansion": 20
+        },
+        {
+            "from": "ethernere",
+            "to": "deadhills",
+            "type": "teleport",
+            "expansion": 20
+        },
+        {
+            "from": "deadhills",
+            "to": "ethernere",
+            "type": "teleport",
+            "expansion": 20
+        },
+        {
+            "from": "ethernere",
+            "to": "neriakd",
+            "type": "teleport",
+            "expansion": 20
+        },
+        {
+            "from": "neriakd",
+            "to": "ethernere",
+            "type": "teleport",
+            "expansion": 20
+        },
+        {
+            "from": "ethernere",
+            "to": "towerofrot",
+            "type": "teleport",
+            "expansion": 20
+        },
+        {
+            "from": "towerofrot",
+            "to": "ethernere",
+            "type": "teleport",
+            "expansion": 20
+        },
+        {
+            "from": "ethernere",
+            "to": "arginhiz",
+            "type": "teleport",
+            "expansion": 20
+        },
+        {
+            "from": "arginhiz",
+            "to": "ethernere",
+            "type": "teleport",
+            "expansion": 20
+        },
+        {
+            "from": "bixiewarfront",
+            "to": "crescent",
+            "type": "walk",
+            "expansion": 20
+        },
+        {
+            "from": "crescent",
+            "to": "bixiewarfront",
+            "type": "walk",
+            "expansion": 20
+        },
+        {
+            "from": "bixiewarfront",
+            "to": "stonehive",
+            "type": "walk",
+            "expansion": 20
+        },
+        {
+            "from": "stonehive",
+            "to": "bixiewarfront",
+            "type": "walk",
+            "expansion": 20
+        },
+        {
+            "from": "deadhills",
+            "to": "dulak",
+            "type": "walk",
+            "expansion": 20
+        },
+        {
+            "from": "dulak",
+            "to": "deadhills",
+            "type": "walk",
+            "expansion": 20
+        },
+        {
+            "from": "deadhills",
+            "to": "towerofrot",
+            "type": "walk",
+            "expansion": 20
+        },
+        {
+            "from": "towerofrot",
+            "to": "deadhills",
+            "type": "walk",
+            "expansion": 20
+        },
+        {
+            "from": "neriakd",
+            "to": "neriakc",
+            "type": "walk",
+            "expansion": 20
+        },
+        {
+            "from": "neriakc",
+            "to": "neriakd",
+            "type": "walk",
+            "expansion": 20
+        },
+        {
+            "from": "arginhiz",
+            "to": "sro",
+            "type": "walk",
+            "expansion": 20
+        },
+        {
+            "from": "sro",
+            "to": "arginhiz",
+            "type": "walk",
+            "expansion": 20
+        },
+        {
+            "from": "buriedsea",
+            "to": "tempesttemple",
+            "type": "teleport",
+            "expansion": 21
+        },
+        {
+            "from": "tempesttemple",
+            "to": "buriedsea",
+            "type": "teleport",
+            "expansion": 21
+        },
+        {
+            "from": "guildlobby",
+            "to": "kattacastrumb",
+            "type": "teleport",
+            "expansion": 21
+        },
+        {
+            "from": "kattacastrumb",
+            "to": "tempesttemple",
+            "type": "walk",
+            "expansion": 21
+        },
+        {
+            "from": "tempesttemple",
+            "to": "kattacastrumb",
+            "type": "walk",
+            "expansion": 21
+        },
+        {
+            "from": "tempesttemple",
+            "to": "endlesscaverns",
+            "type": "walk",
+            "expansion": 21
+        },
+        {
+            "from": "endlesscaverns",
+            "to": "tempesttemple",
+            "type": "walk",
+            "expansion": 21
+        },
+        {
+            "from": "tempesttemple",
+            "to": "brotherisland",
+            "type": "boat",
+            "expansion": 21
+        },
+        {
+            "from": "brotherisland",
+            "to": "tempesttemple",
+            "type": "boat",
+            "expansion": 21
+        },
+        {
+            "from": "brotherisland",
+            "to": "degmar",
+            "type": "translocate",
+            "expansion": 21
+        },
+        {
+            "from": "degmar",
+            "to": "brotherisland",
+            "type": "translocate",
+            "expansion": 21
+        },
+        {
+            "from": "brotherisland",
+            "to": "thuliasaur",
+            "type": "boat",
+            "expansion": 21
+        },
+        {
+            "from": "thuliasaur",
+            "to": "brotherisland",
+            "type": "boat",
+            "expansion": 21
+        },
+        {
+            "from": "brotherisland",
+            "to": "dredge",
+            "type": "boat",
+            "expansion": 21
+        },
+        {
+            "from": "dredge",
+            "to": "brotherisland",
+            "type": "boat",
+            "expansion": 21
+        },
+        {
+            "from": "dredge",
+            "to": "arxmentis",
+            "type": "teleport",
+            "expansion": 21
+        },
+        {
+            "from": "arxmentis",
+            "to": "dredge",
+            "type": "teleport",
+            "expansion": 21
+        },
+        {
+            "from": "potranquility",
+            "to": "pohealth",
+            "type": "teleport",
+            "expansion": 22
+        },
+        {
+            "from": "pohealth",
+            "to": "potranquility",
+            "type": "teleport",
+            "expansion": 22
+        },
+        {
+            "from": "pohealth",
+            "to": "exalted",
+            "type": "teleport",
+            "expansion": 22
+        },
+        {
+            "from": "exalted",
+            "to": "pohealth",
+            "type": "teleport",
+            "expansion": 22
+        },
+        {
+            "from": "exalted",
+            "to": "exaltedb",
+            "type": "translocate",
+            "expansion": 22
+        },
+        {
+            "from": "exaltedb",
+            "to": "exalted",
+            "type": "translocate",
+            "expansion": 22
+        },
+        {
+            "from": "exaltedb",
+            "to": "codecayb",
+            "type": "walk",
+            "expansion": 22
+        },
+        {
+            "from": "codecayb",
+            "to": "exaltedb",
+            "type": "walk",
+            "expansion": 22
+        },
+        {
+            "from": "codecayb",
+            "to": "cosul",
+            "type": "walk",
+            "expansion": 22
+        },
+        {
+            "from": "cosul",
+            "to": "codecayb",
+            "type": "walk",
+            "expansion": 22
+        },
+        {
+            "from": "guildlobby",
+            "to": "lceanium",
+            "type": "teleport",
+            "expansion": 23
+        },
+        {
+            "from": "lceanium",
+            "to": "guildlobby",
+            "type": "teleport",
+            "expansion": 23
+        },
+        {
+            "from": "nexus",
+            "to": "lceanium",
+            "type": "translocate",
+            "expansion": 23
+        },
+        {
+            "from": "lceanium",
+            "to": "scorchedwoods",
+            "type": "walk",
+            "expansion": 23
+        },
+        {
+            "from": "scorchedwoods",
+            "to": "lceanium",
+            "type": "walk",
+            "expansion": 23
+        },
+        {
+            "from": "scorchedwoods",
+            "to": "frontiermtnsb",
+            "type": "walk",
+            "expansion": 23
+        },
+        {
+            "from": "frontiermtnsb",
+            "to": "scorchedwoods",
+            "type": "walk",
+            "expansion": 23
+        },
+        {
+            "from": "scorchedwoods",
+            "to": "chardoktwo",
+            "type": "walk",
+            "expansion": 23
+        },
+        {
+            "from": "chardoktwo",
+            "to": "scorchedwoods",
+            "type": "walk",
+            "expansion": 23
+        },
+        {
+            "from": "frontiermtnsb",
+            "to": "drogab",
+            "type": "walk",
+            "expansion": 23
+        },
+        {
+            "from": "drogab",
+            "to": "frontiermtnsb",
+            "type": "walk",
+            "expansion": 23
+        },
+        {
+            "from": "frontiermtnsb",
+            "to": "korshaext",
+            "type": "walk",
+            "expansion": 23
+        },
+        {
+            "from": "korshaext",
+            "to": "frontiermtnsb",
+            "type": "walk",
+            "expansion": 23
+        },
+        {
+            "from": "korshaext",
+            "to": "korshaint",
+            "type": "walk",
+            "expansion": 23
+        },
+        {
+            "from": "korshaint",
+            "to": "korshaext",
+            "type": "walk",
+            "expansion": 23
+        },
+        {
+            "from": "scorchedwoods",
+            "to": "skyfire",
+            "type": "walk",
+            "expansion": 23
+        },
+        {
+            "from": "skyfire",
+            "to": "scorchedwoods",
+            "type": "walk",
+            "expansion": 23
+        },
+        {
+            "from": "frontiermtnsb",
+            "to": "overthere",
+            "type": "walk",
+            "expansion": 23
+        },
+        {
+            "from": "overthere",
+            "to": "frontiermtnsb",
+            "type": "walk",
+            "expansion": 23
+        },
+        {
+            "from": "guildlobby",
+            "to": "overtheretwo",
+            "type": "translocate",
+            "expansion": 24
+        },
+        {
+            "from": "overtheretwo",
+            "to": "skyfiretwo",
+            "type": "walk",
+            "expansion": 24
+        },
+        {
+            "from": "skyfiretwo",
+            "to": "overtheretwo",
+            "type": "walk",
+            "expansion": 24
+        },
+        {
+            "from": "skyfiretwo",
+            "to": "gorowyn",
+            "type": "walk",
+            "expansion": 24
+        },
+        {
+            "from": "gorowyn",
+            "to": "skyfiretwo",
+            "type": "walk",
+            "expansion": 24
+        },
+        {
+            "from": "overtheretwo",
+            "to": "charasistwo",
+            "type": "walk",
+            "expansion": 24
+        },
+        {
+            "from": "charasistwo",
+            "to": "overtheretwo",
+            "type": "walk",
+            "expansion": 24
+        },
+        {
+            "from": "charasistwo",
+            "to": "charasisb",
+            "type": "walk",
+            "expansion": 24
+        },
+        {
+            "from": "charasisb",
+            "to": "charasistwo",
+            "type": "walk",
+            "expansion": 24
+        },
+        {
+            "from": "potranquility",
+            "to": "stratos",
+            "type": "teleport",
+            "expansion": 25
+        },
+        {
+            "from": "stratos",
+            "to": "potranquility",
+            "type": "teleport",
+            "expansion": 25
+        },
+        {
+            "from": "stratos",
+            "to": "trialsofsmoke",
+            "type": "walk",
+            "expansion": 25
+        },
+        {
+            "from": "trialsofsmoke",
+            "to": "stratos",
+            "type": "walk",
+            "expansion": 25
+        },
+        {
+            "from": "trialsofsmoke",
+            "to": "empyr",
+            "type": "walk",
+            "expansion": 25
+        },
+        {
+            "from": "empyr",
+            "to": "trialsofsmoke",
+            "type": "walk",
+            "expansion": 25
+        },
+        {
+            "from": "empyr",
+            "to": "aalishai",
+            "type": "walk",
+            "expansion": 25
+        },
+        {
+            "from": "aalishai",
+            "to": "empyr",
+            "type": "walk",
+            "expansion": 25
+        },
+        {
+            "from": "stratos",
+            "to": "esianti",
+            "type": "walk",
+            "expansion": 25
+        },
+        {
+            "from": "esianti",
+            "to": "stratos",
+            "type": "walk",
+            "expansion": 25
+        },
+        {
+            "from": "esianti",
+            "to": "mearatas",
+            "type": "walk",
+            "expansion": 25
+        },
+        {
+            "from": "mearatas",
+            "to": "esianti",
+            "type": "walk",
+            "expansion": 25
+        },
+        {
+            "from": "dragonscale",
+            "to": "gnomemtn",
+            "type": "translocate",
+            "expansion": 25
+        },
+        {
+            "from": "nro",
+            "to": "eastwastestwo",
+            "type": "translocate",
+            "expansion": 26
+        },
+        {
+            "from": "eastwastestwo",
+            "to": "nro",
+            "type": "translocate",
+            "expansion": 26
+        },
+        {
+            "from": "eastwastestwo",
+            "to": "crystaltwob",
+            "type": "walk",
+            "expansion": 26
+        },
+        {
+            "from": "crystaltwob",
+            "to": "eastwastestwo",
+            "type": "walk",
+            "expansion": 26
+        },
+        {
+            "from": "eastwastestwo",
+            "to": "crystaltwoa",
+            "type": "walk",
+            "expansion": 26
+        },
+        {
+            "from": "crystaltwoa",
+            "to": "eastwastestwo",
+            "type": "walk",
+            "expansion": 26
+        },
+        {
+            "from": "eastwastestwo",
+            "to": "kaeltwo",
+            "type": "walk",
+            "expansion": 26
+        },
+        {
+            "from": "kaeltwo",
+            "to": "eastwastestwo",
+            "type": "walk",
+            "expansion": 26
+        },
+        {
+            "from": "eastwastestwo",
+            "to": "greatdividetwo",
+            "type": "walk",
+            "expansion": 26
+        },
+        {
+            "from": "greatdividetwo",
+            "to": "eastwastestwo",
+            "type": "walk",
+            "expansion": 26
+        },
+        {
+            "from": "eastwastestwo",
+            "to": "frozenshadowtwo",
+            "type": "walk",
+            "expansion": 26
+        },
+        {
+            "from": "frozenshadowtwo",
+            "to": "eastwastestwo",
+            "type": "walk",
+            "expansion": 26
+        },
+        {
+            "from": "greatdividetwo",
+            "to": "velketortwo",
+            "type": "walk",
+            "expansion": 26
+        },
+        {
+            "from": "velketortwo",
+            "to": "greatdividetwo",
+            "type": "walk",
+            "expansion": 26
+        },
+        {
+            "from": "crystaltwob",
+            "to": "crystaltwoa",
+            "type": "walk",
+            "expansion": 26
+        },
+        {
+            "from": "crystaltwoa",
+            "to": "crystaltwob",
+            "type": "walk",
+            "expansion": 26
+        },
+        {
+            "from": "kaeltwo",
+            "to": "cobaltscar",
+            "type": "walk",
+            "expansion": 26
+        },
+        {
+            "from": "cobaltscar",
+            "to": "kaeltwo",
+            "type": "walk",
+            "expansion": 26
+        },
+        {
+            "from": "kaeltwo",
+            "to": "cobaltscartwo",
+            "type": "walk",
+            "expansion": 27
+        },
+        {
+            "from": "cobaltscartwo",
+            "to": "kaeltwo",
+            "type": "walk",
+            "expansion": 27
+        },
+        {
+            "from": "cobaltscartwo",
+            "to": "westwastestwo",
+            "type": "walk",
+            "expansion": 27
+        },
+        {
+            "from": "westwastestwo",
+            "to": "cobaltscartwo",
+            "type": "walk",
+            "expansion": 27
+        },
+        {
+            "from": "cobaltscartwo",
+            "to": "skyshrinetwo",
+            "type": "walk",
+            "expansion": 27
+        },
+        {
+            "from": "skyshrinetwo",
+            "to": "cobaltscartwo",
+            "type": "walk",
+            "expansion": 27
+        },
+        {
+            "from": "westwastestwo",
+            "to": "necropolistwo",
+            "type": "walk",
+            "expansion": 27
+        },
+        {
+            "from": "necropolistwo",
+            "to": "westwastestwo",
+            "type": "walk",
+            "expansion": 27
+        },
+        {
+            "from": "westwastestwo",
+            "to": "templeveeshantwo",
+            "type": "teleport",
+            "expansion": 27
+        },
+        {
+            "from": "templeveeshantwo",
+            "to": "westwastestwo",
+            "type": "walk",
+            "expansion": 27
+        },
+        {
+            "from": "eastwastestwo",
+            "to": "sleepertwo",
+            "type": "walk",
+            "expansion": 27
+        },
+        {
+            "from": "sleepertwo",
+            "to": "eastwastestwo",
+            "type": "walk",
+            "expansion": 27
+        },
+        {
+            "from": "nexus",
+            "to": "maidentwo",
+            "type": "translocate",
+            "expansion": 28
+        },
+        {
+            "from": "maidentwo",
+            "to": "umbraltwo",
+            "type": "walk",
+            "expansion": 28
+        },
+        {
+            "from": "umbraltwo",
+            "to": "maidentwo",
+            "type": "walk",
+            "expansion": 28
+        },
+        {
+            "from": "maidentwo",
+            "to": "akhevatwo",
+            "type": "walk",
+            "expansion": 28
+        },
+        {
+            "from": "akhevatwo",
+            "to": "maidentwo",
+            "type": "walk",
+            "expansion": 28
+        },
+        {
+            "from": "akhevatwo",
+            "to": "shadowvalley",
+            "type": "walk",
+            "expansion": 28
+        },
+        {
+            "from": "shadowvalley",
+            "to": "akhevatwo",
+            "type": "walk",
+            "expansion": 28
+        },
+        {
+            "from": "shadowvalley",
+            "to": "basilica",
+            "type": "walk",
+            "expansion": 28
+        },
+        {
+            "from": "basilica",
+            "to": "shadowvalley",
+            "type": "walk",
+            "expansion": 28
+        },
+        {
+            "from": "umbraltwo",
+            "to": "vexthaltwo",
+            "type": "walk",
+            "expansion": 28
+        },
+        {
+            "from": "vexthaltwo",
+            "to": "umbraltwo",
+            "type": "walk",
+            "expansion": 28
+        },
+        {
+            "from": "maidentwo",
+            "to": "shadowvalley",
+            "type": "teleport",
+            "expansion": 28
+        },
+        {
+            "from": "umbraltwo",
+            "to": "firefallpass",
+            "type": "walk",
+            "expansion": 29
+        },
+        {
+            "from": "firefallpass",
+            "to": "umbraltwo",
+            "type": "walk",
+            "expansion": 29
+        },
+        {
+            "from": "firefallpass",
+            "to": "shadeweavertwo",
+            "type": "walk",
+            "expansion": 29
+        },
+        {
+            "from": "shadeweavertwo",
+            "to": "firefallpass",
+            "type": "walk",
+            "expansion": 29
+        },
+        {
+            "from": "shadeweavertwo",
+            "to": "sharvahltwo",
+            "type": "walk",
+            "expansion": 29
+        },
+        {
+            "from": "sharvahltwo",
+            "to": "shadeweavertwo",
+            "type": "walk",
+            "expansion": 29
+        },
+        {
+            "from": "shadeweavertwo",
+            "to": "paludaltwo",
+            "type": "walk",
+            "expansion": 29
+        },
+        {
+            "from": "paludaltwo",
+            "to": "shadeweavertwo",
+            "type": "walk",
+            "expansion": 29
+        },
+        {
+            "from": "paludaltwo",
+            "to": "shadowhaventwo",
+            "type": "walk",
+            "expansion": 29
+        },
+        {
+            "from": "shadowhaventwo",
+            "to": "paludaltwo",
+            "type": "walk",
+            "expansion": 29
+        },
+        {
+            "from": "shadowhaventwo",
+            "to": "deepshade",
+            "type": "walk",
+            "expansion": 29
+        },
+        {
+            "from": "deepshade",
+            "to": "shadowhaventwo",
+            "type": "walk",
+            "expansion": 29
+        },
+        {
+            "from": "deepshade",
+            "to": "darklightcaverns",
+            "type": "walk",
+            "expansion": 29
+        },
+        {
+            "from": "darklightcaverns",
+            "to": "deepshade",
+            "type": "walk",
+            "expansion": 29
+        },
+        {
+            "from": "poknowledge",
+            "to": "shadeweavertwo",
+            "type": "teleport",
+            "expansion": 29
+        },
+        {
+            "from": "guildhall",
+            "to": "sharvahltwo",
+            "type": "teleport",
+            "expansion": 29
+        },
+        {
+            "from": "potranquility",
+            "to": "laurioninn",
+            "type": "teleport",
+            "expansion": 30
+        },
+        {
+            "from": "laurioninn",
+            "to": "potranquility",
+            "type": "teleport",
+            "expansion": 30
+        },
+        {
+            "from": "laurioninn",
+            "to": "timorousfalls",
+            "type": "walk",
+            "expansion": 30
+        },
+        {
+            "from": "timorousfalls",
+            "to": "laurioninn",
+            "type": "walk",
+            "expansion": 30
+        },
+        {
+            "from": "laurioninn",
+            "to": "unkemptwoods",
+            "type": "walk",
+            "expansion": 30
+        },
+        {
+            "from": "unkemptwoods",
+            "to": "laurioninn",
+            "type": "walk",
+            "expansion": 30
+        },
+        {
+            "from": "laurioninn",
+            "to": "moorsofnokk",
+            "type": "walk",
+            "expansion": 30
+        },
+        {
+            "from": "moorsofnokk",
+            "to": "laurioninn",
+            "type": "walk",
+            "expansion": 30
+        },
+        {
+            "from": "laurioninn",
+            "to": "ankexfen",
+            "type": "walk",
+            "expansion": 30
+        },
+        {
+            "from": "ankexfen",
+            "to": "laurioninn",
+            "type": "walk",
+            "expansion": 30
+        },
+        {
+            "from": "laurioninn",
+            "to": "pallomen",
+            "type": "walk",
+            "expansion": 30
+        },
+        {
+            "from": "pallomen",
+            "to": "laurioninn",
+            "type": "walk",
+            "expansion": 30
+        },
+        {
+            "from": "laurioninn",
+            "to": "herosforge",
+            "type": "walk",
+            "expansion": 30
+        },
+        {
+            "from": "herosforge",
+            "to": "laurioninn",
+            "type": "walk",
+            "expansion": 30
+        },
+        {
+            "from": "freporte",
+            "to": "hodstock",
+            "type": "walk",
+            "expansion": 31
+        },
+        {
+            "from": "hodstock",
+            "to": "freporte",
+            "type": "walk",
+            "expansion": 31
+        },
+        {
+            "from": "nektulos",
+            "to": "hodstock",
+            "type": "walk",
+            "expansion": 31
+        },
+        {
+            "from": "hodstock",
+            "to": "nektulos",
+            "type": "walk",
+            "expansion": 31
+        },
+        {
+            "from": "guildlobby",
+            "to": "hodstock",
+            "type": "teleport",
+            "expansion": 31
+        },
+        {
+            "from": "hodstock",
+            "to": "toe",
+            "type": "walk",
+            "expansion": 31
+        },
+        {
+            "from": "toe",
+            "to": "hodstock",
+            "type": "walk",
+            "expansion": 31
+        },
+        {
+            "from": "toe",
+            "to": "aureatecovert",
+            "type": "walk",
+            "expansion": 31
+        },
+        {
+            "from": "aureatecovert",
+            "to": "toe",
+            "type": "walk",
+            "expansion": 31
+        },
+        {
+            "from": "toe",
+            "to": "harbingerscradle",
+            "type": "walk",
+            "expansion": 31
+        },
+        {
+            "from": "harbingerscradle",
+            "to": "toe",
+            "type": "walk",
+            "expansion": 31
+        },
+        {
+            "from": "aureatecovert",
+            "to": "harbingerscradle",
+            "type": "walk",
+            "expansion": 31
+        },
+        {
+            "from": "harbingerscradle",
+            "to": "aureatecovert",
+            "type": "walk",
+            "expansion": 31
+        },
+        {
+            "from": "aureatecovert",
+            "to": "gildedspire",
+            "type": "walk",
+            "expansion": 31
+        },
+        {
+            "from": "gildedspire",
+            "to": "aureatecovert",
+            "type": "walk",
+            "expansion": 31
+        },
+        {
+            "from": "harbingerscradle",
+            "to": "puissance",
+            "type": "walk",
+            "expansion": 31
+        },
+        {
+            "from": "puissance",
+            "to": "harbingerscradle",
+            "type": "walk",
+            "expansion": 31
+        },
+        {
+            "from": "wakening",
+            "to": "embattledpogrowth",
+            "type": "walk",
+            "expansion": 32
+        },
+        {
+            "from": "embattledpogrowth",
+            "to": "wakening",
+            "type": "walk",
+            "expansion": 32
+        },
+        {
+            "from": "poknowledge",
+            "to": "embattledpogrowth",
+            "type": "teleport",
+            "expansion": 32
+        },
+        {
+            "from": "guildlobby",
+            "to": "embattledpogrowth",
+            "type": "teleport",
+            "expansion": 32
+        },
+        {
+            "from": "embattledpogrowth",
+            "to": "candlemakers",
+            "type": "walk",
+            "expansion": 32
+        },
+        {
+            "from": "candlemakers",
+            "to": "embattledpogrowth",
+            "type": "walk",
+            "expansion": 32
+        },
+        {
+            "from": "candlemakers",
+            "to": "arcstoneruins",
+            "type": "walk",
+            "expansion": 32
+        },
+        {
+            "from": "arcstoneruins",
+            "to": "candlemakers",
+            "type": "walk",
+            "expansion": 32
+        },
+        {
+            "from": "freeportwest",
+            "to": "arcstoneruins",
+            "type": "teleport",
+            "expansion": 32
+        },
+        {
+            "from": "arcstoneruins",
+            "to": "ruinedrelic",
+            "type": "walk",
+            "expansion": 32
+        },
+        {
+            "from": "ruinedrelic",
+            "to": "arcstoneruins",
+            "type": "walk",
+            "expansion": 32
+        },
+        {
+            "from": "poknowledge",
+            "to": "ruinedrelic",
+            "type": "teleport",
+            "expansion": 32
+        },
+        {
+            "from": "ruinedrelic",
+            "to": "vortex",
+            "type": "walk",
+            "expansion": 32
+        },
+        {
+            "from": "vortex",
+            "to": "ruinedrelic",
+            "type": "walk",
+            "expansion": 32
+        },
+        {
+            "from": "vortex",
+            "to": "spite",
+            "type": "walk",
+            "expansion": 32
+        },
+        {
+            "from": "spite",
+            "to": "vortex",
+            "type": "walk",
+            "expansion": 32
         }
     ]
 }

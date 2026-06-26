@@ -219,6 +219,12 @@
                               x-text="hazardCount() ? hazardCount() + (hazardCount() > 1 ? ' hazards' : ' hazard') : 'no hazards'"></span>
                     </div>
 
+                    <template x-if="route.incomplete">
+                        <div class="incomplete-note">
+                            ⓘ This trip crosses zones past <strong>Rain of Fear</strong>. Those are mapped from community data and are best-effort — some connections may be missing and faction/KOS warnings aren't available for them yet.
+                        </div>
+                    </template>
+
                     <div class="spine-list">
                         <template x-for="(st, i) in stations()" :key="i">
                             <div class="station">

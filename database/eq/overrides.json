@@ -1,6 +1,13 @@
 {
-    "_note": "Curated delta layer applied over the generated PEQ graph by `php artisan eq:build-graph`. Use for custom servers (e.g. EverQuest Legends) and data fixes. `zones`: custom nodes to add ({id, short, long}). `add`: edges to add. `remove`: specs that drop any generated edge matching every listed key (e.g. {\"from\":\"a\",\"to\":\"b\"} or add \"type\" to be specific).",
-    "zones": [],
+    "_note": "Curated delta layer applied over the generated PEQ graph by `php artisan eq:build-graph`. Use for custom servers (e.g. EverQuest Legends) and data fixes. `zones`: custom nodes to add ({id, short, long}). `add`: edges to add. `remove`: specs that drop any generated edge matching every listed key (e.g. {\"from\":\"a\",\"to\":\"b\"} or add \"type\" to be specific). `factions`: hand-add KOS guard factions for zones PEQ's spawns don't reach (post-RoF/client-sourced zones) — map of zone short -> [guard faction ids]; ids must exist in PEQ faction_list to carry standing, applied by `php artisan eq:build-factions`.",
+    "factions": {},
+    "zones": [
+        { "id": 772, "short": "ethernere",     "long": "Ethernere Tainted West Karana" },
+        { "id": 770, "short": "bixiewarfront", "long": "Bixie Warfront" },
+        { "id": 771, "short": "deadhills",     "long": "The Dead Hills" },
+        { "id": 775, "short": "towerofrot",    "long": "Tower of Rot" },
+        { "id": 776, "short": "arginhiz",      "long": "Argin-Hiz" }
+    ],
     "add": [
         { "from": "freporte", "to": "oot", "type": "boat", "expansion": 0, "x": -750.0, "y": 50.0, "z": 0.0 },
         { "from": "oot", "to": "freporte", "type": "boat", "expansion": 0, "x": 300.0, "y": 200.0, "z": 0.0 },
@@ -12,7 +19,34 @@
         { "from": "erudnext", "to": "erudsxing", "type": "boat", "expansion": 0, "tx": 1819.11, "ty": 4802.90, "tz": 0.0 },
 
         { "from": "oasis", "to": "timorous", "type": "boat", "expansion": 1 },
-        { "from": "timorous", "to": "oasis", "type": "boat", "expansion": 1 }
+        { "from": "timorous", "to": "oasis", "type": "boat", "expansion": 1 },
+
+        { "from": "qey2hh1", "to": "ethernere", "type": "teleport", "expansion": 20 },
+        { "from": "ethernere", "to": "qey2hh1", "type": "teleport", "expansion": 20 },
+
+        { "from": "ethernere", "to": "bixiewarfront", "type": "teleport", "expansion": 20 },
+        { "from": "bixiewarfront", "to": "ethernere", "type": "teleport", "expansion": 20 },
+        { "from": "ethernere", "to": "deadhills", "type": "teleport", "expansion": 20 },
+        { "from": "deadhills", "to": "ethernere", "type": "teleport", "expansion": 20 },
+        { "from": "ethernere", "to": "neriakd", "type": "teleport", "expansion": 20 },
+        { "from": "neriakd", "to": "ethernere", "type": "teleport", "expansion": 20 },
+        { "from": "ethernere", "to": "towerofrot", "type": "teleport", "expansion": 20 },
+        { "from": "towerofrot", "to": "ethernere", "type": "teleport", "expansion": 20 },
+        { "from": "ethernere", "to": "arginhiz", "type": "teleport", "expansion": 20 },
+        { "from": "arginhiz", "to": "ethernere", "type": "teleport", "expansion": 20 },
+
+        { "from": "bixiewarfront", "to": "crescent", "type": "walk", "expansion": 20 },
+        { "from": "crescent", "to": "bixiewarfront", "type": "walk", "expansion": 20 },
+        { "from": "bixiewarfront", "to": "stonehive", "type": "walk", "expansion": 20 },
+        { "from": "stonehive", "to": "bixiewarfront", "type": "walk", "expansion": 20 },
+        { "from": "deadhills", "to": "dulak", "type": "walk", "expansion": 20 },
+        { "from": "dulak", "to": "deadhills", "type": "walk", "expansion": 20 },
+        { "from": "deadhills", "to": "towerofrot", "type": "walk", "expansion": 20 },
+        { "from": "towerofrot", "to": "deadhills", "type": "walk", "expansion": 20 },
+        { "from": "neriakd", "to": "neriakc", "type": "walk", "expansion": 20 },
+        { "from": "neriakc", "to": "neriakd", "type": "walk", "expansion": 20 },
+        { "from": "arginhiz", "to": "sro", "type": "walk", "expansion": 20 },
+        { "from": "sro", "to": "arginhiz", "type": "walk", "expansion": 20 }
     ],
     "remove": [
         { "from": "oasis", "to": "overthere" },

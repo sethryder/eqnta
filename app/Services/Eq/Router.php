@@ -216,15 +216,26 @@ class Router
 
         $result = $this->reconstruct($prev, $from, $to, $dist[$to]);
 
+        // Legs at/past this expansion are sourced from client data + hand-curated connectivity, with
+        // no KOS/faction data — flag them so the UI can disclose the route may be incomplete.
+        $limitedFrom = (int) config('eqrouter.limited_data_expansion', PHP_INT_MAX);
+
         // Flag each leg whose destination zone is KOS for this race, or whose hostile mobs out-level
         // the traveler beyond the margin (both independent of mode).
+        $incomplete = false;
         foreach ($result['steps'] as &$step) {
             $step['kos'] = isset($kos[$step['to']]);
             $zoneLevel = $levels[$step['to']] ?? 0;
             if ($zoneLevel > $level + $dangerMargin) {
                 $step['danger'] = $zoneLevel;
             }
+            if (($step['expansion'] ?? 0) >= $limitedFrom) {
+                $step['incomplete'] = true;
+                $incomplete = true;
+            }
         }
+        unset($step);
+        $result['incomplete'] = $incomplete;
 
         return $result;
     }
@@ -281,6 +292,7 @@ class Router
                 'from' => $hop['from'],
                 'to' => $node,
                 'type' => $edge['type'],
+                'expansion' => (int) ($edge['expansion'] ?? 0),
                 'x' => $edge['x'] ?? null,
                 'y' => $edge['y'] ?? null,
                 'z' => $edge['z'] ?? null,

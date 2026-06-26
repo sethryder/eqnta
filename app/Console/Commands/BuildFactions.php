@@ -121,6 +121,26 @@ class BuildFactions extends Command
                 $zonesOut[$short] = $ids;
             }
         }
+        // Hand-curated guard factions for zones PEQ's spawns don't reach (post-RoF zones sourced from
+        // client data — see database/eq/overrides.json `factions`). Merged before the "used" filter
+        // below so a referenced faction's base/mods survive into the output. A faction id that isn't a
+        // PEQ guard faction is kept but warned — it carries no standing, so it can never read as KOS.
+        $overrides = $this->factionOverrides();
+        $zonesOut = self::applyFactionOverrides($zonesOut, $overrides);
+        $unknownOverrides = [];
+        foreach ($overrides as $fids) {
+            foreach ($fids as $fid) {
+                if (! isset($factions[$fid])) {
+                    $unknownOverrides[$fid] = true;
+                }
+            }
+        }
+        if ($unknownOverrides !== []) {
+            $this->warn(sprintf(
+                'Override factions not found as PEQ guard factions (no standing, will not read as KOS): %s',
+                implode(', ', array_keys($unknownOverrides)),
+            ));
+        }
         ksort($zonesOut);
 
         // Keep only factions actually referenced by a zone; emit sorted, integer-keyed data.
@@ -173,6 +193,47 @@ class BuildFactions extends Command
         ));
 
         return self::SUCCESS;
+    }
+
+    /**
+     * Union hand-curated guard factions into the per-zone map. Adds to, never replaces, the
+     * PEQ-derived factions already on a zone; ids are kept sorted and de-duplicated.
+     *
+     * @param  array<string, list<int>>  $zonesOut  zone short → faction ids
+     * @param  array<string, list<int>>  $overrides  zone short → curated faction ids
+     * @return array<string, list<int>>
+     */
+    public static function applyFactionOverrides(array $zonesOut, array $overrides): array
+    {
+        foreach ($overrides as $zone => $fids) {
+            $union = array_flip($zonesOut[$zone] ?? []);
+            foreach ($fids as $fid) {
+                $union[(int) $fid] = true;
+            }
+            $ids = array_map('intval', array_keys($union));
+            sort($ids);
+            $zonesOut[$zone] = $ids;
+        }
+
+        return $zonesOut;
+    }
+
+    /**
+     * Hand-curated zone short → guard faction ids from the graph overrides file, for zones PEQ's
+     * spawn data doesn't reach. Faction ids should exist in PEQ's faction_list to carry standing.
+     *
+     * @return array<string, list<int>>
+     */
+    private function factionOverrides(): array
+    {
+        $path = database_path('eq/overrides.json');
+        if (! is_file($path)) {
+            return [];
+        }
+
+        $factions = json_decode((string) file_get_contents($path), true)['factions'] ?? [];
+
+        return array_map(fn ($fids) => array_map('intval', (array) $fids), $factions);
     }
 
     /**

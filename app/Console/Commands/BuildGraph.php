@@ -91,9 +91,14 @@ class BuildGraph extends Command
         // Brewall maps: backfill missing zone-line coords and add boats/spires/books/clicks.
         $edges = $this->applyBrewall($edges, $longToShort, $expansionByShort);
 
-        // Universal corrections baked into the base graph (boats, data fixes). Per-server deltas
-        // (P99, EverQuest Legends, ...) are applied later at request time, on top of this base.
-        $corrections = GraphDelta::load(database_path('eq/overrides.json'));
+        // Universal corrections baked into the base graph: hand-curated fixes (overrides.json) plus
+        // the post-RoF expansion graph the PEQ dump can't supply (postrof.json — client-sourced nodes
+        // + community-sourced edges for expansions 21-32). Per-server deltas (P99, Legends, ...) are
+        // applied later at request time, on top of this base.
+        $corrections = GraphDelta::merge(
+            GraphDelta::load(database_path('eq/overrides.json')),
+            GraphDelta::load(database_path('eq/postrof.json')),
+        );
         [$zones, $edges] = GraphDelta::apply($zones, $edges, $corrections);
 
         // Hub zones aren't reached on foot: retype any remaining "walk" into/out of a hub (Plane of
@@ -438,5 +443,4 @@ class BuildGraph extends Command
 
         return abs((float) $value) >= self::WILDCARD ? null : (float) $value;
     }
-
 }

@@ -144,8 +144,27 @@ return [
         17 => 'House of Thule',
         18 => 'Veil of Alaris',
         19 => 'Rain of Fear',
+        20 => 'Call of the Forsaken',
+        21 => 'The Darkened Sea',
+        22 => 'The Broken Mirror',
+        23 => 'Empires of Kunark',
+        24 => 'Ring of Scale',
+        25 => 'The Burning Lands',
+        26 => 'Torment of Velious',
+        27 => 'Claws of Veeshan',
+        28 => 'Terror of Luclin',
+        29 => 'Night of Shadows',
+        30 => "Laurion's Song",
+        31 => 'The Outer Brood',
+        32 => 'Shattering of Ro',
         99 => 'Special',
     ],
+
+    // Expansions at or past this ordinal are sourced from client data + hand-curated connectivity
+    // (PEQ stops at Rain of Fear), so their zone graph is best-effort and carries no KOS/faction
+    // data. The Router flags any route leg in this range so the UI can disclose the gap. See the
+    // post-RoF import notes in database/eq/overrides.json.
+    'limited_data_expansion' => 20,
 
     // Server profiles. Each = the expansions enabled there + any deltas (custom zones/edges) that
     // make it differ from stock PEQ. `expansions: null` means the caller picks (generic TLP/custom).
@@ -155,7 +174,7 @@ return [
     'servers' => [
         'live' => [
             'label' => 'Live',
-            'expansions' => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 99],
+            'expansions' => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 99],
             'deltas' => [],
         ],
         'p99' => [
