@@ -99,13 +99,6 @@ body.nta {
     min-height: 100vh;
 }
 
-.mono {
-    font-family: var(--font-mono);
-}
-.display {
-    font-family: var(--font-display);
-}
-
 /* Header */
 .nta-header {
     display: flex;
@@ -648,11 +641,6 @@ input.nta:focus {
     text-transform: uppercase;
     font-weight: 700;
 }
-.leg-note {
-    font-size: 0.8125rem;
-    color: var(--tx3);
-    margin-top: 3px;
-}
 
 /* Inline zone map (click a leg to expand the Brewall map) */
 .zone-map-toggle {
@@ -960,12 +948,6 @@ input.nta:focus {
 }
 .exp-name {
     font-size: 0.8125rem;
-}
-.exp-year {
-    font-family: var(--font-mono);
-    font-size: 0.625rem;
-    color: var(--tx3);
-    margin-left: auto;
 }
 .popover-note {
     font-size: 0.6875rem;

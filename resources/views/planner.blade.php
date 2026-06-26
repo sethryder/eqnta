@@ -79,7 +79,7 @@
                                 <label class="exp-row">
                                     <span class="exp-check" :class="{ on: expEnabled(e.id) }" x-text="expEnabled(e.id) ? '✓' : ''"></span>
                                     <span class="exp-name" x-text="e.name"></span>
-                                    <input type="checkbox" class="sr-only" style="display:none"
+                                    <input type="checkbox" class="sr-only"
                                            :checked="expEnabled(e.id)" @change="toggleExp(e.id)">
                                 </label>
                             </template>
