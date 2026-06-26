@@ -162,14 +162,14 @@ Alpine.data('planner', () => ({
                 cameFrom: step.from, goingTo: steps[i + 1]?.to || null,
                 lineName: `${m.name} line`,
                 incoming: color(i), outgoing: i + 1 < steps.length ? color(i + 1) : null,
-                color: m.color, icon: svgIcon(step.type), kos: !!step.kos,
+                color: m.color, icon: svgIcon(step.type), kos: !!step.kos, danger: step.danger || null,
                 isLast: i === steps.length - 1,
             });
         });
         return list;
     },
     hazardCount() {
-        return (this.route?.steps || []).filter((s) => s.kos).length;
+        return (this.route?.steps || []).filter((s) => s.kos || s.danger).length;
     },
 
     // Expand/collapse the inline Brewall map for a leg, fetching + rendering it the first time.

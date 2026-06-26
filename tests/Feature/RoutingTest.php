@@ -179,6 +179,34 @@ class RoutingTest extends TestCase
         $this->assertFalse(collect($human->json('steps'))->firstWhere('to', 'goodcity')['kos']);
     }
 
+    public function test_safest_routes_an_underlevelled_traveler_around_a_dangerous_zone(): void
+    {
+        config([
+            'eqrouter.graph_path' => __DIR__.'/../Fixtures/kos_graph.json',
+            'eqrouter.factions_path' => __DIR__.'/../Fixtures/danger_factions.json',
+        ]);
+
+        // Fastest takes the short path through the level-40 zone regardless of level, but the leg is
+        // flagged with the zone's danger level so the UI can warn.
+        $fast = $this->getJson('/api/route?from=start&to=dest&server=live&mode=fastest&level=1');
+        $this->assertContains('goodcity', array_column($fast->json('steps'), 'to'));
+        $this->assertSame(40, collect($fast->json('steps'))->firstWhere('to', 'goodcity')['danger']);
+
+        // A traveler who out-levels the zone gets no danger flag on that leg.
+        $safeLevel = $this->getJson('/api/route?from=start&to=dest&server=live&mode=fastest&level=60');
+        $this->assertArrayNotHasKey('danger', collect($safeLevel->json('steps'))->firstWhere('to', 'goodcity'));
+
+        // Safest detours a level-1 around the dangerous zone despite the extra hop.
+        $low = $this->getJson('/api/route?from=start&to=dest&server=live&mode=safest&level=1');
+        $low->assertOk();
+        $this->assertNotContains('goodcity', array_column($low->json('steps'), 'to'));
+
+        // A traveler who out-levels the zone has nothing to fear, so safest keeps the short path.
+        $high = $this->getJson('/api/route?from=start&to=dest&server=live&mode=safest&level=60');
+        $high->assertOk();
+        $this->assertContains('goodcity', array_column($high->json('steps'), 'to'));
+    }
+
     public function test_deity_changes_whether_a_zone_is_kos(): void
     {
         config([

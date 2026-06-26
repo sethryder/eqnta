@@ -63,6 +63,7 @@
     --tx3: #7d8590;
     --header: rgba(13, 17, 23, 0.7);
     --halo-shadow: 0 18px 44px rgba(0, 0, 0, 0.45);
+    --warn: #e3b341;
 }
 
 :root[data-theme='light'] {
@@ -77,6 +78,7 @@
     --tx3: #6b7480;
     --header: rgba(255, 255, 255, 0.82);
     --halo-shadow: 0 18px 44px rgba(40, 60, 90, 0.18);
+    --warn: #9a6700;
 }
 
 :root {
@@ -564,6 +566,13 @@ input.nta:focus {
     border: 1px solid rgba(248, 81, 73, 0.4);
     border-radius: 6px;
     padding: 3px 8px;
+}
+/* Mob-level danger reads amber, distinct from the red faction/KOS chip. Tint + border derive from
+   --warn (per-theme) so it stays legible in both modes. */
+.danger-chip.warn {
+    color: var(--warn);
+    background: color-mix(in srgb, var(--warn) 14%, transparent);
+    border-color: color-mix(in srgb, var(--warn) 42%, transparent);
 }
 
 /* Transit spine */

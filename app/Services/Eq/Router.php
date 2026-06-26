@@ -154,6 +154,13 @@ class Router
         $kos = $this->factions->kosZones($race, $class, $deity);
         $kosPenalty = $mode === 'safest' ? (int) config('eqrouter.kos_penalty', 0) : 0;
 
+        // Level danger: a zone whose hostile-mob median out-levels the traveler (beyond a margin) is
+        // flagged on every leg so the UI can warn; in "safest" mode each level over also adds cost,
+        // so the router threads toward gentler zones.
+        $levels = $this->factions->zoneLevels();
+        $dangerMargin = (int) config('eqrouter.danger_margin', 0);
+        $dangerPerLevel = $mode === 'safest' ? (int) config('eqrouter.danger_per_level', 0) : 0;
+
         // Dijkstra.
         $dist = [];
         $prev = [];   // node => [from, edge]
@@ -192,6 +199,9 @@ class Router
                 if (isset($kos[$next])) {
                     $cost += $kosPenalty;
                 }
+                if (($over = (($levels[$next] ?? 0) - $level - $dangerMargin)) > 0) {
+                    $cost += $over * $dangerPerLevel;
+                }
                 if ($cost < ($dist[$next] ?? PHP_INT_MAX)) {
                     $dist[$next] = $cost;
                     $prev[$next] = ['from' => $current, 'edge' => $edge];
@@ -206,9 +216,14 @@ class Router
 
         $result = $this->reconstruct($prev, $from, $to, $dist[$to]);
 
-        // Flag each leg whose destination zone is KOS for this race (independent of mode).
+        // Flag each leg whose destination zone is KOS for this race, or whose hostile mobs out-level
+        // the traveler beyond the margin (both independent of mode).
         foreach ($result['steps'] as &$step) {
             $step['kos'] = isset($kos[$step['to']]);
+            $zoneLevel = $levels[$step['to']] ?? 0;
+            if ($zoneLevel > $level + $dangerMargin) {
+                $step['danger'] = $zoneLevel;
+            }
         }
 
         return $result;
@@ -252,7 +267,7 @@ class Router
     }
 
     /**
-     * @param array<string, array{from:string, edge:array}> $prev
+     * @param  array<string, array{from:string, edge:array}>  $prev
      * @return array{steps: list<array>, hops: int, weight: int}
      */
     private function reconstruct(array $prev, string $from, string $to, int $weight): array

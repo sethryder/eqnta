@@ -141,7 +141,7 @@
                 </div>
             </div>
 
-            <div :class="klassPorts() ? 'two-col' : ''">
+            <div class="two-col">
                 <div>
                     <label class="field-label" for="deity">Deity</label>
                     <div class="select-wrap">
@@ -153,8 +153,8 @@
                         </select>
                     </div>
                 </div>
-                {{-- Level gates porting-class teleports, so it only appears for Druid/Wizard. --}}
-                <div x-show="klassPorts()">
+                {{-- Level gates porting-class teleports and flags zones whose mobs out-level you. --}}
+                <div>
                     <label class="field-label" for="level">Level</label>
                     <input id="level" class="nta" type="number" min="1" max="60" x-model.number="level">
                 </div>
@@ -216,7 +216,7 @@
                         <span class="meta-pill" x-text="route.hops + (route.hops === 1 ? ' stop' : ' stops')"></span>
                         <span class="meta-pill" x-text="'~' + etaMinutes() + ' min'"></span>
                         <span class="hazard-pill" :class="hazardCount() ? 'danger' : 'clear'"
-                              x-text="hazardCount() ? hazardCount() + (hazardCount() > 1 ? ' KOS zones' : ' KOS zone') : 'no hazards'"></span>
+                              x-text="hazardCount() ? hazardCount() + (hazardCount() > 1 ? ' hazards' : ' hazard') : 'no hazards'"></span>
                     </div>
 
                     <div class="spine-list">
@@ -252,7 +252,10 @@
                                                 <span class="map-caret" aria-hidden="true">▸</span>
                                             </button>
                                             <template x-if="st.kos">
-                                                <span class="danger-chip">⚠ Guards KOS here</span>
+                                                <span class="danger-chip">⚠ Faction KOS here</span>
+                                            </template>
+                                            <template x-if="st.danger">
+                                                <span class="danger-chip warn" x-text="`⚠ Lvl ${st.danger} mobs`"></span>
                                             </template>
                                             <div class="zone-map-panel" x-show="openMap === st.zone" x-cloak
                                                  x-html="mapSvg[st.zone] || ''"></div>

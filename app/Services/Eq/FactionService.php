@@ -5,16 +5,16 @@ namespace App\Services\Eq;
 /**
  * Resolves which zones are kill-on-sight for a traveler, from the committed factions.json
  * (built by eq:build-factions). A character's standing with a guard faction is the faction's base
- * plus its race/class/deity modifiers; the zone is KOS when that standing falls below the threshold
+ * plus its race/class/deity modifiers; the zone is KOS when that standing is at or below the threshold
  * for any of its guard factions — the same con math EQEmu uses for a freshly created character.
  */
 class FactionService
 {
-    /** @var array{threshold:int, factions:array<string,array{base:int,mods:array<string,int>}>, zones:array<string,list<int>>}|null */
+    /** @var array{threshold:int, factions:array<string,array{base:int,mods:array<string,int>}>, zones:array<string,list<int>>, levels:array<string,int>}|null */
     private ?array $data = null;
 
     /**
-     * @return array{threshold:int, factions:array<string,array{base:int,mods:array<string,int>}>, zones:array<string,list<int>>}
+     * @return array{threshold:int, factions:array<string,array{base:int,mods:array<string,int>}>, zones:array<string,list<int>>, levels:array<string,int>}
      */
     public function data(): array
     {
@@ -22,10 +22,21 @@ class FactionService
             $path = config('eqrouter.factions_path');
             $this->data = is_file($path)
                 ? json_decode((string) file_get_contents($path), true, flags: JSON_THROW_ON_ERROR)
-                : ['threshold' => (int) config('eqrouter.kos_threshold'), 'factions' => [], 'zones' => []];
+                : ['threshold' => (int) config('eqrouter.kos_threshold'), 'factions' => [], 'zones' => [], 'levels' => []];
         }
 
         return $this->data;
+    }
+
+    /**
+     * Zone short → median level of its monster spawns (built by eq:build-factions). Drives the
+     * "safest"-mode danger penalty for under-levelled travelers.
+     *
+     * @return array<string, int>
+     */
+    public function zoneLevels(): array
+    {
+        return $this->data()['levels'] ?? [];
     }
 
     /**
@@ -57,7 +68,7 @@ class FactionService
                     $standing[$id] = $value;
                 }
 
-                if ($standing[$id] < $threshold) {
+                if ($standing[$id] <= $threshold) {
                     $kos[$zone] = true;
                     break;
                 }

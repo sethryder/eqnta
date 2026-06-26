@@ -99,12 +99,26 @@ return [
     // + their base/modifiers; the Router computes standing and flags KOS legs from it.
     'factions_path' => database_path('eq/factions.json'),
 
-    // Con standing at/below which a zone's guard faction is kill-on-sight (EQEmu "Scowls" band).
+    // Con standing at or below which a faction is kill-on-sight. -750 is EQEmu's THREATENINGLY
+    // boundary — a mob at exactly -750 already attacks on sight (only -751+ is "Scowls"), so the
+    // comparison is inclusive (<=).
     'kos_threshold' => -750,
+
+    // Minimum spawn points a guard faction must have in a zone before it counts toward KOS. Filters
+    // out a single stray patrol wandering into a dungeon (e.g. one Qeynos guard in Blackburrow) so the
+    // zone isn't flagged "guards KOS" off one NPC. Used by eq:build-factions.
+    'kos_min_spawns' => 2,
 
     // Extra "safest"-mode cost for entering a zone that is KOS for the traveler's race. Large enough
     // to detour around it, but finite so a KOS-only destination still routes.
     'kos_penalty' => 200,
+
+    // "Safest"-mode level-danger penalty. A zone's monster median (factions.json → levels) is the
+    // bar; when it exceeds the traveler's level by more than danger_margin, each level over adds
+    // danger_per_level to the cost, so an under-levelled traveler routes toward gentler zones. Tuned
+    // so a ~20-level-over zone (~120) sits near the KOS penalty; 0 disables it.
+    'danger_margin' => 5,
+    'danger_per_level' => 8,
 
     // EQEmu expansion ordinals (zone.expansion). An edge belongs to the highest expansion among
     // its endpoints; it routes only when that expansion is in the enabled set (see eras / the

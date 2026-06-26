@@ -1,0 +1,9 @@
+{
+    "_note": "Fixture for safest-mode level-danger routing (used with kos_graph.json). No KOS factions; goodcity has a high monster median so an under-levelled traveler detours around it in safest mode, while one who out-levels it does not.",
+    "threshold": -750,
+    "factions": {},
+    "zones": {},
+    "levels": {
+        "goodcity": 40
+    }
+}
