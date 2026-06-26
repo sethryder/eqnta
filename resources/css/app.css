@@ -943,3 +943,41 @@ input:focus-visible,
 [x-cloak] {
     display: none !important;
 }
+
+.site-footer {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 22px 30px 44px;
+    border-top: 1px solid var(--bd);
+}
+/* Signage strip — same uppercase-mono voice as the eyebrows, like the fine print
+   along the bottom margin of a transit map. */
+.footer-strip {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    line-height: 1.9;
+    color: var(--tx3);
+}
+.footer-strip .sep {
+    margin: 0 7px;
+    color: var(--bd);
+}
+.footer-fine {
+    max-width: 600px;
+    margin: 11px 0 0;
+    font-size: 11px;
+    line-height: 1.5;
+    color: var(--tx3);
+    opacity: 0.7;
+}
+.site-footer a {
+    color: var(--tx2);
+    text-decoration: none;
+    border-bottom: 1px solid var(--bd);
+}
+.site-footer a:hover {
+    color: var(--tx);
+}

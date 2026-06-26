@@ -284,5 +284,20 @@
             </div>
         </section>
     </main>
+
+    <footer class="site-footer">
+        <p class="footer-strip">
+            © {{ date('Y') }} Norrath Transit Authority
+            <span class="sep" aria-hidden="true">·</span>
+            Maps © <a href="https://www.eqmaps.info" rel="noopener" target="_blank">Brewall</a>
+            &amp; <a href="https://forums.everquest.com/index.php?threads/goods-maps-pack.238818/" rel="noopener" target="_blank">Good's Maps</a>
+            <span class="sep" aria-hidden="true">·</span>
+            Community-sourced — verify before long trips
+        </p>
+        <p class="footer-fine">
+            EverQuest is a registered trademark of Daybreak Game Company LLC. The Norrath Transit Authority is an
+            unofficial fan project, not affiliated with or endorsed by Daybreak.
+        </p>
+    </footer>
 </body>
 </html>
