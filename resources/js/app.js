@@ -44,6 +44,7 @@ Alpine.data('planner', () => ({
     customExp: {}, // { [id]: true } — used when server === 'tlp'
     eraOpen: false,
     eraTab: 'era',
+    tlpOpen: false, // whether the collapsible "TLP Servers" sub-list is expanded
     zones: [],
     servers: [],
     expansions: [],
@@ -74,6 +75,9 @@ Alpine.data('planner', () => ({
         // Era precedence: a shared URL wins, else the last era this browser used, else default.
         const savedServer = localStorage.getItem('nta-server');
         this.server = [url.get('server'), savedServer, meta.default].find((k) => this.servers.some((s) => s.key === k)) || meta.default;
+        // Reveal the TLP sub-list up front when the active server lives inside it, so the current
+        // selection is never hidden behind a collapsed group.
+        this.tlpOpen = this.servers.some((s) => s.key === this.server && s.group === 'tlp');
         this.customExp = Object.fromEntries((this.serverConfig()?.expansions || []).map((id) => [id, true]));
         const expStr = url.get('exp') || localStorage.getItem('nta-exp');
         if (this.server === 'tlp' && expStr) {
@@ -123,9 +127,23 @@ Alpine.data('planner', () => ({
     togglableExpansions() {
         return this.expansions.filter((e) => e.id >= 1 && e.id < 99);
     },
+    // Main era list vs the collapsed "TLP Servers" sub-list. A server is grouped under TLP when its
+    // config carries group:'tlp' (the named progression servers); everything else stays front-and-centre.
+    mainServers() {
+        return this.servers.filter((s) => s.group !== 'tlp');
+    },
+    tlpServers() {
+        return this.servers.filter((s) => s.group === 'tlp');
+    },
+    // Concrete preview of what's inside the collapsed TLP group — names sell it better than a count.
+    tlpPreview() {
+        const names = this.tlpServers().map((s) => s.label.replace(/\s*\(.*\)$/, ''));
+        if (names.length <= 3) { return names.join(', '); }
+        return `${names.slice(0, 3).join(', ')} + ${names.length - 3} more`;
+    },
     // Human description of a server's era for the era popover (Classic is the base, not counted).
     expansionSummary(server) {
-        if (!server.expansions) { return 'Pick the expansions below'; }
+        if (!server.expansions) { return 'Custom · choose in the Expansions tab'; }
         const real = server.expansions.filter((id) => id >= 1 && id < 99);
         if (real.length === 0) { return 'Base game · no expansions'; }
         // Name the latest enabled expansion rather than claiming "all" — the catalog stops at the
@@ -140,9 +158,9 @@ Alpine.data('planner', () => ({
         const cfg = this.serverConfig();
         const ids = this.enabledExpansionIds();
         const top = this.expansions.filter((e) => ids.includes(e.id) && e.id !== 99).pop();
-        const key = (cfg?.key || '').toUpperCase().slice(0, 7) || 'CUSTOM';
+        const name = (cfg?.label || 'Custom').replace(/\s*\(.*\)$/, '').toUpperCase();
         const tail = (top?.name || '—').toUpperCase();
-        return `${key} · ${tail}`;
+        return `${name} · ${tail}`;
     },
 
     // Build the station list the spine renders from the route steps.

@@ -175,6 +175,25 @@ class RoutingTest extends TestCase
         $this->assertArrayNotHasKey('incomplete', $old->json('steps.0'));
     }
 
+    public function test_named_tlp_servers_are_grouped_and_resolve_to_current_era(): void
+    {
+        Carbon::setTestNow('2026-06-26');
+        $servers = collect($this->getJson('/api/servers')->json('servers'));
+
+        // Frostreaver stays front-and-centre; the other named TLPs are tucked under the 'tlp' group.
+        $this->assertNull($servers->firstWhere('key', 'frostreaver')['group']);
+        $this->assertSame('tlp', $servers->firstWhere('key', 'teek')['group']);
+
+        // Agnarr is permanently Planes-of-Power-era-locked (through Lost Dungeons of Norrath = 6).
+        $this->assertSame([0, 1, 2, 3, 4, 5, 6], $servers->firstWhere('key', 'agnarr')['expansions']);
+
+        // A dated server resolves to its current era — Yelinak reached Empires of Kunark (23) by 2026-06.
+        $this->assertSame(23, max($servers->firstWhere('key', 'yelinak')['expansions']));
+
+        // A caught-up server exposes everything (Mangler through Shattering of Ro = 32).
+        $this->assertSame(32, max($servers->firstWhere('key', 'mangler')['expansions']));
+    }
+
     public function test_safest_mode_prefers_boats_over_a_shorter_overland_walk(): void
     {
         config(['eqrouter.graph_path' => __DIR__.'/../Fixtures/safest_graph.json']);
@@ -346,7 +365,7 @@ class RoutingTest extends TestCase
         $this->assertContains('p99', $keys);
         $this->assertContains('live', $keys);
         $this->assertContains(['id' => 0, 'name' => 'Classic'], $response->json('expansions'));
-        $this->assertSame('live', $response->json('default'));
+        $this->assertSame('legends', $response->json('default')); // first-time landing during the Legends launch
     }
 
     public function test_unknown_server_is_rejected(): void

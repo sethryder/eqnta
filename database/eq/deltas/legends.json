@@ -1,5 +1,28 @@
 {
-    "_note": "EverQuest Legends differences (custom official server). When it launches, add its custom zones to `zones`, custom connections/ports to `add`, and any changed/removed stock connections to `remove`. Update the server's expansion set in config/eqrouter.php if it differs from Velious-era.",
+    "_note": "EverQuest Legends — heavily customized official server (custom zones, custom teleport network, altered stock connections). This is a PER-SERVER delta: applied at request time for the `legends` server only, layered over the base PEQ graph. It does NOT affect other servers. Populate it once beta access lands. Only the `zones`, `add`, and `remove` keys are read — every `_`-prefixed key here is ignored by the loader and exists purely as documentation/template.",
+
+    "_conventions": [
+        "Custom zones go in `zones` as {id, short, long}. Use ids >= 9000 to avoid colliding with real EQ/EQEmu zone ids (which top out ~885, plus the 99x instanced range). If Legends reuses a stock zone (same short), DON'T re-add it — the base graph already has it; just add/remove its edges.",
+        "Edges go in `add` as {from, to, type, expansion}. Directional — add BOTH directions for two-way travel. type is one of walk | teleport | translocate | book | spire | boat | evac (custom teleport hubs/clickies = teleport; NPC ports = translocate; zone lines = walk).",
+        "Tag every edge `expansion: 0` at launch — Legends opens at Classic, and its enabled set in config/eqrouter.php is [0], so only expansion-0 edges route. If Legends later unlocks expansions, bump that config set AND tag era-specific custom content with the matching ordinal.",
+        "Drop stock connections Legends doesn't have via `remove`: {from, to} (optionally add `type` to be specific). A spec matches any generated edge where every listed key equals the edge's value.",
+        "Coords (x,y,z / tx,ty,tz) are optional — the UI falls back to a straight line when absent.",
+        "Capturing the data: pull Legends' custom zones from its client like post-RoF (Resources/ZoneNames.txt = id+long+expansion; .eqg filenames = short). Map the teleport network from in-game exploration or Legends' own docs."
+    ],
+
+    "_example_zones": [
+        { "id": 9001, "short": "legendshub", "long": "The Wayfarer Sanctum" }
+    ],
+    "_example_add": [
+        { "from": "poknowledge", "to": "legendshub", "type": "teleport", "expansion": 0, "_why": "custom Legends hub reached from a portal" },
+        { "from": "legendshub", "to": "poknowledge", "type": "teleport", "expansion": 0 },
+        { "from": "legendshub", "to": "qeynos2", "type": "translocate", "expansion": 0, "_why": "hub translocator NPC to a stock city" },
+        { "from": "qeynos2", "to": "legendshub", "type": "translocate", "expansion": 0 }
+    ],
+    "_example_remove": [
+        { "from": "qeynos2", "to": "qeytoqrg", "type": "walk", "_why": "stock zone line Legends removed/reworked" }
+    ],
+
     "zones": [],
     "add": [],
     "remove": []

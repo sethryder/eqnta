@@ -46,7 +46,7 @@
         <div style="position:relative">
             <button class="pill" @click="eraOpen = !eraOpen" :aria-expanded="eraOpen">
                 <span class="dot"></span>
-                <span x-text="badge()"></span>
+                <span class="pill-badge" x-text="badge()"></span>
                 <span style="font-size:.5rem">▼</span>
             </button>
 
@@ -59,9 +59,9 @@
                             <button class="tab-btn" :class="{ active: eraTab === 'exp' }" @click="eraTab = 'exp'">EXPANSIONS</button>
                         </div>
 
-                        {{-- Era tab: server presets --}}
+                        {{-- Era tab: server presets (TLP progression servers tucked into a sub-list) --}}
                         <div class="popover-body" x-show="eraTab === 'era'">
-                            <template x-for="s in servers" :key="s.key">
+                            <template x-for="s in mainServers()" :key="s.key">
                                 <button class="preset-row" :class="{ active: server === s.key }" @click="selectServer(s.key)">
                                     <span class="preset-dot" :style="`background:${presetColor(s.key)}`"></span>
                                     <div>
@@ -70,6 +70,32 @@
                                     </div>
                                     <span class="preset-check" x-show="server === s.key">✓</span>
                                 </button>
+                            </template>
+
+                            <template x-if="tlpServers().length">
+                                <div class="tlp-group">
+                                    <button class="tlp-toggle" :class="{ open: tlpOpen, active: tlpServers().some((s) => s.key === server) }"
+                                            @click="tlpOpen = !tlpOpen" :aria-expanded="tlpOpen">
+                                        <span class="tlp-caret" aria-hidden="true">▸</span>
+                                        <div class="tlp-toggle-text">
+                                            <div class="preset-name">TLP Servers</div>
+                                            <div class="preset-desc" x-text="tlpPreview()"></div>
+                                        </div>
+                                        <span class="preset-check" x-show="tlpServers().some((s) => s.key === server)">✓</span>
+                                    </button>
+                                    <div class="tlp-list" x-show="tlpOpen">
+                                        <template x-for="s in tlpServers()" :key="s.key">
+                                            <button class="preset-row" :class="{ active: server === s.key }" @click="selectServer(s.key)">
+                                                <span class="preset-dot" :style="`background:${presetColor(s.key)}`"></span>
+                                                <div>
+                                                    <div class="preset-name" x-text="s.label"></div>
+                                                    <div class="preset-desc" x-text="expansionSummary(s)"></div>
+                                                </div>
+                                                <span class="preset-check" x-show="server === s.key">✓</span>
+                                            </button>
+                                        </template>
+                                    </div>
+                                </div>
                             </template>
                         </div>
 

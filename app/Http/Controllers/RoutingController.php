@@ -42,6 +42,7 @@ class RoutingController extends Controller
                 ->map(fn (array $server, string $key) => [
                     'key' => $key,
                     'label' => $server['label'],
+                    'group' => $server['group'] ?? null,
                     'expansions' => $this->serverExpansions($server),
                 ])
                 ->values(),

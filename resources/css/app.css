@@ -175,6 +175,14 @@ body.nta {
 .pill.chip {
     background: var(--chip);
 }
+/* The era badge shows the full server name now; ellipsis is a safety net for the longest
+   name+era combos rather than the old hard 7-char truncation. */
+.pill-badge {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
 .dot {
     width: 7px;
     height: 7px;
@@ -234,6 +242,9 @@ body.nta {
     }
     .pill {
         padding: 6px 9px;
+    }
+    .pill-badge {
+        max-width: 52vw; /* keep the era pill from crowding out the theme toggle on phones */
     }
     .nta-main {
         padding: 18px 14px 48px;
@@ -919,6 +930,52 @@ input.nta:focus {
 }
 .preset-row.active {
     border-color: var(--accent);
+}
+/* "TLP Servers" group: a card-style disclosure (matching the preset rows so it reads as clickable)
+   that reveals the named progression servers, nested under a rail. */
+.tlp-toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    text-align: left;
+    background: var(--panel2);
+    border: 1px solid var(--bd2);
+    border-radius: 10px;
+    padding: 11px 12px;
+    cursor: pointer;
+    color: var(--tx);
+    margin-bottom: 8px;
+}
+.tlp-toggle:hover,
+.tlp-toggle.active {
+    border-color: var(--accent);
+}
+.tlp-caret {
+    flex-shrink: 0;
+    width: 0.9em;
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--accent);
+    transition: transform 0.18s ease;
+}
+.tlp-toggle.open .tlp-caret {
+    transform: rotate(90deg);
+}
+.tlp-toggle-text {
+    flex: 1;
+    min-width: 0;
+}
+/* Nested servers sit inside the group, tied to it by a rail. */
+.tlp-list {
+    margin: 0 0 8px 17px;
+    padding-left: 13px;
+    border-left: 2px solid var(--bd2);
+}
+@media (prefers-reduced-motion: reduce) {
+    .tlp-caret {
+        transition: none;
+    }
 }
 .preset-dot {
     width: 9px;
