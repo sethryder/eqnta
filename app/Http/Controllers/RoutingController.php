@@ -28,7 +28,8 @@ class RoutingController extends Controller
             ? ($server['config']['expansions'] ?? null)
             : array_map('intval', is_array($raw) ? $raw : explode(',', $raw));
 
-        return response()->json($this->router->zones($server['key'], $server['delta'], $expansions));
+        return response()->json($this->router->zones($server['key'], $server['delta'], $expansions))
+            ->header('Cache-Control', 'public, max-age=0, s-maxage=86400, must-revalidate');
     }
 
     /**
@@ -51,7 +52,7 @@ class RoutingController extends Controller
             'races' => $this->codeList('eqrouter.races'),
             'classes' => $this->codeList('eqrouter.classes'),
             'deities' => $this->codeList('eqrouter.deities'),
-        ]);
+        ])->header('Cache-Control', 'public, max-age=0, s-maxage=86400, must-revalidate');
     }
 
     /**
@@ -143,7 +144,7 @@ class RoutingController extends Controller
 
     /**
      * Raw Brewall map geometry (`L`/`P` lines) for a zone, by short name. Served as-is for the
-     * client to parse into an SVG; the file is static so let the browser cache it.
+     * client to parse into an SVG; cached at the edge (purged on deploy), browser revalidates.
      */
     public function map(string $zone): Response
     {
@@ -158,7 +159,7 @@ class RoutingController extends Controller
 
         return response((string) file_get_contents($path), 200, [
             'Content-Type' => 'text/plain',
-            'Cache-Control' => 'public, max-age=86400',
+            'Cache-Control' => 'public, max-age=0, s-maxage=86400, must-revalidate',
         ]);
     }
 
@@ -207,7 +208,7 @@ class RoutingController extends Controller
             }
         }
 
-        return response()->json($points, 200, ['Cache-Control' => 'public, max-age=86400']);
+        return response()->json($points, 200, ['Cache-Control' => 'public, max-age=0, s-maxage=86400, must-revalidate']);
     }
 
     /**
@@ -223,7 +224,7 @@ class RoutingController extends Controller
 
         $all = $this->bakedPaths();
 
-        return response()->json($all[$zone] ?? (object) [], 200, ['Cache-Control' => 'public, max-age=86400']);
+        return response()->json($all[$zone] ?? (object) [], 200, ['Cache-Control' => 'public, max-age=0, s-maxage=86400, must-revalidate']);
     }
 
     /**
