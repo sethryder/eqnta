@@ -4,6 +4,33 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Norrath Transit Authority · Zone Trip Planner</title>
+    <meta name="description" content="Plan the fastest route between any EverQuest zones: overland runs, boats, Plane of Knowledge books, spires, and class ports, tuned to your server's expansion era. Every route is shareable.">
+    <link rel="canonical" href="{{ url('/') }}">
+
+    {{-- Open Graph / Twitter — routes are shared as links, so previews matter --}}
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Norrath Transit Authority">
+    <meta property="og:title" content="Norrath Transit Authority · Zone Trip Planner">
+    <meta property="og:description" content="Chart the quickest trip across Norrath: boats, PoK books, spires, and class ports for your server's era. Shareable itineraries.">
+    <meta property="og:url" content="{{ url('/') }}">
+    <meta property="og:image" content="{{ url('/og.png') }}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Norrath Transit Authority · Zone Trip Planner">
+    <meta name="twitter:description" content="Chart the quickest trip across Norrath for your server's era. Shareable itineraries.">
+    <meta name="twitter:image" content="{{ url('/og.png') }}">
+
+    <script type="application/ld+json">
+    {!! json_encode([
+        '@context' => 'https://schema.org',
+        '@type' => 'WebApplication',
+        'name' => 'Norrath Transit Authority',
+        'applicationCategory' => 'UtilitiesApplication',
+        'description' => 'Zone trip planner for EverQuest emulator servers. Routes overland runs, boats, Plane of Knowledge books, spires, and class teleports into a single itinerary.',
+        'url' => url('/'),
+        'offers' => ['@type' => 'Offer', 'price' => '0', 'priceCurrency' => 'USD'],
+    ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
+    </script>
+
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     @fonts
@@ -14,7 +41,7 @@
     <header class="nta-header">
         <div class="logo-badge"><span class="wm"><span class="n">N</span><span class="ta">TA</span></span></div>
         <div>
-            <div class="title-main">NORRATH TRANSIT AUTHORITY</div>
+            <h1 class="title-main">NORRATH TRANSIT AUTHORITY</h1>
             <div class="title-sub">ZONE TRIP PLANNER · EST. 1999</div>
         </div>
         <div class="header-spacer"></div>
@@ -169,7 +196,7 @@
             {{-- First-run intro: shown until a trip is planned. --}}
             <template x-if="(!route || !route.steps.length) && !message">
                 <div class="service-card intro-card">
-                    <div class="intro-title">Plan a trip across Norrath</div>
+                    <h2 class="intro-title">Plan a trip across Norrath</h2>
                     <p class="intro-lede">The Norrath Transit Authority charts the quickest way from any zone to any
                         other — stitching overland runs, boats, Plane of Knowledge books, spires, and class teleports
                         into a single itinerary.</p>
@@ -180,7 +207,7 @@
                         <li><b>Match your server.</b> Use the <b>Era</b> selector up top to limit travel to the
                             expansions your server runs.</li>
                     </ol>
-                    <p class="intro-foot">Every route is shareable — your selections live in the page URL.</p>
+                    <p class="intro-foot">Every route is shareable. Your selections live in the page URL.</p>
                 </div>
             </template>
 
