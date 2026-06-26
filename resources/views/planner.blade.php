@@ -186,6 +186,20 @@
                 </div>
             </div>
 
+            {{-- Legends: multiclass "rituals". A leveled (~25) Druid/Wizard you own can cast its ports
+                 on whatever you're playing, so these are opt-in toggles independent of the Class field. --}}
+            <div x-show="ritualClasses().length" x-cloak>
+                <span class="field-label">Ritual access</span>
+                <template x-for="c in ritualClasses()" :key="c.code">
+                    <label class="exp-row">
+                        <span class="exp-check" :class="{ on: rituals.includes(c.code) }"
+                              x-text="rituals.includes(c.code) ? '✓' : ''"></span>
+                        <span class="exp-name" x-text="c.label + ' rituals (lv 25+)'"></span>
+                        <input type="checkbox" class="sr-only" x-model="rituals" :value="c.code">
+                    </label>
+                </template>
+            </div>
+
             <div>
                 <span class="field-label">Routing priority</span>
                 <div class="segmented" role="group" aria-label="Routing priority">
@@ -289,8 +303,12 @@
                                             <template x-if="st.danger">
                                                 <span class="danger-chip warn" x-text="`⚠ Lvl ${st.danger} mobs`"></span>
                                             </template>
-                                            <div class="zone-map-panel" x-show="openMap === st.zone" x-cloak
-                                                 x-html="mapSvg[st.zone] || ''"></div>
+                                            <div class="zone-map-panel" x-show="openMap === st.zone" x-cloak>
+                                                <template x-if="st.castBy">
+                                                    <div class="cast-by" x-text="`✦ ${st.castBy}`"></div>
+                                                </template>
+                                                <div x-html="mapSvg[st.zone] || ''"></div>
+                                            </div>
                                         </div>
                                     </template>
                                 </div>

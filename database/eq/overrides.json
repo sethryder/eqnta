@@ -46,9 +46,20 @@
         { "from": "neriakd", "to": "neriakc", "type": "walk", "expansion": 20 },
         { "from": "neriakc", "to": "neriakd", "type": "walk", "expansion": 20 },
         { "from": "arginhiz", "to": "sro", "type": "walk", "expansion": 20 },
-        { "from": "sro", "to": "arginhiz", "type": "walk", "expansion": 20 }
+        { "from": "sro", "to": "arginhiz", "type": "walk", "expansion": 20 },
+
+        { "from": "hole", "to": "erudnext", "type": "teleport", "expansion": 0 },
+        { "from": "erudnext", "to": "hole", "type": "teleport", "expansion": 0 },
+        { "from": "hole", "to": "neriakc", "type": "teleport", "expansion": 0 },
+        { "from": "neriakc", "to": "hole", "type": "teleport", "expansion": 0 }
     ],
+    "_fixes_2026_06": "Verified against eqlwiki + project1999 wiki. (1) gukbottom<->innothule removed: Lower Guk borders ONLY Upper Guk; Innothule's Guk zone line lands in Upper Guk. (2) hole<->erudnint removed and hole<->erudnext + hole<->neriakc added as teleporters: The Hole reaches Erudin (not Erudin Palace) and Neriak Third Gate via in-zone teleporter pads, which PEQ mistyped/mistargeted. Remove specs must contain ONLY edge-matching keys (GraphDelta::matches checks every key), so rationale lives here, not inline.",
     "remove": [
+        { "from": "gukbottom", "to": "innothule" },
+        { "from": "innothule", "to": "gukbottom" },
+        { "from": "hole", "to": "erudnint" },
+        { "from": "erudnint", "to": "hole" },
+
         { "from": "oasis", "to": "overthere" },
 
         { "from": "timorous", "to": "cabwest", "type": "walk" },

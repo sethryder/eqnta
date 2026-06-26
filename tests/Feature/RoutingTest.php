@@ -302,6 +302,32 @@ class RoutingTest extends TestCase
         $high->assertOk();
         $this->assertSame(1, $high->json('hops'));
         $this->assertSame('teleport', $high->json('steps.0.type'));
+        // The teleport step carries its spell/class so the UI can show what casts the line.
+        $this->assertSame('DRU', $high->json('steps.0.class'));
+        $this->assertNotEmpty($high->json('steps.0.spell'));
+    }
+
+    public function test_legends_ritual_grants_port_to_non_porting_class(): void
+    {
+        // A warrior can't normally port. On Legends, opting into Druid rituals unlocks Druid ports
+        // regardless of class or level (Ring of Karana → northkarana, exp 0).
+        $without = $this->getJson('/api/route?from=oasis&to=northkarana&server=legends&class=WAR&level=20');
+        $without->assertOk();
+        $this->assertGreaterThan(1, $without->json('hops'));
+
+        $with = $this->getJson('/api/route?from=oasis&to=northkarana&server=legends&class=WAR&level=20&rituals[]=DRU');
+        $with->assertOk();
+        $this->assertSame(1, $with->json('hops'));
+        $this->assertSame('teleport', $with->json('steps.0.type'));
+    }
+
+    public function test_ritual_param_ignored_on_servers_without_the_mechanic(): void
+    {
+        // The ritual param must not grant ports on a server that doesn't declare rituals (Live),
+        // guarding against a stale/shared URL.
+        $route = $this->getJson('/api/route?from=oasis&to=northkarana&server=live&class=WAR&level=20&rituals[]=DRU');
+        $route->assertOk();
+        $this->assertGreaterThan(1, $route->json('hops'));
     }
 
     public function test_server_expansion_set_excludes_later_expansion_teleport(): void

@@ -1,48 +1,323 @@
 {
     "_note": "Stable fixture for RoutingTest. Independent of the generated database/eq/graph.json.",
     "zones": [
-        { "id": 1, "short": "qeynos2", "long": "North Qeynos" },
-        { "id": 2, "short": "qeytoqrg", "long": "Qeynos Hills" },
-        { "id": 3, "short": "northkarana", "long": "North Karana" },
-        { "id": 4, "short": "eastkarana", "long": "East Karana" },
-        { "id": 5, "short": "highpass", "long": "Highpass Hold" },
-        { "id": 6, "short": "kithicor", "long": "Kithicor Forest" },
-        { "id": 7, "short": "ecommons", "long": "East Commonlands" },
-        { "id": 8, "short": "freportw", "long": "West Freeport" },
-        { "id": 9, "short": "freporte", "long": "East Freeport" },
-        { "id": 10, "short": "oot", "long": "Ocean of Tears" },
-        { "id": 11, "short": "butcher", "long": "Butcherblock Mountains" },
-        { "id": 12, "short": "nro", "long": "North Ro" },
-        { "id": 13, "short": "oasis", "long": "Oasis of Marr" },
-        { "id": 14, "short": "permafrost", "long": "Permafrost Keep" }
+        {
+            "id": 1,
+            "short": "qeynos2",
+            "long": "North Qeynos"
+        },
+        {
+            "id": 2,
+            "short": "qeytoqrg",
+            "long": "Qeynos Hills"
+        },
+        {
+            "id": 3,
+            "short": "northkarana",
+            "long": "North Karana"
+        },
+        {
+            "id": 4,
+            "short": "eastkarana",
+            "long": "East Karana"
+        },
+        {
+            "id": 5,
+            "short": "highpass",
+            "long": "Highpass Hold"
+        },
+        {
+            "id": 6,
+            "short": "kithicor",
+            "long": "Kithicor Forest"
+        },
+        {
+            "id": 7,
+            "short": "ecommons",
+            "long": "East Commonlands"
+        },
+        {
+            "id": 8,
+            "short": "freportw",
+            "long": "West Freeport"
+        },
+        {
+            "id": 9,
+            "short": "freporte",
+            "long": "East Freeport"
+        },
+        {
+            "id": 10,
+            "short": "oot",
+            "long": "Ocean of Tears"
+        },
+        {
+            "id": 11,
+            "short": "butcher",
+            "long": "Butcherblock Mountains"
+        },
+        {
+            "id": 12,
+            "short": "nro",
+            "long": "North Ro"
+        },
+        {
+            "id": 13,
+            "short": "oasis",
+            "long": "Oasis of Marr"
+        },
+        {
+            "id": 14,
+            "short": "permafrost",
+            "long": "Permafrost Keep"
+        }
     ],
     "edges": [
-        { "from": "qeynos2", "to": "qeytoqrg", "type": "walk", "expansion": 0, "x": 320.0, "y": -100.0, "z": 0.0 },
-        { "from": "qeytoqrg", "to": "qeynos2", "type": "walk", "expansion": 0, "x": -800.0, "y": 50.0, "z": 0.0 },
-        { "from": "qeytoqrg", "to": "northkarana", "type": "walk", "expansion": 0, "x": 900.0, "y": -200.0, "z": 0.0 },
-        { "from": "northkarana", "to": "qeytoqrg", "type": "walk", "expansion": 0, "x": -1100.0, "y": 300.0, "z": 0.0 },
-        { "from": "northkarana", "to": "eastkarana", "type": "walk", "expansion": 0, "x": 50.0, "y": -1400.0, "z": 0.0 },
-        { "from": "eastkarana", "to": "northkarana", "type": "walk", "expansion": 0, "x": 100.0, "y": 1500.0, "z": 0.0 },
-        { "from": "eastkarana", "to": "highpass", "type": "walk", "expansion": 0, "x": -1200.0, "y": -300.0, "z": 0.0 },
-        { "from": "highpass", "to": "eastkarana", "type": "walk", "expansion": 0, "x": 200.0, "y": 100.0, "z": 0.0 },
-        { "from": "highpass", "to": "kithicor", "type": "walk", "expansion": 0, "x": -150.0, "y": -400.0, "z": 0.0 },
-        { "from": "kithicor", "to": "highpass", "type": "walk", "expansion": 0, "x": 300.0, "y": 600.0, "z": 0.0 },
-        { "from": "kithicor", "to": "ecommons", "type": "walk", "expansion": 0, "x": 1100.0, "y": -50.0, "z": 0.0 },
-        { "from": "ecommons", "to": "kithicor", "type": "walk", "expansion": 0, "x": -1300.0, "y": 200.0, "z": 0.0 },
-        { "from": "ecommons", "to": "freportw", "type": "walk", "expansion": 0, "x": -1100.0, "y": 0.0, "z": 0.0 },
-        { "from": "freportw", "to": "ecommons", "type": "walk", "expansion": 0, "x": 500.0, "y": -200.0, "z": 0.0 },
-        { "from": "freportw", "to": "freporte", "type": "walk", "expansion": 0, "x": -600.0, "y": 100.0, "z": 0.0 },
-        { "from": "freporte", "to": "freportw", "type": "walk", "expansion": 0, "x": 400.0, "y": -100.0, "z": 0.0 },
-        { "from": "ecommons", "to": "nro", "type": "walk", "expansion": 0, "x": 1200.0, "y": 300.0, "z": 0.0 },
-        { "from": "nro", "to": "ecommons", "type": "walk", "expansion": 0, "x": -1400.0, "y": -100.0, "z": 0.0 },
-        { "from": "nro", "to": "oasis", "type": "walk", "expansion": 0, "x": 100.0, "y": -1600.0, "z": 0.0 },
-        { "from": "oasis", "to": "nro", "type": "walk", "expansion": 0, "x": 150.0, "y": 1700.0, "z": 0.0, "tx": 90.0, "ty": -1550.0, "tz": 0.0 },
-        { "from": "freporte", "to": "oot", "type": "boat", "expansion": 0, "x": -750.0, "y": 50.0, "z": 0.0 },
-        { "from": "oot", "to": "freporte", "type": "boat", "expansion": 0, "x": 300.0, "y": 200.0, "z": 0.0 },
-        { "from": "oot", "to": "butcher", "type": "boat", "expansion": 0, "x": -400.0, "y": -900.0, "z": 0.0 },
-        { "from": "butcher", "to": "oot", "type": "boat", "expansion": 0, "x": 2900.0, "y": -400.0, "z": 0.0 },
-        { "from": "*", "to": "northkarana", "type": "teleport", "class": "DRU", "min_level": 29, "expansion": 0 },
-        { "from": "*", "to": "nro", "type": "teleport", "class": "WIZ", "min_level": 29, "expansion": 0 },
-        { "from": "*", "to": "freportw", "type": "teleport", "class": "WIZ", "min_level": 39, "expansion": 4 }
+        {
+            "from": "qeynos2",
+            "to": "qeytoqrg",
+            "type": "walk",
+            "expansion": 0,
+            "x": 320.0,
+            "y": -100.0,
+            "z": 0.0
+        },
+        {
+            "from": "qeytoqrg",
+            "to": "qeynos2",
+            "type": "walk",
+            "expansion": 0,
+            "x": -800.0,
+            "y": 50.0,
+            "z": 0.0
+        },
+        {
+            "from": "qeytoqrg",
+            "to": "northkarana",
+            "type": "walk",
+            "expansion": 0,
+            "x": 900.0,
+            "y": -200.0,
+            "z": 0.0
+        },
+        {
+            "from": "northkarana",
+            "to": "qeytoqrg",
+            "type": "walk",
+            "expansion": 0,
+            "x": -1100.0,
+            "y": 300.0,
+            "z": 0.0
+        },
+        {
+            "from": "northkarana",
+            "to": "eastkarana",
+            "type": "walk",
+            "expansion": 0,
+            "x": 50.0,
+            "y": -1400.0,
+            "z": 0.0
+        },
+        {
+            "from": "eastkarana",
+            "to": "northkarana",
+            "type": "walk",
+            "expansion": 0,
+            "x": 100.0,
+            "y": 1500.0,
+            "z": 0.0
+        },
+        {
+            "from": "eastkarana",
+            "to": "highpass",
+            "type": "walk",
+            "expansion": 0,
+            "x": -1200.0,
+            "y": -300.0,
+            "z": 0.0
+        },
+        {
+            "from": "highpass",
+            "to": "eastkarana",
+            "type": "walk",
+            "expansion": 0,
+            "x": 200.0,
+            "y": 100.0,
+            "z": 0.0
+        },
+        {
+            "from": "highpass",
+            "to": "kithicor",
+            "type": "walk",
+            "expansion": 0,
+            "x": -150.0,
+            "y": -400.0,
+            "z": 0.0
+        },
+        {
+            "from": "kithicor",
+            "to": "highpass",
+            "type": "walk",
+            "expansion": 0,
+            "x": 300.0,
+            "y": 600.0,
+            "z": 0.0
+        },
+        {
+            "from": "kithicor",
+            "to": "ecommons",
+            "type": "walk",
+            "expansion": 0,
+            "x": 1100.0,
+            "y": -50.0,
+            "z": 0.0
+        },
+        {
+            "from": "ecommons",
+            "to": "kithicor",
+            "type": "walk",
+            "expansion": 0,
+            "x": -1300.0,
+            "y": 200.0,
+            "z": 0.0
+        },
+        {
+            "from": "ecommons",
+            "to": "freportw",
+            "type": "walk",
+            "expansion": 0,
+            "x": -1100.0,
+            "y": 0.0,
+            "z": 0.0
+        },
+        {
+            "from": "freportw",
+            "to": "ecommons",
+            "type": "walk",
+            "expansion": 0,
+            "x": 500.0,
+            "y": -200.0,
+            "z": 0.0
+        },
+        {
+            "from": "freportw",
+            "to": "freporte",
+            "type": "walk",
+            "expansion": 0,
+            "x": -600.0,
+            "y": 100.0,
+            "z": 0.0
+        },
+        {
+            "from": "freporte",
+            "to": "freportw",
+            "type": "walk",
+            "expansion": 0,
+            "x": 400.0,
+            "y": -100.0,
+            "z": 0.0
+        },
+        {
+            "from": "ecommons",
+            "to": "nro",
+            "type": "walk",
+            "expansion": 0,
+            "x": 1200.0,
+            "y": 300.0,
+            "z": 0.0
+        },
+        {
+            "from": "nro",
+            "to": "ecommons",
+            "type": "walk",
+            "expansion": 0,
+            "x": -1400.0,
+            "y": -100.0,
+            "z": 0.0
+        },
+        {
+            "from": "nro",
+            "to": "oasis",
+            "type": "walk",
+            "expansion": 0,
+            "x": 100.0,
+            "y": -1600.0,
+            "z": 0.0
+        },
+        {
+            "from": "oasis",
+            "to": "nro",
+            "type": "walk",
+            "expansion": 0,
+            "x": 150.0,
+            "y": 1700.0,
+            "z": 0.0,
+            "tx": 90.0,
+            "ty": -1550.0,
+            "tz": 0.0
+        },
+        {
+            "from": "freporte",
+            "to": "oot",
+            "type": "boat",
+            "expansion": 0,
+            "x": -750.0,
+            "y": 50.0,
+            "z": 0.0
+        },
+        {
+            "from": "oot",
+            "to": "freporte",
+            "type": "boat",
+            "expansion": 0,
+            "x": 300.0,
+            "y": 200.0,
+            "z": 0.0
+        },
+        {
+            "from": "oot",
+            "to": "butcher",
+            "type": "boat",
+            "expansion": 0,
+            "x": -400.0,
+            "y": -900.0,
+            "z": 0.0
+        },
+        {
+            "from": "butcher",
+            "to": "oot",
+            "type": "boat",
+            "expansion": 0,
+            "x": 2900.0,
+            "y": -400.0,
+            "z": 0.0
+        },
+        {
+            "from": "*",
+            "to": "northkarana",
+            "type": "teleport",
+            "class": "DRU",
+            "min_level": 29,
+            "expansion": 0,
+            "spell": "Ring of Karana"
+        },
+        {
+            "from": "*",
+            "to": "nro",
+            "type": "teleport",
+            "class": "WIZ",
+            "min_level": 29,
+            "expansion": 0,
+            "spell": "Ring of the Nro"
+        },
+        {
+            "from": "*",
+            "to": "freportw",
+            "type": "teleport",
+            "class": "WIZ",
+            "min_level": 39,
+            "expansion": 4,
+            "spell": "Translocate: West Freeport"
+        }
     ]
 }

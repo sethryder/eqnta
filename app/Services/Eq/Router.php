@@ -137,15 +137,16 @@ class Router
      * @param  'fastest'|'safest'  $mode  cost profile: fastest time, or least overland exposure
      * @param  string|null  $race  race code; with class/deity, drives the KOS-zone penalty and flags
      * @param  array{zones: list<array>, add: list<array>, remove: list<array>}  $delta  per-server delta
+     * @param  list<string>  $rituals  class codes whose ports are usable regardless of class/level (Legends rituals)
      * @return array{steps: list<array>, hops: int, weight: int}|null
      */
-    public function find(string $from, string $to, array $expansions, ?string $class, int $level, string $mode = 'fastest', ?string $race = null, ?string $deity = null, string $cacheKey = 'base', array $delta = []): ?array
+    public function find(string $from, string $to, array $expansions, ?string $class, int $level, string $mode = 'fastest', ?string $race = null, ?string $deity = null, string $cacheKey = 'base', array $delta = [], array $rituals = []): ?array
     {
         if ($from === $to) {
             return ['steps' => [], 'hops' => 0, 'weight' => 0];
         }
 
-        $adjacency = $this->buildAdjacency($expansions, $class, $level, $cacheKey, $delta);
+        $adjacency = $this->buildAdjacency($expansions, $class, $level, $cacheKey, $delta, $rituals);
         $fastest = config('eqrouter.weights');
         $weights = $mode === 'safest' ? config('eqrouter.weights_safe', $fastest) : $fastest;
 
@@ -243,9 +244,10 @@ class Router
     /**
      * Filtered adjacency list: short => list of usable edges.
      *
+     * @param  list<string>  $rituals  class codes whose port edges bypass the class/level gate
      * @return array<string, list<array>>
      */
-    private function buildAdjacency(array $expansions, ?string $class, int $level, string $cacheKey = 'base', array $delta = []): array
+    private function buildAdjacency(array $expansions, ?string $class, int $level, string $cacheKey = 'base', array $delta = [], array $rituals = []): array
     {
         $graph = $this->resolvedGraph($cacheKey, $delta);
         $enabled = array_flip($expansions);
@@ -258,8 +260,9 @@ class Router
                 continue;
             }
 
-            // Class/level gate (teleport-type edges only carry a class).
-            if (isset($edge['class'])) {
+            // Class/level gate (teleport-type edges only carry a class). A ritual-enabled class
+            // (Legends) bypasses both the class match and the level requirement — purely additive.
+            if (isset($edge['class']) && ! in_array($edge['class'], $rituals, true)) {
                 if ($class !== $edge['class'] || $level < ($edge['min_level'] ?? 0)) {
                     continue;
                 }
@@ -302,6 +305,12 @@ class Router
             if (isset($edge['tx'], $edge['ty'])) {
                 $step['tx'] = $edge['tx'];
                 $step['ty'] = $edge['ty'];
+            }
+            // Teleport provenance for the expanded panel: which spell/class casts this line.
+            foreach (['spell', 'class'] as $key) {
+                if (isset($edge[$key])) {
+                    $step[$key] = $edge[$key];
+                }
             }
             $steps[] = $step;
             $node = $hop['from'];

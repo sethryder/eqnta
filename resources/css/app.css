@@ -721,6 +721,13 @@ input.nta:focus {
     line-height: 1.7;
     padding: 8px 4px 2px;
 }
+/* Teleport provenance line above the map (which spell/class casts this leg). */
+.cast-by {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #5a4ba8;
+    padding: 2px 4px 8px;
+}
 .map-key {
     font-size: 1rem;
     vertical-align: -1px;

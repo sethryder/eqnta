@@ -44,6 +44,7 @@ class RoutingController extends Controller
                     'label' => $server['label'],
                     'group' => $server['group'] ?? null,
                     'expansions' => $this->serverExpansions($server),
+                    'rituals' => $server['rituals'] ?? null,
                 ])
                 ->values(),
             'expansions' => collect(config('eqrouter.expansions'))
@@ -90,11 +91,17 @@ class RoutingController extends Controller
             'expansions' => ['nullable', 'array'],
             'expansions.*' => [Rule::in(array_keys(config('eqrouter.expansions')))],
             'class' => ['nullable', Rule::in(array_keys(config('eqrouter.classes')))],
+            'rituals' => ['nullable', 'array'],
+            'rituals.*' => [Rule::in(array_keys(config('eqrouter.classes')))],
             'level' => ['nullable', 'integer', 'min:1', 'max:'.config('eqrouter.max_level')],
             'mode' => ['nullable', Rule::in(['fastest', 'safest'])],
             'race' => ['nullable', Rule::in(array_keys(config('eqrouter.races')))],
             'deity' => ['nullable', Rule::in(array_keys(config('eqrouter.deities')))],
         ]);
+
+        // Ritual ports are only a thing on servers that declare them (Legends); ignore the param
+        // elsewhere so a stale/shared URL can't grant ports the server doesn't have.
+        $rituals = array_values(array_intersect($validated['rituals'] ?? [], $server['config']['rituals'] ?? []));
 
         $result = $this->router->find(
             $validated['from'],
@@ -107,6 +114,7 @@ class RoutingController extends Controller
             $validated['deity'] ?? null,
             $server['key'],
             $server['delta'],
+            $rituals,
         );
 
         if ($result === null) {

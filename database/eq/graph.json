@@ -5847,18 +5847,6 @@
             "tz": -7
         },
         {
-            "from": "gukbottom",
-            "to": "innothule",
-            "type": "walk",
-            "expansion": 0,
-            "x": -77,
-            "y": 140,
-            "z": -238,
-            "tx": -818,
-            "ty": 170,
-            "tz": -9
-        },
-        {
             "from": "hatesfury",
             "to": "nadox",
             "type": "walk",
@@ -7408,18 +7396,6 @@
             "tx": -946.63,
             "ty": 580.63,
             "tz": -95.78
-        },
-        {
-            "from": "hole",
-            "to": "erudnint",
-            "type": "walk",
-            "expansion": 0,
-            "x": 0,
-            "y": 0,
-            "z": 0,
-            "tx": 885,
-            "ty": 630,
-            "tz": -29
         },
         {
             "from": "jaggedpine",
@@ -15082,7 +15058,7 @@
             "to": "dranik",
             "type": "walk",
             "expansion": 8,
-            "x": -0,
+            "x": 0,
             "y": -5.9689,
             "z": -3.125
         },
@@ -17653,6 +17629,30 @@
             "to": "vortex",
             "type": "walk",
             "expansion": 32
+        },
+        {
+            "from": "hole",
+            "to": "erudnext",
+            "type": "teleport",
+            "expansion": 0
+        },
+        {
+            "from": "erudnext",
+            "to": "hole",
+            "type": "teleport",
+            "expansion": 0
+        },
+        {
+            "from": "hole",
+            "to": "neriakc",
+            "type": "teleport",
+            "expansion": 0
+        },
+        {
+            "from": "neriakc",
+            "to": "hole",
+            "type": "teleport",
+            "expansion": 0
         }
     ]
 }

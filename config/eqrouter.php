@@ -191,6 +191,11 @@ return [
             'label' => 'EverQuest Legends',
             'expansions' => [0], // Classic only — launched as base game, no expansions unlocked yet
             'deltas' => ['legends'],
+            // Legends lets you multiclass and cast "rituals": once any Druid/Wizard you own is leveled
+            // (~25), those ports are usable regardless of your active class. Listed classes get an
+            // opt-in checkbox in the UI that enables their ports at any level. ponytail: flat unlock,
+            // not per-spell — revisit if Legends gates individual rituals by level.
+            'rituals' => ['DRU', 'WIZ'],
         ],
         'frostreaver' => [
             'label' => 'Frostreaver (TLP)',

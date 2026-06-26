@@ -1,5 +1,7 @@
 {
-    "_note": "EverQuest Legends — heavily customized official server (custom zones, custom teleport network, altered stock connections). This is a PER-SERVER delta: applied at request time for the `legends` server only, layered over the base PEQ graph. It does NOT affect other servers. Populate it once beta access lands. Only the `zones`, `add`, and `remove` keys are read — every `_`-prefixed key here is ignored by the loader and exists purely as documentation/template.",
+    "_note": "EverQuest Legends — heavily customized official server (custom zones, custom teleport network, altered stock connections). This is a PER-SERVER delta: applied at request time for the `legends` server only, layered over the base PEQ graph. It does NOT affect other servers. Only the `zones`, `add`, and `remove` keys are read — every `_`-prefixed key here is ignored by the loader and exists purely as documentation/template.",
+
+    "_status": "Druid + Wizard teleport networks sourced from https://eqlwiki.com/Druid#Spells and https://eqlwiki.com/Wizard#Spells (Druid cross-checked against eqprogression.com/legends/druid-spells — identical). Legends gives both classes a fuller Classic-era port set than stock PEQ. Only gaps vs the base graph are listed below (destinations base lacks at expansion 0, or offers only at a higher level / under a later-expansion tag). Levels are the earliest single-target version (Druid 'Ring of X', Wizard 'X Gate'); group/Translocate/Zephyr variants reach the same zones at higher levels, so they add no new routing edges. Already correct in base at exp0, NOT re-added: Druid northkarana(15)/butcher(16)/steamfont(21)/feerrott(22)/lavastorm(22); Wizard northkarana(18)/gfaydark(20)/nektulos(22)/cazicthule(23)/'West Karana'=qey2hh1(23)/airplane+hateplaneb(46). Superseded base edges for added dests are all later-expansion (exp1/2/3/11/12), so they're already filtered out on Legends [0] — no `remove` needed except qrg (base Surefall is exp0 L26, dropped in favour of L15). Ritual access — any class casting these once a leveled Druid/Wizard hits 25 — is handled by the server `rituals` flag in config/eqrouter.php, which bypasses these min_levels.",
 
     "_conventions": [
         "Custom zones go in `zones` as {id, short, long}. Use ids >= 9000 to avoid colliding with real EQ/EQEmu zone ids (which top out ~885, plus the 99x instanced range). If Legends reuses a stock zone (same short), DON'T re-add it — the base graph already has it; just add/remove its edges.",
@@ -24,6 +26,38 @@
     ],
 
     "zones": [],
-    "add": [],
-    "remove": []
+    "add": [
+        { "from": "*", "to": "qrg",        "type": "teleport", "class": "DRU", "min_level": 15, "expansion": 0, "spell": "Ring of Surefall Glade" },
+        { "from": "*", "to": "tox",        "type": "teleport", "class": "DRU", "min_level": 17, "expansion": 0, "spell": "Ring of Toxxulia" },
+        { "from": "*", "to": "commons",    "type": "teleport", "class": "DRU", "min_level": 17, "expansion": 0, "spell": "Ring of West Commons" },
+        { "from": "*", "to": "sro",        "type": "teleport", "class": "DRU", "min_level": 20, "expansion": 0, "spell": "Ring of South Ro" },
+        { "from": "*", "to": "stonebrunt", "type": "teleport", "class": "DRU", "min_level": 20, "expansion": 0, "spell": "Ring of Stonebrunt" },
+        { "from": "*", "to": "misty",      "type": "teleport", "class": "DRU", "min_level": 25, "expansion": 0, "spell": "Ring of Misty Thicket" },
+        { "from": "*", "to": "eastkarana", "type": "evac",     "class": "DRU", "min_level": 26, "expansion": 0, "spell": "Succor: East Karana" },
+
+        { "from": "*", "to": "tox",           "type": "teleport", "class": "WIZ", "min_level": 19, "expansion": 0, "spell": "Toxxulia Gate" },
+        { "from": "*", "to": "grimling",      "type": "teleport", "class": "WIZ", "min_level": 20, "expansion": 0, "spell": "Grimling Gate" },
+        { "from": "*", "to": "stonebrunt",    "type": "teleport", "class": "WIZ", "min_level": 21, "expansion": 0, "spell": "Stonebrunt Gate" },
+        { "from": "*", "to": "commons",       "type": "teleport", "class": "WIZ", "min_level": 21, "expansion": 0, "spell": "West Commons Gate" },
+        { "from": "*", "to": "nro",           "type": "teleport", "class": "WIZ", "min_level": 22, "expansion": 0, "spell": "North Ro Gate" },
+        { "from": "*", "to": "skyfire",       "type": "evac",     "class": "WIZ", "min_level": 36, "expansion": 0, "spell": "Tishan's Relocation" },
+        { "from": "*", "to": "emeraldjungle", "type": "evac",     "class": "WIZ", "min_level": 37, "expansion": 0, "spell": "Markar's Relocation" },
+        { "from": "*", "to": "sro",           "type": "evac",     "class": "WIZ", "min_level": 38, "expansion": 0, "spell": "Evacuate: South Ro" },
+
+        { "from": "lavastorm",  "to": "soltemple",  "type": "walk", "expansion": 0 },
+        { "from": "soltemple",  "to": "lavastorm",  "type": "walk", "expansion": 0 },
+        { "from": "paineel",    "to": "warrens",    "type": "walk", "expansion": 0 },
+        { "from": "warrens",    "to": "paineel",    "type": "walk", "expansion": 0 },
+        { "from": "warrens",    "to": "stonebrunt", "type": "walk", "expansion": 0 },
+        { "from": "stonebrunt", "to": "warrens",    "type": "walk", "expansion": 0 }
+    ],
+    "_add_walk_why": "Walk lines confirmed on Legends by eqlwiki zone pages but tagged later-expansion in base (so filtered out on Legends [0]): lavastorm<->soltemple (base exp1), paineel<->warrens + warrens<->stonebrunt (base exp2). Re-added at exp0. This also wires the Odus chain tox-paineel-warrens-stonebrunt and makes Temple of Solusek Ro reachable.",
+    "_remove_why": "1) qrg teleport DRU: base 'Circle of Surefall Glade' is L26; Legends gives Surefall at L15 (added above), drop the stock one. 2) jaggedpine + nedaria: Jaggedpine Forest / Nedaria's Landing are tagged exp0 in base but are NOT Legends zones (absent from eqlwiki's 118-zone list AND Sivax's classic map) — drop every edge touching them so routing can't path through phantom zones.",
+    "remove": [
+        { "from": "*", "to": "qrg", "type": "teleport", "class": "DRU" },
+        { "from": "jaggedpine" },
+        { "to": "jaggedpine" },
+        { "from": "nedaria" },
+        { "to": "nedaria" }
+    ]
 }

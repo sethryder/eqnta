@@ -38,6 +38,7 @@ Alpine.data('planner', () => ({
     race: '',
     deity: '',
     level: 60,
+    rituals: [], // class codes with ritual port access (Legends only); independent of `klass`
     mode: 'fastest', // 'fastest' | 'safest'
     server: 'live',
     defaultServer: 'live',
@@ -90,6 +91,8 @@ Alpine.data('planner', () => ({
         if (['fastest', 'safest'].includes(url.get('mode'))) { this.mode = url.get('mode'); }
         const lvl = Number(url.get('level'));
         if (lvl >= 1 && lvl <= 60) { this.level = lvl; }
+        const allowedRituals = this.serverConfig()?.rituals || [];
+        this.rituals = (url.get('rituals') || '').split(',').filter((c) => allowedRituals.includes(c));
 
         await this.loadZones();
         // From/to come from the URL when valid for this world; otherwise leave blank so a first-time
@@ -103,16 +106,25 @@ Alpine.data('planner', () => ({
         // Recompute when any routing input changes; reload the zone list when the world changes.
         this.$watch('server', async () => {
             this.customExp = Object.fromEntries((this.serverConfig()?.expansions || []).map((id) => [id, true]));
+            this.rituals = this.rituals.filter((c) => (this.serverConfig()?.rituals || []).includes(c));
             await this.loadZones();
             this.compute();
         });
         ['from', 'to', 'klass', 'race', 'deity', 'level', 'mode'].forEach((k) => this.$watch(k, () => this.compute()));
+        this.$watch('rituals', () => this.compute());
         this.$watch('customExp', () => { if (this.server === 'tlp') { this.loadZones().then(() => this.compute()); } }, { deep: true });
     },
 
     // --- derived ---
     serverConfig() {
         return this.servers.find((s) => s.key === this.server);
+    },
+    // Classes the current server lets you cast as "rituals", labelled from the class meta. Empty on
+    // servers without the mechanic — the ritual checkboxes only render when this is non-empty.
+    ritualClasses() {
+        return (this.serverConfig()?.rituals || [])
+            .map((code) => this.classes.find((c) => c.code === code))
+            .filter(Boolean);
     },
     enabledExpansionIds() {
         if (this.server === 'tlp') {
@@ -168,6 +180,7 @@ Alpine.data('planner', () => ({
         if (!this.route || !this.route.steps.length) { return []; }
         const steps = this.route.steps;
         const color = (i) => (MODES[steps[i]?.type] || MODES.walk).color;
+        const classLabel = (code) => this.classes.find((c) => c.code === code)?.label || code;
         const list = [{
             label: this.zoneLabel(this.from), kind: 'depart',
             incoming: null, outgoing: color(0), color: color(0),
@@ -181,6 +194,10 @@ Alpine.data('planner', () => ({
                 lineName: `${m.name} line`,
                 incoming: color(i), outgoing: i + 1 < steps.length ? color(i + 1) : null,
                 color: m.color, icon: svgIcon(step.type), kos: !!step.kos, danger: step.danger || null,
+                // Which spell/class casts a teleport leg — shown in the expanded panel, not the spine.
+                castBy: step.type === 'teleport'
+                    ? [step.class && classLabel(step.class), step.spell].filter(Boolean).join(' · ')
+                    : null,
                 isLast: i === steps.length - 1,
             });
         });
@@ -422,6 +439,7 @@ Alpine.data('planner', () => ({
         if (this.race) { p.set('race', this.race); }
         if (this.deity) { p.set('deity', this.deity); }
         if (this.level !== 60) { p.set('level', this.level); }
+        if (this.rituals.length) { p.set('rituals', this.rituals.join(',')); }
         if (this.mode !== 'fastest') { p.set('mode', this.mode); }
         const qs = p.toString();
         history.replaceState(null, '', qs ? `?${qs}` : location.pathname);
@@ -447,6 +465,7 @@ Alpine.data('planner', () => ({
             if (this.klass) { params.set('class', this.klass); }
             if (this.race) { params.set('race', this.race); }
             if (this.deity) { params.set('deity', this.deity); }
+            this.rituals.forEach((c) => params.append('rituals[]', c));
             if (this.server === 'tlp') { this.enabledExpansionIds().forEach((id) => params.append('expansions[]', id)); }
 
             const res = await fetch(`/api/route?${params}`);
