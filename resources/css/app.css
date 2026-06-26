@@ -853,6 +853,15 @@ input.nta:focus {
     max-height: calc(100vh - 120px);
     max-height: calc(100dvh - 120px);
 }
+/* ponytail: on a narrow screen the era pill sits near the left edge, so right:0 throws the
+   panel offscreen left. Flip the anchor to open rightward instead. width:min(340,100vw-24)
+   keeps it inside the viewport. Back to right:0 once there's room. */
+@media (max-width: 420px) {
+    .popover {
+        right: auto;
+        left: 0;
+    }
+}
 .tab-bar {
     flex: none;
 }

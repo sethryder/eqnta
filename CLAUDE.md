@@ -161,3 +161,8 @@ This project has domain-specific skills available in `**/skills/**`. You MUST ac
 - To filter on a particular test name: `php artisan test --compact --filter=testName` (recommended after making a change to a related file).
 
 </laravel-boost-guidelines>
+
+# Deployment
+
+- **Purge the Cloudflare cache after every deploy.** The homepage (`/`) is served stateless and edge-cacheable (`s-maxage=86400` — see `routes/web.php`), so Cloudflare can hold the HTML for up to 24h. A deploy changes the hashed asset URLs in that HTML, so without a purge the edge keeps serving old HTML that references deleted `public/build` assets (browsers are safe — they revalidate). Use "Purge Everything" or wire a `cf` purge into the deploy.
+- Edge HTML caching requires a Cloudflare **Cache Rule** for `eqnta.com/` (Eligible for cache, Edge TTL = respect origin `cache-control`). CF does not cache `text/html` by default. Verify with `curl -sI https://eqnta.com/`: no `set-cookie`, `cache-control: public`, and `cf-cache-status: HIT` on a second hit.
