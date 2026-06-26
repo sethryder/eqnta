@@ -171,6 +171,11 @@ return [
     // Deltas are file names (without .json) under deltas_path, applied at request time over the base
     // graph; missing files are ignored, so a profile can be declared before its data exists.
     // Add a server by adding an entry here — no code changes.
+    //
+    // For time-locked progression (TLP) servers, give `unlocks` instead of `expansions`: a map of
+    // expansion ordinal → unlock date (Y-m-d). The enabled set is computed per request from today's
+    // date — Classic (0) is always on, and each expansion auto-enables once its date passes. No
+    // manual upkeep as new expansions unlock. (See RoutingController::serverExpansions.)
     'servers' => [
         'live' => [
             'label' => 'Live',
@@ -186,6 +191,42 @@ return [
             'label' => 'EverQuest Legends',
             'expansions' => [0], // Classic only — launched as base game, no expansions unlocked yet
             'deltas' => ['legends'],
+        ],
+        'frostreaver' => [
+            'label' => 'Frostreaver (TLP)',
+            // Time-locked schedule: ordinal → unlock date. Classic (0) is always on; the rest enable
+            // automatically as their date passes (RoK+SoV share a date, etc. — paired unlocks).
+            'unlocks' => [
+                1 => '2026-05-27', 2 => '2026-05-27',   // Ruins of Kunark + Scars of Velious
+                3 => '2026-10-01',                       // Shadows of Luclin
+                4 => '2027-02-04', 5 => '2027-02-04',   // Planes of Power + Legacy of Ykesha
+                6 => '2027-04-01',                       // Lost Dungeons of Norrath
+                7 => '2027-04-29',                       // Gates of Discord
+                8 => '2027-06-24', 9 => '2027-06-24',   // Omens of War + Dragons of Norrath
+                10 => '2027-08-19', 11 => '2027-08-19', // Depths of Darkhollow + Prophecy of Ro
+                12 => '2027-10-14',                      // The Serpent's Spine
+                13 => '2027-12-09',                      // The Buried Sea
+                14 => '2028-02-03',                      // Secrets of Faydwer
+                15 => '2028-03-30',                      // Seeds of Destruction
+                16 => '2028-05-25',                      // Underfoot
+                17 => '2028-07-20',                      // House of Thule
+                18 => '2028-09-14',                      // Veil of Alaris
+                19 => '2028-11-09',                      // Rain of Fear
+                20 => '2029-01-04',                      // Call of the Forsaken
+                21 => '2029-03-01',                      // The Darkened Sea
+                22 => '2029-04-26',                      // The Broken Mirror
+                23 => '2029-06-21',                      // Empires of Kunark
+                24 => '2029-08-16',                      // Ring of Scale
+                25 => '2029-10-11',                      // The Burning Lands
+                26 => '2029-12-06',                      // Torment of Velious
+                27 => '2030-01-31',                      // Claws of Veeshan
+                28 => '2030-03-28',                      // Terror of Luclin
+                29 => '2030-05-23',                      // Night of Shadows
+                30 => '2030-07-18',                      // Laurion's Song
+                31 => '2030-09-12',                      // The Outer Brood
+                32 => '2030-11-07',                      // Shattering of Ro
+            ],
+            'deltas' => [],
         ],
         'tlp' => [
             'label' => 'TLP / Custom (choose expansions)',

@@ -42,7 +42,7 @@ class RoutingController extends Controller
                 ->map(fn (array $server, string $key) => [
                     'key' => $key,
                     'label' => $server['label'],
-                    'expansions' => $server['expansions'],
+                    'expansions' => $this->serverExpansions($server),
                 ])
                 ->values(),
             'expansions' => collect(config('eqrouter.expansions'))
@@ -264,11 +264,41 @@ class RoutingController extends Controller
             $servers[$key]['deltas'] ?? [],
         );
 
+        $config = $servers[$key];
+        $config['expansions'] = $this->serverExpansions($config);
+
         return [
             'key' => $key,
-            'config' => $servers[$key],
+            'config' => $config,
             'delta' => GraphDelta::merge(...$deltas),
         ];
+    }
+
+    /**
+     * The expansions enabled on a server right now. A static `expansions` list is returned as-is; a
+     * server with an `unlocks` schedule (ordinal → unlock date Y-m-d) is resolved against today —
+     * Classic (0) is always on, each expansion enabling once its date has passed. Returns null when
+     * the server lets the caller choose (generic TLP), preserving the existing "pick your own" path.
+     *
+     * @param  array{expansions?: list<int>|null, unlocks?: array<int, string>}  $config
+     * @return list<int>|null
+     */
+    private function serverExpansions(array $config): ?array
+    {
+        if (! isset($config['unlocks'])) {
+            return $config['expansions'] ?? null;
+        }
+
+        $today = now()->toDateString();
+        $enabled = [0]; // Classic is always available on a TLP from launch.
+        foreach ($config['unlocks'] as $ordinal => $date) {
+            if ($date <= $today) {
+                $enabled[] = (int) $ordinal;
+            }
+        }
+        sort($enabled);
+
+        return $enabled;
     }
 
     /**

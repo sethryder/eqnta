@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use Illuminate\Support\Carbon;
 use Tests\TestCase;
 
 class RoutingTest extends TestCase
@@ -12,6 +13,33 @@ class RoutingTest extends TestCase
 
         // Route against a stable fixture, not the generated database/eq/graph.json.
         config(['eqrouter.graph_path' => __DIR__.'/../Fixtures/graph.json']);
+    }
+
+    protected function tearDown(): void
+    {
+        Carbon::setTestNow(); // never leak a frozen clock into another test
+        parent::tearDown();
+    }
+
+    public function test_frostreaver_tlp_unlocks_expansions_automatically_by_date(): void
+    {
+        $expansionsOn = function (string $date): array {
+            Carbon::setTestNow($date);
+
+            return collect($this->getJson('/api/servers')->json('servers'))
+                ->firstWhere('key', 'frostreaver')['expansions'];
+        };
+
+        // Before the first unlock date: Classic only.
+        $this->assertSame([0], $expansionsOn('2026-01-01'));
+        // Ruins of Kunark + Scars of Velious unlock together on 2026-05-27 (inclusive on the day).
+        $this->assertSame([0, 1, 2], $expansionsOn('2026-05-27'));
+        // Still pre-Luclin a few months later.
+        $this->assertSame([0, 1, 2], $expansionsOn('2026-09-30'));
+        // Shadows of Luclin enables 2026-10-01.
+        $this->assertSame([0, 1, 2, 3], $expansionsOn('2026-10-01'));
+        // Long after the final unlock: everything through Shattering of Ro (no Special/99 on a TLP).
+        $this->assertSame(range(0, 32), $expansionsOn('2031-01-01'));
     }
 
     public function test_zones_endpoint_returns_seed_zones_sorted_by_long_name(): void
