@@ -3,6 +3,45 @@
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 
+/* Self-hosted fonts (latin subset, normal style), vendored from the @fontsource/oswald
+   and @fontsource/jetbrains-mono packages into public/fonts/. woff2-only — universal since ~2016.
+   To refresh: re-copy the woff2 from the node_modules/@fontsource files directories. */
+@font-face {
+    font-family: 'Oswald';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url('/fonts/oswald/oswald-latin-500-normal.woff2') format('woff2');
+}
+@font-face {
+    font-family: 'Oswald';
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url('/fonts/oswald/oswald-latin-600-normal.woff2') format('woff2');
+}
+@font-face {
+    font-family: 'Oswald';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('/fonts/oswald/oswald-latin-700-normal.woff2') format('woff2');
+}
+@font-face {
+    font-family: 'JetBrains Mono';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('/fonts/jetbrains-mono/jetbrains-mono-latin-400-normal.woff2') format('woff2');
+}
+@font-face {
+    font-family: 'JetBrains Mono';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('/fonts/jetbrains-mono/jetbrains-mono-latin-700-normal.woff2') format('woff2');
+}
+
 @theme {
     --font-sans: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
@@ -649,14 +688,16 @@ input.nta:focus {
     height: auto;
     max-height: 360px;
 }
+/* Map text renders on the always-light parchment field (.zone-map-panel), so it uses
+   fixed dark ink in both themes — the page's --tx* vars go light in dark mode and wash out here. */
 .map-note {
     font-size: 0.8125rem;
-    color: var(--tx3);
+    color: #6f6552;
     padding: 8px 4px;
 }
 .map-caption {
     font-size: 0.8125rem;
-    color: var(--tx2);
+    color: #2f2a22;
     line-height: 1.7;
     padding: 8px 4px 2px;
 }
@@ -664,9 +705,9 @@ input.nta:focus {
     font-size: 1rem;
     vertical-align: -1px;
 }
-.map-key.enter { color: #3fb950; }
-.map-key.exit { color: #e3b341; }
-.map-note-dim { color: var(--tx3); }
+.map-key.enter { color: #2f8f46; }
+.map-key.exit { color: #b07d12; }
+.map-note-dim { color: #6f6552; }
 
 /* Line guide */
 .guide-grid {

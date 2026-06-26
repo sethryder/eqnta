@@ -31,7 +31,7 @@ function svgIcon(type, stroke = '#fff') {
 
 Alpine.data('planner', () => ({
     // --- state ---
-    theme: localStorage.getItem('nta-theme') || 'dark',
+    theme: document.documentElement.dataset.theme || 'dark', // set pre-paint by the head script (saved → OS → dark)
     from: '',
     to: '',
     klass: '',

@@ -10,6 +10,8 @@
         "bake:paths": "node database/eq/tools/bake-paths.mjs"
     },
     "devDependencies": {
+        "@fontsource/jetbrains-mono": "^5.2.8",
+        "@fontsource/oswald": "^5.2.8",
         "@tailwindcss/vite": "^4.0.0",
         "concurrently": "^9.0.1",
         "laravel-vite-plugin": "^3.1",

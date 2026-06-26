@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="dark">
 <head>
+    {{-- Set theme before paint (no flash): saved choice, else OS preference, else dark. --}}
+    <script>
+        document.documentElement.dataset.theme =
+            localStorage.getItem('nta-theme')
+            || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+    </script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Norrath Transit Authority · Zone Trip Planner</title>
@@ -19,21 +25,11 @@
     <meta name="twitter:description" content="Chart the quickest trip across Norrath for your server's era. Shareable itineraries.">
     <meta name="twitter:image" content="{{ url('/og.png') }}">
 
-    <script type="application/ld+json">
-    {!! json_encode([
-        '@context' => 'https://schema.org',
-        '@type' => 'WebApplication',
-        'name' => 'Norrath Transit Authority',
-        'applicationCategory' => 'UtilitiesApplication',
-        'description' => 'Zone trip planner for EverQuest emulator servers. Routes overland runs, boats, Plane of Knowledge books, spires, and class teleports into a single itinerary.',
-        'url' => url('/'),
-        'offers' => ['@type' => 'Offer', 'price' => '0', 'priceCurrency' => 'USD'],
-    ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
-    </script>
+    {{-- JSON-LD built in the route: Blade mangles the literal "@context" key as a directive --}}
+    <script type="application/ld+json">{!! $jsonLd !!}</script>
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    @fonts
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="nta" x-data="planner" x-cloak>
