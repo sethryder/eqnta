@@ -1,0 +1,15 @@
+{
+    "_note": "Fixture for the fastest-vs-safest test. start->dest has a 1-hop overland walk and a 3-hop all-boat detour; fastest takes the walk, safest takes the boats.",
+    "zones": [
+        { "id": 1, "short": "start", "long": "Start Town" },
+        { "id": 2, "short": "isle1", "long": "First Isle" },
+        { "id": 3, "short": "isle2", "long": "Second Isle" },
+        { "id": 4, "short": "dest", "long": "Destination" }
+    ],
+    "edges": [
+        { "from": "start", "to": "dest", "type": "walk", "expansion": 0, "x": 0.0, "y": 0.0, "z": 0.0 },
+        { "from": "start", "to": "isle1", "type": "boat", "expansion": 0, "x": 0.0, "y": 0.0, "z": 0.0 },
+        { "from": "isle1", "to": "isle2", "type": "boat", "expansion": 0, "x": 0.0, "y": 0.0, "z": 0.0 },
+        { "from": "isle2", "to": "dest", "type": "boat", "expansion": 0, "x": 0.0, "y": 0.0, "z": 0.0 }
+    ]
+}

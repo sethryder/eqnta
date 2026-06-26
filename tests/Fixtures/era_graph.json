@@ -1,0 +1,13 @@
+{
+    "_note": "Fixture for zone-list-by-expansion test. luclinzone is only touched by a Luclin (exp 3) edge, so it should appear only when expansion 3 is enabled.",
+    "zones": [
+        { "id": 1, "short": "home", "long": "Home City" },
+        { "id": 2, "short": "classiczone", "long": "Classic Field" },
+        { "id": 3, "short": "luclinzone", "long": "Luclin Moon" }
+    ],
+    "edges": [
+        { "from": "home", "to": "classiczone", "type": "walk", "expansion": 0, "x": 0.0, "y": 0.0, "z": 0.0 },
+        { "from": "classiczone", "to": "home", "type": "walk", "expansion": 0, "x": 0.0, "y": 0.0, "z": 0.0 },
+        { "from": "home", "to": "luclinzone", "type": "translocate", "expansion": 3, "x": 0.0, "y": 0.0, "z": 0.0 }
+    ]
+}

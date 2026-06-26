@@ -1,0 +1,6 @@
+{
+    "_note": "Project 1999 differences from stock PEQ (Velious-era). Add P99-specific connections/teleports here, and `remove` any stock edges P99 doesn't have. Empty = P99 approximated by the PEQ graph filtered to expansions 0-2.",
+    "zones": [],
+    "add": [],
+    "remove": []
+}

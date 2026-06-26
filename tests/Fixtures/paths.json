@@ -1,0 +1,9 @@
+{
+    "blackburrow": {
+        "everfrost|qeytoqrg": { "len": 1091, "line": [[340, -95], [300, -40], [120, 60], [-16, 162]] },
+        "qeytoqrg|everfrost": { "len": 1091, "line": [[-16, 162], [120, 60], [300, -40], [340, -95]] }
+    },
+    "qeytoqrg": {
+        "qeynos2|northkarana": { "len": 1500, "line": [[0, 0], [100, 100]] }
+    }
+}

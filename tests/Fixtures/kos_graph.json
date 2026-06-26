@@ -1,0 +1,17 @@
+{
+    "_note": "Fixture for race/KOS routing. start->dest has a short 2-hop path through 'goodcity' and a longer 3-hop path avoiding it. An evil race in safest mode should detour around the KOS city; everyone else takes the short path.",
+    "zones": [
+        { "id": 1, "short": "start", "long": "Start Town" },
+        { "id": 2, "short": "goodcity", "long": "Good City" },
+        { "id": 3, "short": "mid1", "long": "Mid One" },
+        { "id": 4, "short": "mid2", "long": "Mid Two" },
+        { "id": 5, "short": "dest", "long": "Destination" }
+    ],
+    "edges": [
+        { "from": "start", "to": "goodcity", "type": "walk", "expansion": 0, "x": 0.0, "y": 0.0, "z": 0.0 },
+        { "from": "goodcity", "to": "dest", "type": "walk", "expansion": 0, "x": 0.0, "y": 0.0, "z": 0.0 },
+        { "from": "start", "to": "mid1", "type": "walk", "expansion": 0, "x": 0.0, "y": 0.0, "z": 0.0 },
+        { "from": "mid1", "to": "mid2", "type": "walk", "expansion": 0, "x": 0.0, "y": 0.0, "z": 0.0 },
+        { "from": "mid2", "to": "dest", "type": "walk", "expansion": 0, "x": 0.0, "y": 0.0, "z": 0.0 }
+    ]
+}

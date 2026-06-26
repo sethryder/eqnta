@@ -1,0 +1,6 @@
+{
+    "_note": "EverQuest Legends differences (custom official server). When it launches, add its custom zones to `zones`, custom connections/ports to `add`, and any changed/removed stock connections to `remove`. Update the server's expansion set in config/eqrouter.php if it differs from Velious-era.",
+    "zones": [],
+    "add": [],
+    "remove": []
+}

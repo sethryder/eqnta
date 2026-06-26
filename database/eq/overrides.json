@@ -1,0 +1,51 @@
+{
+    "_note": "Curated delta layer applied over the generated PEQ graph by `php artisan eq:build-graph`. Use for custom servers (e.g. EverQuest Legends) and data fixes. `zones`: custom nodes to add ({id, short, long}). `add`: edges to add. `remove`: specs that drop any generated edge matching every listed key (e.g. {\"from\":\"a\",\"to\":\"b\"} or add \"type\" to be specific).",
+    "zones": [],
+    "add": [
+        { "from": "freporte", "to": "oot", "type": "boat", "expansion": 0, "x": -750.0, "y": 50.0, "z": 0.0 },
+        { "from": "oot", "to": "freporte", "type": "boat", "expansion": 0, "x": 300.0, "y": 200.0, "z": 0.0 },
+        { "from": "oot", "to": "butcher", "type": "boat", "expansion": 0, "x": -400.0, "y": -900.0, "z": 0.0 },
+        { "from": "butcher", "to": "oot", "type": "boat", "expansion": 0, "x": 2900.0, "y": -400.0, "z": 0.0 },
+
+        { "from": "erudsxing", "to": "qeynos2", "type": "boat", "expansion": 0, "x": 1842.25, "y": -2747.89, "z": 0.0 },
+        { "from": "qeynos2", "to": "erudsxing", "type": "boat", "expansion": 0 },
+        { "from": "erudnext", "to": "erudsxing", "type": "boat", "expansion": 0, "tx": 1819.11, "ty": 4802.90, "tz": 0.0 },
+
+        { "from": "oasis", "to": "timorous", "type": "boat", "expansion": 1 },
+        { "from": "timorous", "to": "oasis", "type": "boat", "expansion": 1 }
+    ],
+    "remove": [
+        { "from": "oasis", "to": "overthere" },
+
+        { "from": "timorous", "to": "cabwest", "type": "walk" },
+        { "from": "timorous", "to": "freporte", "type": "walk" },
+        { "from": "timorous", "to": "freeporteast", "type": "walk" },
+        { "from": "timorous", "to": "halas", "type": "walk" },
+        { "from": "timorous", "to": "felwithea", "type": "walk" },
+        { "from": "timorous", "to": "gfaydark", "type": "walk" },
+        { "from": "timorous", "to": "neriakb", "type": "walk" },
+        { "from": "timorous", "to": "erudnext", "type": "walk" },
+        { "from": "timorous", "to": "oggok", "type": "walk" },
+        { "from": "timorous", "to": "grobb", "type": "walk" },
+        { "from": "timorous", "to": "rivervale", "type": "walk" },
+        { "from": "timorous", "to": "akanon", "type": "walk" },
+        { "from": "timorous", "to": "kaladima", "type": "walk" },
+
+        { "from": "neriakc", "to": "lfaydark", "type": "walk" },
+        { "from": "lfaydark", "to": "neriakc", "type": "walk" },
+        { "from": "neriakc", "to": "hole", "type": "walk" },
+        { "from": "hole", "to": "neriakc", "type": "walk" },
+        { "from": "veeshan", "to": "freporte", "type": "walk" },
+        { "from": "freporte", "to": "veeshan", "type": "walk" },
+        { "from": "veeshan", "to": "airplane", "type": "walk" },
+        { "from": "airplane", "to": "veeshan", "type": "walk" },
+        { "from": "tox", "to": "qcat", "type": "walk" },
+        { "from": "qcat", "to": "tox", "type": "walk" },
+
+        { "from": "ecommons", "to": "kithicor", "type": "walk" },
+        { "from": "kithicor", "to": "ecommons", "type": "walk" },
+
+        { "from": "erudsxing", "to": "qeynos" },
+        { "from": "qeynos", "to": "erudsxing" }
+    ]
+}

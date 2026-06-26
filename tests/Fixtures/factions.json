@@ -1,0 +1,11 @@
+{
+    "_note": "Fixture for FactionService/KOS routing tests. goodcity has two guard factions: 900 is KOS to Iksar (race 128), 901 is KOS to Innoruuk worshippers (deity 206) and Necromancers (class 11). Used with kos_graph.json.",
+    "threshold": -750,
+    "factions": {
+        "900": { "base": 0, "mods": { "r128": -1000 } },
+        "901": { "base": 0, "mods": { "d206": -800, "c11": -400 } }
+    },
+    "zones": {
+        "goodcity": [900, 901]
+    }
+}

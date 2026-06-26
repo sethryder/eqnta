@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;}
+  :root,[data-theme="dark"]{--bg:#0a0e14;--panel:#11161f;--panel2:#0d1117;--chip:#161b22;--bd:#21262d;--bd2:#30363d;--tx:#e6edf3;--tx2:#adbac7;--tx3:#7d8590;--header:rgba(13,17,23,0.7);}
+  [data-theme="light"]{--bg:#e9edf2;--panel:#ffffff;--panel2:#f4f6f9;--chip:#eaeef4;--bd:#dce2ea;--bd2:#c4ccd8;--tx:#15191f;--tx2:#475160;--tx3:#6b7480;--header:rgba(255,255,255,0.82);}
+  body{margin:0;}
+  ::selection{background:#2f81f7;color:#fff;}
+  select option{background:var(--panel2);color:var(--tx);}
+</style>
+</helmet>
+
+<div data-theme="{{ themeAttr }}" style="min-height:100vh; background:var(--bg); background-image:radial-gradient(circle at 12% -5%, rgba(47,129,247,0.07), transparent 40%), radial-gradient(circle at 90% 110%, rgba(163,113,247,0.06), transparent 45%); font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; color:var(--tx); padding-bottom:60px;">
+
+  <!-- ===================== HEADER ===================== -->
+  <div style="display:flex; align-items:center; gap:18px; padding:18px 30px; border-bottom:1px solid var(--bd); background:var(--header); backdrop-filter:blur(6px); position:sticky; top:0; z-index:20;">
+    <div style="flex:none; width:46px; height:46px; border-radius:50%; background:var(--panel2); border:2.5px solid var(--tx); display:flex; flex-direction:column; align-items:center; justify-content:center; line-height:0.84;">
+      <span style="font-family:'Oswald',sans-serif; font-weight:700; font-size:20px; letter-spacing:0.02em;">N</span>
+      <span style="font-family:'JetBrains Mono',monospace; font-size:5.5px; letter-spacing:0.18em; color:var(--tx3); margin-top:1px;">T·A</span>
+    </div>
+    <div style="flex:1; min-width:0;">
+      <div style="font-family:'Oswald',sans-serif; font-weight:600; font-size:21px; letter-spacing:0.12em; line-height:1;">NORRATH TRANSIT AUTHORITY</div>
+      <div style="font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:0.16em; color:var(--tx3); margin-top:4px;">ZONE TRIP PLANNER · EST. 1999</div>
+    </div>
+    <div style="position:relative;">
+      <button onClick="{{ toggleRuleset }}" style="display:inline-flex; align-items:center; gap:8px; font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.12em; color:var(--tx); padding:5px 11px 5px 12px; border:1px solid var(--bd2); border-radius:20px; background:var(--panel); cursor:pointer;">
+        <span style="width:7px; height:7px; border-radius:50%; background:#3fb950;"></span>
+        {{ eraBadge }}
+        <span style="color:var(--tx3); font-size:8px;">▼</span>
+      </button>
+      <sc-if value="{{ rulesetOpen }}" hint-placeholder-val="{{ false }}">
+        <div onClick="{{ closeRuleset }}" style="position:fixed; inset:0; z-index:50;"></div>
+        <div style="position:absolute; right:0; top:42px; width:340px; background:var(--panel); border:1px solid var(--bd2); border-radius:14px; box-shadow:0 18px 44px rgba(0,0,0,0.4); z-index:60; overflow:hidden;">
+          <div style="display:flex; gap:6px; padding:8px; border-bottom:1px solid var(--bd);">
+            <button onClick="{{ setTabRuleset }}" style="{{ tabRulesetStyle }}">RULESET</button>
+            <button onClick="{{ setTabExp }}" style="{{ tabExpStyle }}">EXPANSIONS</button>
+          </div>
+
+          <sc-if value="{{ tabIsRuleset }}" hint-placeholder-val="{{ true }}">
+            <div style="padding:12px;">
+              <sc-for list="{{ rulesetOptions }}" as="r" hint-placeholder-count="3">
+                <button onClick="{{ r.select }}" style="{{ r.style }}">
+                  <span style="{{ r.dotStyle }}"></span>
+                  <span style="flex:1; text-align:left;">
+                    <span style="display:block; font-family:'Oswald',sans-serif; font-weight:600; font-size:14px; letter-spacing:0.03em; color:var(--tx);">{{ r.name }}</span>
+                    <span style="display:block; font-size:11px; color:var(--tx3); margin-top:1px;">{{ r.desc }}</span>
+                  </span>
+                  <sc-if value="{{ r.active }}" hint-placeholder-val="{{ false }}"><span style="color:#3fb950; font-size:14px;">✓</span></sc-if>
+                </button>
+              </sc-for>
+
+              <sc-if value="{{ tlpActive }}" hint-placeholder-val="{{ false }}">
+                <div style="margin-top:4px; padding:12px; border:1px solid var(--bd); border-radius:10px; background:var(--panel2);">
+                  <div style="font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:0.16em; color:var(--tx3); margin-bottom:5px;">SERVER</div>
+                  <div style="position:relative; margin-bottom:12px;">
+                    <select value="{{ tlpServerVal }}" onChange="{{ onTlpServer }}" style="width:100%; appearance:none; -webkit-appearance:none; padding:9px 28px 9px 11px; background:var(--panel); border:1px solid var(--bd2); border-radius:8px; color:var(--tx); font-size:13px; font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; cursor:pointer;">
+                      <sc-for list="{{ tlpServers }}" as="srv" hint-placeholder-count="5"><option value="{{ srv }}">{{ srv }}</option></sc-for>
+                    </select>
+                    <span style="position:absolute; right:11px; top:50%; transform:translateY(-50%); pointer-events:none; color:var(--tx3); font-size:10px;">▼</span>
+                  </div>
+                  <div style="font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:0.16em; color:var(--tx3); margin-bottom:5px;">UNLOCKED THROUGH</div>
+                  <div style="position:relative;">
+                    <select value="{{ tlpThroughVal }}" onChange="{{ onTlpThrough }}" style="width:100%; appearance:none; -webkit-appearance:none; padding:9px 28px 9px 11px; background:var(--panel); border:1px solid var(--bd2); border-radius:8px; color:var(--tx); font-size:13px; font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; cursor:pointer;">
+                      <sc-for list="{{ expSelectList }}" as="x" hint-placeholder-count="5"><option value="{{ x.id }}">{{ x.name }}</option></sc-for>
+                    </select>
+                    <span style="position:absolute; right:11px; top:50%; transform:translateY(-50%); pointer-events:none; color:var(--tx3); font-size:10px;">▼</span>
+                  </div>
+                </div>
+              </sc-if>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ tabIsExp }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:12px;">
+              <div style="font-size:11.5px; color:var(--tx3); line-height:1.45; margin-bottom:11px;">Enable the expansions your server has unlocked — sets the ruleset to <strong style="color:var(--tx2);">Custom</strong>.</div>
+              <sc-for list="{{ expList }}" as="x" hint-placeholder-count="5">
+                <button onClick="{{ x.toggle }}" style="{{ x.rowStyle }}">
+                  <span style="{{ x.boxStyle }}">{{ x.check }}</span>
+                  <span style="flex:1; text-align:left;">
+                    <span style="display:block; font-size:13.5px; color:var(--tx); font-weight:500;">{{ x.name }}</span>
+                    <span style="display:block; font-size:11px; color:var(--tx3); margin-top:1px;">{{ x.unlocks }}</span>
+                  </span>
+                </button>
+              </sc-for>
+              <div style="font-size:11px; color:var(--tx3); margin-top:6px; line-height:1.45;">Live unlocks every later expansion — Plane of Knowledge books then cover most of the world.</div>
+            </div>
+          </sc-if>
+        </div>
+      </sc-if>
+    </div>
+    <button onClick="{{ toggleTheme }}" style="display:inline-flex; align-items:center; gap:6px; font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.12em; color:var(--tx2); padding:5px 12px; border:1px solid var(--bd2); border-radius:20px; background:var(--chip); cursor:pointer;">{{ themeToggleLabel }}</button>
+  </div>
+
+  <!-- ===================== GRID ===================== -->
+  <div style="max-width:1180px; margin:0 auto; padding:26px 24px; display:grid; grid-template-columns:minmax(300px,348px) minmax(0,1fr); gap:26px; align-items:start;">
+
+    <!-- ============ PLANNER ============ -->
+    <div style="background:var(--panel); border:1px solid var(--bd); border-radius:14px; padding:22px; position:sticky; top:96px;">
+      <div style="font-family:'Oswald',sans-serif; font-weight:600; font-size:15px; letter-spacing:0.14em; color:var(--tx2); margin-bottom:18px; display:flex; align-items:center; gap:8px;">
+        <span style="width:8px; height:8px; border-radius:50%; background:#3fb950;"></span>PLAN A TRIP
+      </div>
+
+      <!-- FROM -->
+      <div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.16em; color:var(--tx3); text-transform:uppercase; margin-bottom:6px;">Departing</div>
+      <div style="position:relative; margin-bottom:8px;">
+        <select value="{{ fromVal }}" onChange="{{ onFrom }}" style="width:100%; appearance:none; -webkit-appearance:none; padding:11px 34px 11px 13px; background:var(--panel2); border:1px solid var(--bd2); border-radius:9px; color:var(--tx); font-size:14.5px; font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; cursor:pointer;">
+          <sc-for list="{{ zoneGroups }}" as="g" hint-placeholder-count="4">
+            <optgroup label="{{ g.cont }}">
+              <sc-for list="{{ g.zones }}" as="z" hint-placeholder-count="6"><option value="{{ z.id }}">{{ z.label }}</option></sc-for>
+            </optgroup>
+          </sc-for>
+        </select>
+        <span style="position:absolute; right:13px; top:50%; transform:translateY(-50%); pointer-events:none; color:var(--tx3); font-size:11px;">▼</span>
+      </div>
+
+      <!-- SWAP -->
+      <div style="display:flex; justify-content:center; margin:2px 0;">
+        <button onClick="{{ onSwap }}" style="display:inline-flex; align-items:center; gap:7px; background:var(--chip); border:1px solid var(--bd2); color:var(--tx2); font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.12em; padding:5px 13px; border-radius:20px; cursor:pointer;">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4v16M7 4l-3 3M7 4l3 3M17 20V4M17 20l-3-3M17 20l3-3"/></svg>
+          SWAP
+        </button>
+      </div>
+
+      <!-- TO -->
+      <div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.16em; color:var(--tx3); text-transform:uppercase; margin:8px 0 6px;">Destination</div>
+      <div style="position:relative; margin-bottom:20px;">
+        <select value="{{ toVal }}" onChange="{{ onTo }}" style="width:100%; appearance:none; -webkit-appearance:none; padding:11px 34px 11px 13px; background:var(--panel2); border:1px solid var(--bd2); border-radius:9px; color:var(--tx); font-size:14.5px; font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; cursor:pointer;">
+          <sc-for list="{{ zoneGroups }}" as="g" hint-placeholder-count="4">
+            <optgroup label="{{ g.cont }}">
+              <sc-for list="{{ g.zones }}" as="z" hint-placeholder-count="6"><option value="{{ z.id }}">{{ z.label }}</option></sc-for>
+            </optgroup>
+          </sc-for>
+        </select>
+        <span style="position:absolute; right:13px; top:50%; transform:translateY(-50%); pointer-events:none; color:var(--tx3); font-size:11px;">▼</span>
+      </div>
+
+      <!-- TRAVELER -->
+      <div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.16em; color:var(--tx3); text-transform:uppercase; margin-bottom:6px;">Traveler</div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:20px;">
+        <div style="position:relative;">
+          <select value="{{ classVal }}" onChange="{{ onClass }}" style="width:100%; appearance:none; -webkit-appearance:none; padding:10px 28px 10px 12px; background:var(--panel2); border:1px solid var(--bd2); border-radius:9px; color:var(--tx); font-size:13.5px; font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; cursor:pointer;">
+            <sc-for list="{{ classOptions }}" as="c" hint-placeholder-count="6"><option value="{{ c.id }}">{{ c.label }}</option></sc-for>
+          </select>
+          <span style="position:absolute; right:11px; top:50%; transform:translateY(-50%); pointer-events:none; color:var(--tx3); font-size:10px;">▼</span>
+        </div>
+        <div style="position:relative;">
+          <select value="{{ raceVal }}" onChange="{{ onRace }}" style="width:100%; appearance:none; -webkit-appearance:none; padding:10px 28px 10px 12px; background:var(--panel2); border:1px solid var(--bd2); border-radius:9px; color:var(--tx); font-size:13.5px; font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; cursor:pointer;">
+            <sc-for list="{{ raceOptions }}" as="r" hint-placeholder-count="6"><option value="{{ r.id }}">{{ r.label }}</option></sc-for>
+          </select>
+          <span style="position:absolute; right:11px; top:50%; transform:translateY(-50%); pointer-events:none; color:var(--tx3); font-size:10px;">▼</span>
+        </div>
+      </div>
+      <!-- MODE -->
+      <div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.16em; color:var(--tx3); text-transform:uppercase; margin-bottom:6px;">Routing priority</div>
+      <div style="display:flex; border:1px solid var(--bd2); border-radius:9px; overflow:hidden; margin-bottom:6px;">
+        <button onClick="{{ setFast }}" style="{{ fastBtnStyle }}">FASTEST</button>
+        <button onClick="{{ setSafe }}" style="{{ safeBtnStyle }}">SAFEST</button>
+      </div>
+      <div style="font-size:12px; color:var(--tx3); line-height:1.45;">{{ modeHint }}</div>
+    </div>
+
+    <!-- ============ RESULTS ============ -->
+    <div>
+      <!-- result header -->
+      <div style="margin-bottom:18px;">
+        <div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.2em; color:var(--tx3);">ITINERARY</div>
+        <div style="display:flex; align-items:center; flex-wrap:wrap; gap:10px; margin-top:8px;">
+          <span style="font-family:'Oswald',sans-serif; font-weight:600; font-size:25px; letter-spacing:0.01em;">{{ fromLabel }}</span>
+          <span style="color:var(--tx3);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </span>
+          <span style="font-family:'Oswald',sans-serif; font-weight:600; font-size:25px; letter-spacing:0.01em;">{{ toLabel }}</span>
+        </div>
+      </div>
+
+      <!-- same zone -->
+      <sc-if value="{{ sameZone }}" hint-placeholder-val="{{ false }}">
+        <div style="background:var(--panel); border:1px solid var(--bd); border-radius:14px; padding:28px; text-align:center; color:var(--tx3); font-size:15px;">You're already there. Pick a different destination.</div>
+      </sc-if>
+
+      <!-- no route -->
+      <sc-if value="{{ noRoute }}" hint-placeholder-val="{{ false }}">
+        <div style="background:var(--panel); border:1px solid var(--bd); border-radius:14px; padding:28px; text-align:center; color:#c9737a; font-size:15px;">No charted route between these zones in this era.</div>
+      </sc-if>
+
+      <!-- PRIMARY SERVICE -->
+      <sc-if value="{{ hasRoute }}" hint-placeholder-val="{{ true }}">
+        <div style="background:var(--panel); border:1px solid var(--bd); border-radius:14px; overflow:hidden;">
+          <div style="padding:18px 22px; border-bottom:1px solid var(--bd); display:flex; align-items:center; flex-wrap:wrap; gap:12px;">
+            <span style="{{ primaryTagStyle }}">{{ primaryService }}</span>
+            <div style="display:flex; gap:7px; margin-left:auto; flex-wrap:wrap;">
+              <span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--tx2); padding:4px 10px; border-radius:20px; background:var(--panel2); border:1px solid var(--bd2);">{{ primaryStops }} stops</span>
+              <span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--tx2); padding:4px 10px; border-radius:20px; background:var(--panel2); border:1px solid var(--bd2);">~{{ primaryTime }} min</span>
+              <span style="{{ primaryHazStyle }}">{{ primaryHazLabel }}</span>
+            </div>
+          </div>
+          <div style="padding:22px 22px 8px;">
+            <sc-for list="{{ primaryStations }}" as="st" hint-placeholder-count="3">
+              <div style="display:flex; gap:15px;">
+                <div style="flex:none; width:30px; display:flex; flex-direction:column; align-items:center;">
+                  <div style="{{ st.topBarStyle }}"></div>
+                  <div style="{{ st.bulletStyle }}">{{ st.iconNode }}</div>
+                  <div style="{{ st.bottomBarStyle }}"></div>
+                </div>
+                <div style="flex:1; padding-bottom:20px;">
+                  <sc-if value="{{ st.origin }}" hint-placeholder-val="{{ true }}">
+                    <div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.16em; color:var(--tx3);">DEPART</div>
+                    <div style="font-family:'Oswald',sans-serif; font-weight:500; font-size:18px; margin-top:3px;">{{ st.label }}</div>
+                  </sc-if>
+                  <sc-if value="{{ st.isLeg }}" hint-placeholder-val="{{ false }}">
+                    <div style="display:flex; align-items:center; gap:9px; flex-wrap:wrap;">
+                      <span style="{{ st.lineNameStyle }}">{{ st.lineName }}</span>
+                      <sc-if value="{{ st.danger }}" hint-placeholder-val="{{ false }}"><span style="display:inline-block; font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:0.1em; color:#f85149; background:rgba(248,81,73,0.13); border:1px solid rgba(248,81,73,0.4); border-radius:20px; padding:2px 9px;">{{ st.dangerLabel }}</span></sc-if>
+                    </div>
+                    <div style="font-family:'Oswald',sans-serif; font-weight:500; font-size:18px; margin-top:4px;">{{ st.label }}</div>
+                    <sc-if value="{{ st.note }}" hint-placeholder-val="{{ false }}"><div style="font-size:13px; color:var(--tx3); margin-top:2px; line-height:1.4;">{{ st.note }}</div></sc-if>
+                  </sc-if>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ALT SERVICE -->
+      <sc-if value="{{ altExists }}" hint-placeholder-val="{{ false }}">
+        <div style="background:var(--panel2); border:1px solid var(--bd); border-radius:14px; overflow:hidden; margin-top:18px;">
+          <div style="padding:15px 22px; border-bottom:1px solid var(--bd); display:flex; align-items:center; flex-wrap:wrap; gap:12px;">
+            <div>
+              <span style="font-family:'Oswald',sans-serif; font-weight:600; font-size:14px; letter-spacing:0.1em; color:var(--tx2);">OVERLAND SERVICE</span>
+              <span style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--tx3); margin-left:8px;">no ports · group-friendly</span>
+            </div>
+            <div style="display:flex; gap:7px; margin-left:auto; flex-wrap:wrap;">
+              <span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--tx3); padding:4px 10px; border-radius:20px; background:var(--chip); border:1px solid var(--bd);">{{ altStops }} stops</span>
+              <span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--tx3); padding:4px 10px; border-radius:20px; background:var(--chip); border:1px solid var(--bd);">~{{ altTime }} min</span>
+            </div>
+          </div>
+          <div style="padding:20px 22px 6px;">
+            <sc-for list="{{ altStations }}" as="st" hint-placeholder-count="5">
+              <div style="display:flex; gap:15px;">
+                <div style="flex:none; width:30px; display:flex; flex-direction:column; align-items:center;">
+                  <div style="{{ st.topBarStyle }}"></div>
+                  <div style="{{ st.bulletStyle }}">{{ st.iconNode }}</div>
+                  <div style="{{ st.bottomBarStyle }}"></div>
+                </div>
+                <div style="flex:1; padding-bottom:18px;">
+                  <sc-if value="{{ st.origin }}" hint-placeholder-val="{{ true }}">
+                    <div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.16em; color:var(--tx3);">DEPART</div>
+                    <div style="font-family:'Oswald',sans-serif; font-weight:500; font-size:17px; margin-top:3px;">{{ st.label }}</div>
+                  </sc-if>
+                  <sc-if value="{{ st.isLeg }}" hint-placeholder-val="{{ false }}">
+                    <div style="display:flex; align-items:center; gap:9px; flex-wrap:wrap;">
+                      <span style="{{ st.lineNameStyle }}">{{ st.lineName }}</span>
+                      <sc-if value="{{ st.danger }}" hint-placeholder-val="{{ false }}"><span style="display:inline-block; font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:0.1em; color:#f85149; background:rgba(248,81,73,0.13); border:1px solid rgba(248,81,73,0.4); border-radius:20px; padding:2px 9px;">{{ st.dangerLabel }}</span></sc-if>
+                    </div>
+                    <div style="font-family:'Oswald',sans-serif; font-weight:500; font-size:17px; margin-top:4px;">{{ st.label }}</div>
+                    <sc-if value="{{ st.note }}" hint-placeholder-val="{{ false }}"><div style="font-size:13px; color:var(--tx3); margin-top:2px; line-height:1.4;">{{ st.note }}</div></sc-if>
+                  </sc-if>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- LEGEND -->
+      <sc-if value="{{ showLegend }}" hint-placeholder-val="{{ true }}">
+        <div style="margin-top:22px; padding:18px 22px; background:var(--panel2); border:1px solid var(--bd); border-radius:14px;">
+          <div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.18em; color:var(--tx3); margin-bottom:14px;">LINE GUIDE</div>
+          <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:13px;">
+            <sc-for list="{{ legendItems }}" as="L" hint-placeholder-count="8">
+              <div style="display:flex; align-items:center; gap:10px;">
+                <span style="{{ L.dotStyle }}">{{ L.node }}</span>
+                <div style="line-height:1.2;">
+                  <div style="{{ L.nameStyle }}">{{ L.name }}</div>
+                  <sc-if value="{{ L.tag }}" hint-placeholder-val="{{ false }}"><div style="font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:0.1em; color:var(--tx3); margin-top:1px;">{{ L.tag }}</div></sc-if>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1180,&quot;height&quot;:860},&quot;defaultMode&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;fastest&quot;,&quot;safest&quot;],&quot;default&quot;:&quot;safest&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;showLegend&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
+class Component extends DCLogic {
+  state = { from:'nqeynos', to:'gfay', klass:'druid', race:'wood_elf', era:'classic', mode:null, theme:'dark', rulesetOpen:false, ruleset:'p99', rulesetTab:'ruleset', tlpServer:'Teek', tlpThrough:'luclin', customExp:{classic:true,kunark:true,velious:true} };
+
+  componentDidMount(){ let t='dark'; try{ const v=localStorage.getItem('nta-theme'); if(v==='light'||v==='dark') t=v; }catch(e){} this.applyBodyBg(t); if(t!==this.state.theme) this.setState({theme:t}); }
+  applyBodyBg(t){ try{ document.body.style.background = (t==='light') ? '#e9edf2' : '#0a0e14'; }catch(e){} }
+  toggleTheme = () => { const t = (this.state.theme==='light') ? 'dark' : 'light'; try{ localStorage.setItem('nta-theme', t); }catch(e){} this.applyBodyBg(t); this.setState({theme:t}); };
+
+  // ---------- DATA ----------
+  ZONES = {
+    nqeynos:{label:'North Qeynos',cont:'Antonica'}, sqeynos:{label:'South Qeynos',cont:'Antonica'},
+    qeynos_hills:{label:'Qeynos Hills',cont:'Antonica'}, surefall:{label:'Surefall Glade',cont:'Antonica'},
+    blackburrow:{label:'Blackburrow',cont:'Antonica'}, everfrost:{label:'Everfrost Peaks',cont:'Antonica'},
+    halas:{label:'Halas',cont:'Antonica'}, permafrost:{label:'Permafrost Caverns',cont:'Antonica'},
+    wkaranas:{label:'Western Karana',cont:'Antonica'}, nkaranas:{label:'Northern Karana',cont:'Antonica'},
+    ekaranas:{label:'Eastern Karana',cont:'Antonica'}, skaranas:{label:'Southern Karana',cont:'Antonica'},
+    lakerathe:{label:'Lake Rathetear',cont:'Antonica'}, rathe:{label:'Rathe Mountains',cont:'Antonica'},
+    feerrott:{label:'The Feerrott',cont:'Antonica'}, oggok:{label:'Oggok',cont:'Antonica'},
+    cazic:{label:'Cazic-Thule',cont:'Antonica'}, innothule:{label:'Innothule Swamp',cont:'Antonica'},
+    grobb:{label:'Grobb',cont:'Antonica'}, sro:{label:'South Ro',cont:'Antonica'},
+    oasis:{label:'Oasis of Marr',cont:'Antonica'}, nro:{label:'North Ro',cont:'Antonica'},
+    wcommons:{label:'West Commonlands',cont:'Antonica'}, ecommons:{label:'East Commonlands',cont:'Antonica'},
+    befallen:{label:'Befallen',cont:'Antonica'}, wfreeport:{label:'West Freeport',cont:'Antonica'},
+    nfreeport:{label:'North Freeport',cont:'Antonica'}, efreeport:{label:'East Freeport',cont:'Antonica'},
+    highpass:{label:'Highpass Hold',cont:'Antonica'}, kithicor:{label:'Kithicor Forest',cont:'Antonica'},
+    nektulos:{label:'Nektulos Forest',cont:'Antonica'}, lavastorm:{label:'Lavastorm Mountains',cont:'Antonica'},
+    erudscross:{label:"Erud's Crossing",cont:'At Sea'}, oot:{label:'Ocean of Tears',cont:'At Sea'},
+    erudin:{label:'Erudin',cont:'Odus'}, toxxulia:{label:'Toxxulia Forest',cont:'Odus'}, kerra:{label:'Kerra Isle',cont:'Odus'},
+    butcherblock:{label:'Butcherblock Mountains',cont:'Faydwer'}, gfay:{label:'Greater Faydark · Kelethin',cont:'Faydwer'},
+    lfay:{label:'Lesser Faydark',cont:'Faydwer'}, felwithe:{label:'Northern Felwithe',cont:'Faydwer'},
+    kaladim:{label:'Kaladim',cont:'Faydwer'}, crushbone:{label:'Crushbone',cont:'Faydwer'},
+    steamfont:{label:'Steamfont Mountains',cont:'Faydwer'}, akanon:{label:"Ak'Anon",cont:'Faydwer'},
+    mistmoore:{label:'Castle Mistmoore',cont:'Faydwer'}, unrest:{label:'Estate of Unrest',cont:'Faydwer'}
+  };
+
+  // [a, b, mode, time, danger, note, hazardLabel]
+  EDGES = [
+    ['nqeynos','sqeynos','run',1], ['nqeynos','qeynos_hills','run',2], ['sqeynos','qeynos_hills','run',1],
+    ['qeynos_hills','surefall','run',1], ['qeynos_hills','blackburrow','run',2], ['blackburrow','everfrost','run',3],
+    ['everfrost','halas','run',2], ['everfrost','permafrost','run',1], ['qeynos_hills','wkaranas','run',3],
+    ['wkaranas','nkaranas','run',3], ['wkaranas','ekaranas','run',4], ['nkaranas','ekaranas','run',3],
+    ['nkaranas','skaranas','run',3], ['skaranas','lakerathe','run',2], ['lakerathe','rathe','run',2],
+    ['rathe','feerrott','run',3], ['feerrott','oggok','run',1], ['feerrott','cazic','run',1],
+    ['feerrott','innothule','run',3], ['innothule','grobb','run',1], ['innothule','sro','run',3],
+    ['sro','oasis','run',2], ['oasis','nro','run',2], ['nro','wcommons','run',3],
+    ['wcommons','wfreeport','run',2], ['wfreeport','nfreeport','run',1], ['nfreeport','efreeport','run',1],
+    ['wcommons','ecommons','run',3], ['ecommons','befallen','run',1], ['ekaranas','highpass','run',2],
+    ['highpass','kithicor','run',2,3,'Cross only in daylight — undead at night.','DEADLY AFTER DARK'],
+    ['kithicor','ecommons','run',2,3,'The undead army roams Kithicor after dusk.','DEADLY AFTER DARK'],
+    ['ecommons','nektulos','run',3], ['nektulos','lavastorm','run',3],
+    ['efreeport','oot','boat',5,0,'Board the ferry — stay aboard until it docks.'],
+    ['oot','butcherblock','boat',6,0,'Cross the Ocean of Tears — ~1 min sail.'],
+    ['oot','kerra','boat',4,0,'Ferry stop at Kerra Isle.'],
+    ['nqeynos','erudscross','boat',6,0,'Catch the Erudin ferry from the Qeynos docks.'],
+    ['erudscross','erudin','boat',5,0,'Final leg of the Erudin ferry.'],
+    ['erudin','toxxulia','run',2], ['butcherblock','gfay','run',3], ['butcherblock','kaladim','run',2],
+    ['gfay','lfay','run',3], ['gfay','felwithe','run',2], ['gfay','crushbone','run',3], ['gfay','steamfont','run',3],
+    ['steamfont','akanon','run',2], ['lfay','mistmoore','run',2], ['lfay','unrest','run',2]
+  ];
+
+  MODES = {
+    run:{code:'R',color:'#3fb950',name:'Overland Line'},
+    boat:{code:'F',color:'#2f81f7',name:'Ferry Line'},
+    druid:{code:'D',color:'#a371f7',name:'Druid Grove Line'},
+    wizard:{code:'W',color:'#e668c4',name:'Wizard Arcane Line'},
+    translocator:{code:'T',color:'#2bb4a6',name:'Translocator'},
+    gate:{code:'G',color:'#f778ba',name:'Gate / Clicky'},
+    spire:{code:'S',color:'#58a6ff',name:'Spire Line'},
+    pop:{code:'P',color:'#e3b341',name:'Plane Book'}
+  };
+
+  PORTS = {
+    druid:[{to:'nkaranas',spell:'Ring of Karana'},{to:'gfay',spell:'Teleport: Greater Faydark'},{to:'toxxulia',spell:'Teleport: Toxxulia'},{to:'nro',spell:'Teleport: North Ro'},{to:'surefall',spell:'Teleport: Surefall Glade'}],
+    wizard:[{to:'nkaranas',spell:'Teleport: North Karana'},{to:'gfay',spell:'Teleport: Greater Faydark'},{to:'toxxulia',spell:'Teleport: Toxxulia'},{to:'nro',spell:'Teleport: North Ro'},{to:'wcommons',spell:'Teleport: West Commonlands'}]
+  };
+
+  GOOD_CITIES = new Set(['nqeynos','sqeynos','surefall','halas','felwithe','kaladim','erudin','gfay']);
+  EVIL_CITIES = new Set(['grobb','oggok','cazic']);
+  RACE_ALIGN = { human:'neutral', barbarian:'good', erudite:'good', wood_elf:'good', high_elf:'good', half_elf:'neutral', dwarf:'good', halfling:'good', gnome:'good', dark_elf:'evil', troll:'evil', ogre:'evil', iksar:'evil' };
+
+  CLASS_LIST = [['warrior','Warrior'],['cleric','Cleric'],['paladin','Paladin'],['ranger','Ranger'],['shadowknight','Shadow Knight'],['druid','Druid ✦'],['monk','Monk'],['bard','Bard'],['rogue','Rogue'],['shaman','Shaman'],['necromancer','Necromancer'],['wizard','Wizard ✦'],['magician','Magician'],['enchanter','Enchanter']];
+  RACE_LIST = [['human','Human'],['barbarian','Barbarian'],['erudite','Erudite'],['wood_elf','Wood Elf'],['high_elf','High Elf'],['half_elf','Half Elf'],['dark_elf','Dark Elf'],['dwarf','Dwarf'],['halfling','Halfling'],['gnome','Gnome'],['troll','Troll'],['ogre','Ogre'],['iksar','Iksar']];
+  ERA_LIST = [['classic','Era · Classic'],['kunark','Era · Kunark'],['velious','Era · Velious'],['pop','Era · Planes of Power'],['live','Era · Live']];
+
+  EXPS = [
+    {id:'classic', short:'Classic', name:'Classic', year:1999, unlocks:'Boats, Druid & Wizard ports'},
+    {id:'kunark', short:'Kunark', name:'Ruins of Kunark', year:2000, unlocks:'Kunark continent & ports'},
+    {id:'velious', short:'Velious', name:'Scars of Velious', year:2000, unlocks:'Velious zones, Wizard/Druid ports'},
+    {id:'luclin', short:'Luclin', name:'Shadows of Luclin', year:2001, unlocks:'The Nexus, spires & translocators'},
+    {id:'pop', short:'PoP', name:'Planes of Power', year:2002, unlocks:'Plane of Knowledge books'}
+  ];
+  TLP_SERVERS = ['Teek','Oakwynd','Yelinak','Tormax','Vaniki','Mischief'];
+
+  enabledExpIds(s){
+    if(s.ruleset==='p99') return ['classic','kunark','velious'];
+    if(s.ruleset==='live') return this.EXPS.map(x=>x.id);
+    if(s.ruleset==='tlp'){ const i=this.EXPS.findIndex(x=>x.id===s.tlpThrough); return this.EXPS.slice(0,(i<0?0:i)+1).map(x=>x.id); }
+    return this.EXPS.filter(x=>s.customExp && s.customExp[x.id]).map(x=>x.id);
+  }
+  toggleExp(id){
+    this.setState(st=>{
+      let base;
+      if(st.ruleset==='custom'){ base={...st.customExp}; }
+      else { base={}; this.enabledExpIds(st).forEach(e=>base[e]=true); }
+      base[id]=!base[id];
+      return { ruleset:'custom', customExp:base };
+    });
+  }
+
+  buildAdj(){
+    this.adj = {};
+    Object.keys(this.ZONES).forEach(z => this.adj[z] = []);
+    this.EDGES.forEach(e => {
+      const [a,b,mode,time,danger,note,hazard] = e;
+      this.adj[a].push({to:b,mode,time,danger:danger||0,note:note||'',hazard:hazard||''});
+      this.adj[b].push({to:a,mode,time,danger:danger||0,note:note||'',hazard:hazard||''});
+    });
+    this.groups = [];
+    ['Antonica','Faydwer','Odus','At Sea'].forEach(c => {
+      const zones = Object.keys(this.ZONES).filter(z=>this.ZONES[z].cont===c).map(z=>({id:z,label:this.ZONES[z].label})).sort((a,b)=>a.label.localeCompare(b.label));
+      this.groups.push({cont:c, zones});
+    });
+  }
+
+  isKOS(zone,race){
+    const al = this.RACE_ALIGN[race] || 'neutral';
+    if(al==='evil' && this.GOOD_CITIES.has(zone)) return true;
+    if(al==='good' && this.EVIL_CITIES.has(zone)) return true;
+    return false;
+  }
+
+  edgeCost(e,mode,race){
+    let c = e.time;
+    if(mode==='safest'){ c += (e.danger||0)*120; if(this.isKOS(e.to,race)) c += 90; }
+    return c;
+  }
+
+  dijkstra(fromId,toId,useTele,mode,race,klass){
+    const ports = useTele ? (this.PORTS[klass]||[]) : [];
+    const dist={}, prev={}, prevEdge={}, visited={};
+    Object.keys(this.ZONES).forEach(z=>dist[z]=Infinity);
+    dist[fromId]=0;
+    const pq=[fromId];
+    while(pq.length){
+      let bi=0; for(let i=1;i<pq.length;i++){ if(dist[pq[i]]<dist[pq[bi]]) bi=i; }
+      const u=pq.splice(bi,1)[0];
+      if(visited[u]) continue; visited[u]=true;
+      if(u===toId) break;
+      const neigh = this.adj[u].slice();
+      for(const p of ports){ if(p.to!==u) neigh.push({to:p.to,mode:klass,time:0.6,danger:0,note:p.spell,hazard:'',teleport:true}); }
+      for(const e of neigh){
+        const nd = dist[u] + this.edgeCost(e,mode,race);
+        if(nd < dist[e.to]){ dist[e.to]=nd; prev[e.to]=u; prevEdge[e.to]=e; if(!visited[e.to]) pq.push(e.to); }
+      }
+    }
+    if(dist[toId]===Infinity) return null;
+    const legs=[]; let cur=toId;
+    let guard=0;
+    while(cur!==fromId && guard++<200){ const e=prevEdge[cur]; legs.unshift({...e,from:prev[cur],to:cur}); cur=prev[cur]; }
+    return legs;
+  }
+
+  icon(mode,size,color){
+    const sw = mode==='run' ? 2.6 : 2.2;
+    const p = d => React.createElement('path',{d,key:d});
+    let kids;
+    switch(mode){
+      case 'run': kids=[p('M7 4l6 8-6 8'),p('M13 4l6 8-6 8')]; break;
+      case 'boat': kids=[p('M4 14h16l-2.2 5H6.2z'),p('M12 3v8'),p('M12 5.5l5 4')]; break;
+      case 'druid': case 'wizard': kids=[React.createElement('circle',{cx:12,cy:12,r:3.3,key:'c'}),p('M12 3.2v2.6M12 18.2v2.6M3.2 12h2.6M18.2 12h2.6M6.2 6.2l1.8 1.8M16 16l1.8 1.8M17.8 6.2l-1.8 1.8M6.2 17.8l1.8-1.8')]; break;
+      case 'gate': kids=[React.createElement('circle',{cx:12,cy:12,r:8,key:'c'}),React.createElement('circle',{cx:12,cy:12,r:2.6,key:'c2'})]; break;
+      case 'translocator': kids=[p('M12 3l9 9-9 9-9-9z')]; break;
+      case 'spire': kids=[p('M12 3l7 18H5z')]; break;
+      case 'pop': kids=[React.createElement('rect',{x:4,y:4,width:16,height:16,rx:1,key:'r'}),p('M12 4v16')]; break;
+      default: kids=[p('M7 4l6 8-6 8'),p('M13 4l6 8-6 8')];
+    }
+    return React.createElement('svg',{width:size,height:size,viewBox:'0 0 24 24',fill:'none',stroke:color,strokeWidth:sw,strokeLinecap:'round',strokeLinejoin:'round'},kids);
+  }
+
+  makeStations(legs,fromId,race){
+    const M=this.MODES, out=[];
+    if(!legs || !legs.length) return out;
+    const firstColor = M[legs[0].mode].color;
+    out.push({
+      origin:true, isLeg:false, label:this.ZONES[fromId].label, iconNode:null,
+      topBarStyle:{flex:1,width:'6px',background:'transparent',minHeight:'12px'},
+      bottomBarStyle:{flex:1,width:'6px',background:firstColor,minHeight:'12px'},
+      bulletStyle:{flexShrink:0,width:'26px',height:'26px',borderRadius:'50%',background:'var(--panel2)',border:'3px solid '+firstColor,display:'flex',alignItems:'center',justifyContent:'center'}
+    });
+    legs.forEach((leg,i)=>{
+      const m=M[leg.mode], color=m.color, isLast=i===legs.length-1;
+      const nextColor = isLast ? 'transparent' : M[legs[i+1].mode].color;
+      const kos = this.isKOS(leg.to,race);
+      const danger = (leg.danger>0) || kos;
+      let note = leg.note || '';
+      if(!note && leg.mode==='run') note='';
+      out.push({
+        origin:false, isLeg:true, terminus:isLast,
+        label:this.ZONES[leg.to].label, lineName:m.name, color, note,
+        iconNode:this.icon(leg.mode,15,'#fff'),
+        danger, dangerLabel: leg.danger>0 ? ('⚠ '+(leg.hazard||'HAZARD')) : ('⚠ KOS · '+this.ZONES[leg.to].label),
+        lineNameStyle:{color, fontFamily:"'JetBrains Mono',monospace", fontSize:'10px', letterSpacing:'0.16em', textTransform:'uppercase', fontWeight:700},
+        topBarStyle:{flex:1,width:'6px',background:color,minHeight:'12px'},
+        bottomBarStyle:{flex:1,width:'6px',background:nextColor,minHeight:'12px'},
+        bulletStyle:{flexShrink:0,width:'26px',height:'26px',borderRadius:'50%',background:color,display:'flex',alignItems:'center',justifyContent:'center',boxShadow: isLast ? '0 0 0 4px '+color+'33' : 'none'}
+      });
+    });
+    return out;
+  }
+
+  summarize(legs,race){
+    return {
+      stops: legs.length,
+      time: Math.max(1,Math.round(legs.reduce((a,l)=>a+l.time,0))),
+      hazards: legs.filter(l => l.danger>0 || this.isKOS(l.to,race)).length
+    };
+  }
+
+  renderVals(){
+    if(!this.adj) this.buildAdj();
+    const s=this.state;
+    const mode = s.mode || this.props.defaultMode || 'safest';
+    const race = s.race, klass = s.klass, from=s.from, to=s.to;
+    const hasTele = !!this.PORTS[klass];
+    const sameZone = from===to;
+    const primaryLegs = sameZone ? [] : this.dijkstra(from,to,hasTele,mode,race,klass);
+    const noRoute = !sameZone && !primaryLegs;
+    const usedTele = !!(primaryLegs && primaryLegs.some(l=>l.teleport));
+    let altLegs = null;
+    if(usedTele){ altLegs = this.dijkstra(from,to,false,mode,race,klass); }
+
+    const primaryStations = this.makeStations(primaryLegs||[],from,race);
+    const altStations = (altLegs && altLegs.length) ? this.makeStations(altLegs,from,race) : [];
+    const pSum = primaryLegs ? this.summarize(primaryLegs,race) : {stops:0,time:0,hazards:0};
+    const aSum = altLegs ? this.summarize(altLegs,race) : {stops:0,time:0,hazards:0};
+
+    let primaryService = 'Overland Route';
+    if(usedTele) primaryService = (klass==='druid'?'Druid Grove Express':'Wizard Arcane Express');
+    else if(primaryLegs && primaryLegs.some(l=>l.mode==='boat')) primaryService = 'Land & Sea Route';
+
+    const tagColor = usedTele ? this.MODES[klass].color : (primaryLegs && primaryLegs.some(l=>l.mode==='boat') ? '#2f81f7' : '#3fb950');
+
+    const hasHaz = pSum.hazards>0;
+
+    // ---------- ruleset / expansions ----------
+    const enabledIds = this.enabledExpIds(s);
+    const enabledSet = new Set(enabledIds);
+    const highId = this.EXPS.filter(x=>enabledSet.has(x.id)).map(x=>x.id).pop();
+    const highShort = highId ? this.EXPS.find(x=>x.id===highId).short.toUpperCase() : '—';
+    let badgeMain='P99', badgeSub=highShort;
+    if(s.ruleset==='live'){ badgeMain='LIVE'; badgeSub='ALL'; }
+    else if(s.ruleset==='tlp'){ badgeMain=s.tlpServer.toUpperCase(); }
+    else if(s.ruleset==='custom'){ badgeMain='CUSTOM'; }
+    const badgeText = badgeMain+' · '+badgeSub;
+
+    const rulesetMeta=[
+      {id:'p99', name:'Project 1999', desc:'Classic → Velious, frozen', dot:'#a371f7'},
+      {id:'live', name:'Live', desc:'Every expansion unlocked', dot:'#2f81f7'},
+      {id:'tlp', name:'Time-Locked Progression', desc:'Pick a server & unlock point', dot:'#3fb950'}
+    ];
+    const rowBtnBase={width:'100%',display:'flex',alignItems:'center',gap:'11px',padding:'11px 12px',borderRadius:'10px',cursor:'pointer',marginBottom:'6px'};
+    const rulesetOptions=rulesetMeta.map(r=>({
+      name:r.name, desc:r.desc, active:s.ruleset===r.id,
+      select:()=>this.setState({ruleset:r.id}),
+      dotStyle:{flexShrink:0,width:'10px',height:'10px',borderRadius:'50%',background:r.dot, boxShadow: s.ruleset===r.id ? '0 0 0 3px '+r.dot+'44':'none'},
+      style:{...rowBtnBase, border: s.ruleset===r.id ? '1px solid '+r.dot : '1px solid var(--bd)', background: s.ruleset===r.id ? 'var(--chip)':'var(--panel2)'}
+    }));
+
+    const boxBase={flexShrink:0,width:'20px',height:'20px',borderRadius:'5px',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'12px',fontWeight:700};
+    const expList=this.EXPS.map(x=>{
+      const on=enabledSet.has(x.id);
+      return { name:x.name+'  ·  '+x.year, unlocks:x.unlocks, check: on?'✓':'',
+        toggle:()=>this.toggleExp(x.id),
+        boxStyle:{...boxBase, background: on?'#3fb950':'transparent', color:'#08130b', border: on?'1px solid #3fb950':'1px solid var(--bd2)'},
+        rowStyle:{width:'100%',display:'flex',alignItems:'center',gap:'11px',padding:'9px 10px',border:'1px solid var(--bd)',borderRadius:'10px',background:'var(--panel2)',cursor:'pointer',marginBottom:'6px'} };
+    });
+
+    const tabSegBase={flex:1,padding:'8px 0',border:'none',borderRadius:'8px',cursor:'pointer',fontFamily:"'JetBrains Mono',monospace",fontSize:'10px',letterSpacing:'0.14em',fontWeight:700};
+    const tabIsRuleset = s.rulesetTab!=='exp';
+    const tabRulesetStyle={...tabSegBase, background: tabIsRuleset?'var(--chip)':'transparent', color: tabIsRuleset?'var(--tx)':'var(--tx3)'};
+    const tabExpStyle={...tabSegBase, background: !tabIsRuleset?'var(--chip)':'transparent', color: !tabIsRuleset?'var(--tx)':'var(--tx3)'};
+
+    const reqExp={run:'classic',boat:'classic',druid:'classic',wizard:'classic',gate:'classic',translocator:'luclin',spire:'luclin',pop:'pop'};
+    const legendItems = ['run','boat','druid','wizard','translocator','gate','spire','pop'].map(k=>{
+      const m=this.MODES[k];
+      const tags={druid:'Druid only',wizard:'Wizard only',translocator:'Luclin',spire:'Luclin',pop:'Planes of Power',gate:'Most classes',run:'',boat:''};
+      const need=reqExp[k]; const locked=!enabledSet.has(need);
+      const ne=this.EXPS.find(x=>x.id===need);
+      return { name:m.name, locked,
+        nameStyle:{fontSize:'13px', color: locked?'var(--tx3)':'var(--tx)'},
+        tag: locked ? ('LOCKED · NEEDS '+(ne?ne.short.toUpperCase():'?')) : (tags[k]||''),
+        node:this.icon(k,15, locked ? 'var(--tx3)' : '#fff'),
+        dotStyle:{flexShrink:0,width:'28px',height:'28px',borderRadius:'7px',background: locked?'var(--chip)':m.color, border: locked?'1px solid var(--bd2)':'none', display:'flex',alignItems:'center',justifyContent:'center', opacity: locked?0.7:1} };
+    });
+
+    const segBase = {flex:1,padding:'10px 0',border:'none',cursor:'pointer',fontFamily:"'JetBrains Mono',monospace",fontSize:'11px',letterSpacing:'0.14em',fontWeight:700};
+    const fastActive = mode==='fastest';
+    const fastBtnStyle = {...segBase, background: fastActive?'#1f6feb':'var(--panel2)', color: fastActive?'#fff':'var(--tx3)'};
+    const safeBtnStyle = {...segBase, background: !fastActive?'#1f6feb':'var(--panel2)', color: !fastActive?'#fff':'var(--tx3)'};
+
+    return {
+      eraBadge: badgeText,
+      themeAttr: s.theme || 'dark',
+      themeToggleLabel: (s.theme==='light') ? '☀ LIGHT' : '☾ DARK',
+      toggleTheme: this.toggleTheme,
+      rulesetOpen: s.rulesetOpen,
+      toggleRuleset: ()=>this.setState(st=>({rulesetOpen:!st.rulesetOpen})),
+      closeRuleset: ()=>this.setState({rulesetOpen:false}),
+      setTabRuleset: ()=>this.setState({rulesetTab:'ruleset'}),
+      setTabExp: ()=>this.setState({rulesetTab:'exp'}),
+      tabIsRuleset, tabIsExp: !tabIsRuleset,
+      tabRulesetStyle, tabExpStyle,
+      rulesetOptions,
+      tlpActive: s.ruleset==='tlp',
+      tlpServers: this.TLP_SERVERS,
+      tlpServerVal: s.tlpServer, onTlpServer: e=>this.setState({tlpServer:e.target.value}),
+      tlpThroughVal: s.tlpThrough, onTlpThrough: e=>this.setState({tlpThrough:e.target.value}),
+      expSelectList: this.EXPS.map(x=>({id:x.id,name:x.name})),
+      expList,
+      zoneGroups:this.groups,
+      classOptions:this.CLASS_LIST.map(c=>({id:c[0],label:c[1]})),
+      raceOptions:this.RACE_LIST.map(r=>({id:r[0],label:r[1]})),
+      eraOptions:this.ERA_LIST.map(e=>({id:e[0],label:e[1]})),
+      fromVal:from, toVal:to, classVal:klass, raceVal:race, eraVal:s.era,
+      onFrom:e=>this.setState({from:e.target.value}),
+      onTo:e=>this.setState({to:e.target.value}),
+      onClass:e=>this.setState({klass:e.target.value}),
+      onRace:e=>this.setState({race:e.target.value}),
+      onEra:e=>this.setState({era:e.target.value}),
+      onSwap:()=>this.setState(st=>({from:st.to,to:st.from})),
+      setFast:()=>this.setState({mode:'fastest'}),
+      setSafe:()=>this.setState({mode:'safest'}),
+      fastBtnStyle, safeBtnStyle,
+      modeHint: mode==='fastest' ? 'Shortest travel time. Ignores danger — may route through deadly zones or hostile cities.' : 'Avoids hazardous zones and cities where your race is attacked on sight, when an alternative exists.',
+      fromLabel:this.ZONES[from].label, toLabel:this.ZONES[to].label,
+      sameZone, noRoute, hasRoute: !sameZone && !noRoute,
+      primaryService,
+      primaryTagStyle:{display:'inline-flex',alignItems:'center',fontFamily:"'Oswald',sans-serif",fontWeight:600,fontSize:'15px',letterSpacing:'0.06em',color:'#fff',background:tagColor,padding:'5px 14px',borderRadius:'7px'},
+      primaryStops:pSum.stops, primaryTime:pSum.time,
+      primaryHazLabel: hasHaz ? (pSum.hazards+' hazard'+(pSum.hazards>1?'s':'')) : 'no hazards',
+      primaryHazStyle: hasHaz
+        ? {fontFamily:"'JetBrains Mono',monospace",fontSize:'11px',color:'#f85149',padding:'4px 10px',borderRadius:'20px',background:'rgba(248,81,73,0.13)',border:'1px solid rgba(248,81,73,0.4)'}
+        : {fontFamily:"'JetBrains Mono',monospace",fontSize:'11px',color:'#3fb950',padding:'4px 10px',borderRadius:'20px',background:'rgba(63,185,80,0.12)',border:'1px solid rgba(63,185,80,0.35)'},
+      primaryStations,
+      altExists: altStations.length>0,
+      altStations, altStops:aSum.stops, altTime:aSum.time,
+      legendItems,
+      showLegend: this.props.showLegend ?? true
+    };
+  }
+}
+</script>
+</body>
+</html>
