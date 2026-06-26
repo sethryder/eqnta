@@ -6,6 +6,7 @@
         "build": "vite build",
         "dev": "vite",
         "fetch:maps": "node database/eq/tools/fetch-maps.mjs",
+        "fetch:vmaps": "bash database/eq/tools/fetch-vmaps.sh",
         "bake:paths": "node database/eq/tools/bake-paths.mjs"
     },
     "devDependencies": {
