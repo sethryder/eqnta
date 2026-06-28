@@ -1128,6 +1128,15 @@ input:focus-visible,
     margin: 0 7px;
     color: var(--bd);
 }
+/* Cross-promo — a sibling project, not a map credit, so it sits on its own line. */
+.footer-promo {
+    margin: 9px 0 0;
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--tx3);
+}
 .footer-fine {
     max-width: 600px;
     margin: 11px 0 0;
@@ -1139,10 +1148,11 @@ input:focus-visible,
 .site-footer a {
     color: var(--tx2);
     text-decoration: none;
-    border-bottom: 1px solid var(--bd);
+    border-bottom: 1px solid transparent;
 }
 .site-footer a:hover {
     color: var(--tx);
+    border-bottom-color: var(--bd);
 }
 /* Stack the footer credits before the mono separators start stranding on their own lines */
 @media (max-width: 720px) {

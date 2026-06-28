@@ -345,9 +345,8 @@
             &amp; <a href="https://forums.everquest.com/index.php?threads/goods-maps-pack.238818/" rel="noopener" target="_blank">Good's Maps</a></span>
             <span class="sep" aria-hidden="true">·</span>
             <span class="footer-item">Community-sourced — verify before long trips</span>
-            <span class="sep" aria-hidden="true">·</span>
-            <span class="footer-item"><a href="https://eqlfilter.com/" rel="noopener" target="_blank">EQ Legends Loot Filter</a></span>
         </p>
+        <p class="footer-promo">More projects · <a href="https://eqlfilter.com/" rel="noopener" target="_blank">EQ Legends Loot Filter</a></p>
         <p class="footer-fine">
             EverQuest is a registered trademark of Daybreak Game Company LLC. The Norrath Transit Authority is an
             unofficial fan project, not affiliated with or endorsed by Daybreak.
