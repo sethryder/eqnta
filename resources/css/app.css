@@ -66,26 +66,50 @@
     --warn: #e3b341;
 }
 
+/* Parchment palette — matches the eqlfilter sister site (aged paper + sepia ink).
+   --accent goes warm brown here, overriding the global blue (this selector out-specifies :root). */
 :root[data-theme='light'] {
-    --bg: #e9edf2;
-    --panel: #ffffff;
-    --panel2: #f4f6f9;
-    --chip: #eaeef4;
-    --bd: #dce2ea;
-    --bd2: #c4ccd8;
-    --tx: #15191f;
-    --tx2: #475160;
-    --tx3: #6b7480;
-    --header: rgba(255, 255, 255, 0.82);
-    --halo-shadow: 0 18px 44px rgba(40, 60, 90, 0.18);
-    --warn: #9a6700;
+    --bg: #e3d7bd;
+    --panel: #f1e8d4;
+    --panel2: #e8ddc3;
+    --chip: #e0d3b4;
+    --bd: #cabf9d;
+    --bd2: #b9ac86;
+    --tx: #2f2920;
+    --tx2: #574d3a;
+    --tx3: #7a6e54;
+    --accent: #7c5a2c;
+    --hazard: #b23a2b; /* brick red — the dark-mode #f85149 glows wrong on paper and fails contrast */
+    --ok: #4a6b2e; /* ink green — the dark-mode #3fb950 neons out on parchment (the "no hazards" pill) */
+    --header: rgba(241, 232, 212, 0.85);
+    --halo-shadow: 0 18px 44px rgba(74, 58, 30, 0.22);
+    --warn: #9c6f2b;
+    /* Ink-on-paper transit palette: the digital line colors glow on dark but read as plastic
+       stickers on parchment, so light mode prints them as muted, earthier ink. */
+    --line-walk: #5d7d39;
+    --line-boat: #36598a;
+    --line-book: #9a6f1f;
+    --line-spire: #4a6a9c;
+    --line-teleport: #7a4f9c;
+    --line-translocate: #2f7a6e;
+    --line-evac: #a8527e;
 }
 
 :root {
     --accent: #1f6feb;
     --hazard: #f85149;
+    --ok: #3fb950; /* "clear / online / go" green — light theme inks it for paper */
     --font-display: 'Oswald', sans-serif;
     --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+    /* Transit-line palette — default (dark theme); light theme overrides these with ink tones.
+       Referenced from app.js MODES so a theme toggle re-colors lines via CSS, no JS re-render. */
+    --line-walk: #3fb950;
+    --line-boat: #2f81f7;
+    --line-book: #e3b341;
+    --line-spire: #58a6ff;
+    --line-teleport: #a371f7;
+    --line-translocate: #2bb4a6;
+    --line-evac: #f778ba;
 }
 
 * {
@@ -200,7 +224,7 @@ body.nta {
     width: 7px;
     height: 7px;
     border-radius: 50%;
-    background: #3fb950;
+    background: var(--ok);
     flex-shrink: 0;
 }
 .theme-icon {
@@ -569,14 +593,14 @@ input.nta:focus {
     padding: 4px 10px;
 }
 .hazard-pill.clear {
-    color: #3fb950;
-    background: rgba(63, 185, 80, 0.12);
-    border: 1px solid rgba(63, 185, 80, 0.35);
+    color: var(--ok);
+    background: color-mix(in srgb, var(--ok) 13%, transparent);
+    border: 1px solid color-mix(in srgb, var(--ok) 32%, transparent);
 }
 .hazard-pill.danger {
     color: var(--hazard);
-    background: rgba(248, 81, 73, 0.13);
-    border: 1px solid rgba(248, 81, 73, 0.4);
+    background: color-mix(in srgb, var(--hazard) 13%, transparent);
+    border: 1px solid color-mix(in srgb, var(--hazard) 40%, transparent);
 }
 /* Disclosure banner for routes crossing post–Rain of Fear zones: best-effort, community-sourced
    data. Muted/neutral (not a hazard) so it informs without alarming. */
@@ -584,7 +608,7 @@ input.nta:focus {
     margin: 10px 0 2px;
     font-size: 0.6875rem;
     line-height: 1.45;
-    color: var(--text-muted, #8b949e);
+    color: var(--tx2);
     background: color-mix(in srgb, var(--warn) 8%, transparent);
     border: 1px solid color-mix(in srgb, var(--warn) 30%, transparent);
     border-radius: 8px;
@@ -598,8 +622,8 @@ input.nta:focus {
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--hazard);
-    background: rgba(248, 81, 73, 0.13);
-    border: 1px solid rgba(248, 81, 73, 0.4);
+    background: color-mix(in srgb, var(--hazard) 13%, transparent);
+    border: 1px solid color-mix(in srgb, var(--hazard) 40%, transparent);
     border-radius: 6px;
     padding: 3px 8px;
 }
@@ -1016,7 +1040,7 @@ input.nta:focus {
 }
 .preset-check {
     margin-left: auto;
-    color: #3fb950;
+    color: var(--ok);
     font-weight: 700;
 }
 .exp-row {
@@ -1041,8 +1065,8 @@ input.nta:focus {
     flex-shrink: 0;
 }
 .exp-check.on {
-    background: #3fb950;
-    border-color: #3fb950;
+    background: var(--ok);
+    border-color: var(--ok);
 }
 .exp-name {
     font-size: 0.8125rem;
