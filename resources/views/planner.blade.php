@@ -37,7 +37,7 @@
     <header class="nta-header">
         <div class="logo-badge"><span class="wm"><span class="n">N</span><span class="ta">TA</span></span></div>
         <div>
-            <h1 class="title-main">NORRATH TRANSIT AUTHORITY</h1>
+            <h1 class="title-main">NORRATH TRANSIT AUTHORITY <span class="beta-tag">BETA</span></h1>
             <div class="title-sub">ZONE TRIP PLANNER · EST. 1999</div>
         </div>
         <div class="header-spacer"></div>
@@ -342,6 +342,8 @@
             &amp; <a href="https://forums.everquest.com/index.php?threads/goods-maps-pack.238818/" rel="noopener" target="_blank">Good's Maps</a>
             <span class="sep" aria-hidden="true">·</span>
             Community-sourced — verify before long trips
+            <span class="sep" aria-hidden="true">·</span>
+            <a href="https://eqlfilter.com/" rel="noopener" target="_blank">EQ Legends Loot Filter</a>
         </p>
         <p class="footer-fine">
             EverQuest is a registered trademark of Daybreak Game Company LLC. The Norrath Transit Authority is an
