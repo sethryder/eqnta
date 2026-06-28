@@ -339,14 +339,14 @@
 
     <footer class="site-footer">
         <p class="footer-strip">
-            © {{ date('Y') }} Norrath Transit Authority
+            <span class="footer-item">© {{ date('Y') }} Norrath Transit Authority</span>
             <span class="sep" aria-hidden="true">·</span>
-            Maps © <a href="https://www.eqmaps.info" rel="noopener" target="_blank">Brewall</a>
-            &amp; <a href="https://forums.everquest.com/index.php?threads/goods-maps-pack.238818/" rel="noopener" target="_blank">Good's Maps</a>
+            <span class="footer-item">Maps © <a href="https://www.eqmaps.info" rel="noopener" target="_blank">Brewall</a>
+            &amp; <a href="https://forums.everquest.com/index.php?threads/goods-maps-pack.238818/" rel="noopener" target="_blank">Good's Maps</a></span>
             <span class="sep" aria-hidden="true">·</span>
-            Community-sourced — verify before long trips
+            <span class="footer-item">Community-sourced — verify before long trips</span>
             <span class="sep" aria-hidden="true">·</span>
-            <a href="https://eqlfilter.com/" rel="noopener" target="_blank">EQ Legends Loot Filter</a>
+            <span class="footer-item"><a href="https://eqlfilter.com/" rel="noopener" target="_blank">EQ Legends Loot Filter</a></span>
         </p>
         <p class="footer-fine">
             EverQuest is a registered trademark of Daybreak Game Company LLC. The Norrath Transit Authority is an

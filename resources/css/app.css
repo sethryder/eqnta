@@ -1144,3 +1144,15 @@ input:focus-visible,
 .site-footer a:hover {
     color: var(--tx);
 }
+/* Stack the footer credits before the mono separators start stranding on their own lines */
+@media (max-width: 720px) {
+    .site-footer {
+        padding: 22px 18px 40px;
+    }
+    .footer-item {
+        display: block;
+    }
+    .footer-strip .sep {
+        display: none;
+    }
+}
