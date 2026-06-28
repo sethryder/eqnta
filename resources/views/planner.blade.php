@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="dark">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="light">
 <head>
-    {{-- Set theme before paint (no flash): saved choice, else OS preference, else dark. --}}
+    {{-- Set theme before paint (no flash): saved choice, else OS preference, else light.
+         Checks `dark` explicitly so no-preference falls through to light. --}}
     <script>
         document.documentElement.dataset.theme =
             localStorage.getItem('nta-theme')
-            || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+            || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
     </script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -277,7 +278,7 @@
                                     </template>
                                     <div class="bullet"
                                          :class="{ origin: st.kind === 'depart' }"
-                                         :style="st.kind === 'depart' ? '' : `background:${st.color}; box-shadow:${st.isLast ? '0 0 0 4px ' + st.color + '33' : 'none'}`">
+                                         :style="st.kind === 'depart' ? '' : `background:${st.color}; box-shadow:${st.isLast ? '0 0 0 4px color-mix(in srgb, ' + st.color + ' 22%, transparent)' : 'none'}`">
                                         <template x-if="st.kind !== 'depart'"><span x-html="st.icon"></span></template>
                                     </div>
                                 </div>

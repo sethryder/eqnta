@@ -1,14 +1,16 @@
 import Alpine from 'alpinejs';
 
 // Travel mode (edge `type`) -> line color, label, and a 20x20 white icon path.
+// Colors are CSS vars (defined per-theme in app.css) so a light/dark toggle re-inks the lines
+// with no re-render. White icons sit on the filled bullet, so contrast holds in both themes.
 const MODES = {
-    walk: { color: '#3fb950', name: 'Overland', tag: 'Run', icon: 'M10 3.3a1.3 1.3 0 1 0 0 2.6 1.3 1.3 0 0 0 0-2.6zM10 6.6v4.2M10 10.8l-2.1 3.9M10 10.8l2.4 3.4M7.5 8.1l2.5 1 2.5-1.4' },
-    boat: { color: '#2f81f7', name: 'Ferry', tag: 'Boat', icon: 'M4 13h12l-2 4H6zM10 4v9M10 4l4 3-4 2' },
-    book: { color: '#e3b341', name: 'PoK Book', tag: 'Plane of Knowledge', icon: 'M4 5h12v11H4zM10 5v11' },
-    spire: { color: '#58a6ff', name: 'Spire', tag: 'Spire', icon: 'M10 3l5 14H5z' },
-    teleport: { color: '#a371f7', name: 'Teleport', tag: 'Class port', icon: 'M10 3l2 5 5 2-5 2-2 5-2-5-5-2 5-2z' },
-    translocate: { color: '#2bb4a6', name: 'Translocate', tag: 'Translocator', icon: 'M15 10a5 5 0 1 1-1.5-3.5M14 4v3h-3' },
-    evac: { color: '#f778ba', name: 'Evac', tag: 'Succor', icon: 'M7 6v4a4 4 0 0 0 8 0M7 6L4 9M7 6l3 3' },
+    walk: { color: 'var(--line-walk)', name: 'Overland', tag: 'Run', icon: 'M10 3.3a1.3 1.3 0 1 0 0 2.6 1.3 1.3 0 0 0 0-2.6zM10 6.6v4.2M10 10.8l-2.1 3.9M10 10.8l2.4 3.4M7.5 8.1l2.5 1 2.5-1.4' },
+    boat: { color: 'var(--line-boat)', name: 'Ferry', tag: 'Boat', icon: 'M4 13h12l-2 4H6zM10 4v9M10 4l4 3-4 2' },
+    book: { color: 'var(--line-book)', name: 'PoK Book', tag: 'Plane of Knowledge', icon: 'M4 5h12v11H4zM10 5v11' },
+    spire: { color: 'var(--line-spire)', name: 'Spire', tag: 'Spire', icon: 'M10 3l5 14H5z' },
+    teleport: { color: 'var(--line-teleport)', name: 'Teleport', tag: 'Class port', icon: 'M10 3l2 5 5 2-5 2-2 5-2-5-5-2 5-2z' },
+    translocate: { color: 'var(--line-translocate)', name: 'Translocate', tag: 'Translocator', icon: 'M15 10a5 5 0 1 1-1.5-3.5M14 4v3h-3' },
+    evac: { color: 'var(--line-evac)', name: 'Evac', tag: 'Succor', icon: 'M7 6v4a4 4 0 0 0 8 0M7 6L4 9M7 6l3 3' },
 };
 
 // The lowest expansion ordinal that makes each mode routable, for the "locked" line-guide flags.
@@ -31,7 +33,7 @@ function svgIcon(type, stroke = '#fff') {
 
 Alpine.data('planner', () => ({
     // --- state ---
-    theme: document.documentElement.dataset.theme || 'dark', // set pre-paint by the head script (saved → OS → dark)
+    theme: document.documentElement.dataset.theme || 'light', // set pre-paint by the head script (saved → OS → light)
     from: '',
     to: '',
     klass: '',
@@ -334,11 +336,11 @@ Alpine.data('planner', () => ({
     },
     serviceTag() {
         const types = (this.route?.steps || []).map((s) => s.type);
-        if (types.includes('teleport')) { return { name: 'Arcane Express', color: '#a371f7' }; }
-        if (types.includes('translocate')) { return { name: 'Translocator Service', color: '#2bb4a6' }; }
-        if (types.includes('book')) { return { name: 'Plane of Knowledge Route', color: '#e3b341' }; }
-        if (types.includes('boat')) { return { name: 'Land & Sea Route', color: '#2f81f7' }; }
-        return { name: 'Overland Route', color: '#3fb950' };
+        if (types.includes('teleport')) { return { name: 'Arcane Express', color: 'var(--line-teleport)' }; }
+        if (types.includes('translocate')) { return { name: 'Translocator Service', color: 'var(--line-translocate)' }; }
+        if (types.includes('book')) { return { name: 'Plane of Knowledge Route', color: 'var(--line-book)' }; }
+        if (types.includes('boat')) { return { name: 'Land & Sea Route', color: 'var(--line-boat)' }; }
+        return { name: 'Overland Route', color: 'var(--line-walk)' };
     },
     legend() {
         const enabled = this.enabledExpansionIds();
@@ -398,7 +400,7 @@ Alpine.data('planner', () => ({
     },
     // Identity dot per era in the popover (matches the handoff's preset colors).
     presetColor(key) {
-        return { live: '#2f81f7', p99: '#a371f7', legends: '#3fb950', tlp: '#e3b341' }[key] || '#7d8590';
+        return { live: 'var(--line-boat)', p99: 'var(--line-teleport)', legends: 'var(--line-walk)', tlp: 'var(--line-book)' }[key] || 'var(--tx3)';
     },
     toggleExp(id) {
         // Editing the expansion set means a custom world: switch to the TLP/custom profile.
