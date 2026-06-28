@@ -51,18 +51,23 @@
    px is kept only for hairline borders, radii, and fixed structural geometry
    (spine/bullet/logo) that is tied to SVG and layout, not reflowable text. */
 
+/* "Command Deck" — eqlfilter's dark theme: warm-neutral panels and off-white parchment-tinted
+   ink instead of a cold blue-black, with a gold accent that keeps a hint of the parchment world. */
 :root[data-theme='dark'] {
-    --bg: #0a0e14;
-    --panel: #11161f;
-    --panel2: #0d1117;
-    --chip: #161b22;
-    --bd: #21262d;
-    --bd2: #30363d;
-    --tx: #e6edf3;
-    --tx2: #adbac7;
-    --tx3: #7d8590;
-    --header: rgba(13, 17, 23, 0.7);
-    --halo-shadow: 0 18px 44px rgba(0, 0, 0, 0.45);
+    --bg: #15171b;
+    --panel: #1d2026;
+    --panel2: #181b20;
+    --chip: #262a31;
+    --bd: #343a44;
+    --bd2: #434b57;
+    --tx: #e8e4da;
+    --tx2: #bdb6a9;
+    --tx3: #9b968c;
+    --accent: #c9a45a;
+    --accent-text: #15171b; /* gold accent is light, so its fills take dark text */
+    --hazard: #d9694a; /* warm terracotta danger, matching the warmed base */
+    --header: rgba(21, 23, 27, 0.72);
+    --halo-shadow: 0 18px 44px rgba(0, 0, 0, 0.5);
     --warn: #e3b341;
 }
 
@@ -79,6 +84,7 @@
     --tx2: #574d3a;
     --tx3: #7a6e54;
     --accent: #7c5a2c;
+    --accent-text: #f6efdd; /* cream on the dark-brown accent fills */
     --hazard: #b23a2b; /* brick red — the dark-mode #f85149 glows wrong on paper and fails contrast */
     --ok: #4a6b2e; /* ink green — the dark-mode #3fb950 neons out on parchment (the "no hazards" pill) */
     --header: rgba(241, 232, 212, 0.85);
@@ -97,19 +103,22 @@
 
 :root {
     --accent: #1f6feb;
+    --accent-text: #fff; /* text/icon color on accent fills; per-theme above */
     --hazard: #f85149;
     --ok: #3fb950; /* "clear / online / go" green — light theme inks it for paper */
     --font-display: 'Oswald', sans-serif;
     --font-mono: 'JetBrains Mono', ui-monospace, monospace;
     /* Transit-line palette — default (dark theme); light theme overrides these with ink tones.
-       Referenced from app.js MODES so a theme toggle re-colors lines via CSS, no JS re-render. */
-    --line-walk: #3fb950;
-    --line-boat: #2f81f7;
-    --line-book: #e3b341;
-    --line-spire: #58a6ff;
-    --line-teleport: #a371f7;
-    --line-translocate: #2bb4a6;
-    --line-evac: #f778ba;
+       Referenced from app.js MODES so a theme toggle re-colors lines via CSS, no JS re-render.
+       Softened/warmed to sit in the Command Deck base (eqlfilter action palette): a steel-blue
+       ferry instead of electric, a bronze PoK book held off the gold accent, a calmer evac rose. */
+    --line-walk: #4fae6b;
+    --line-boat: #5b8dd9;
+    --line-book: #d2913f;
+    --line-spire: #7aa6dd;
+    --line-teleport: #a472cf;
+    --line-translocate: #3fa597;
+    --line-evac: #dd7ba6;
 }
 
 * {
@@ -180,7 +189,7 @@ body.nta {
     padding: 2px 5px;
     border-radius: 3px;
     background: var(--accent);
-    color: #fff;
+    color: var(--accent-text);
     position: relative;
     top: -2px;
 }
@@ -458,7 +467,7 @@ input.nta:focus {
 }
 .combo-item.sel {
     background: var(--accent);
-    color: #fff;
+    color: var(--accent-text);
 }
 .combo-empty {
     color: var(--tx3);
@@ -509,7 +518,7 @@ input.nta:focus {
 }
 .seg-btn.active {
     background: var(--accent);
-    color: #fff;
+    color: var(--accent-text);
 }
 .mode-hint {
     font-size: 0.75rem;
@@ -874,7 +883,7 @@ input.nta:focus {
     place-items: center;
     border-radius: 50%;
     background: var(--accent);
-    color: #fff;
+    color: var(--accent-text);
     font-family: var(--font-display);
     font-weight: 600;
     font-size: 0.875rem;
