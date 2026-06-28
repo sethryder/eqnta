@@ -2,8 +2,10 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="light">
 <head>
     {{-- Set theme before paint (no flash): saved choice, else OS preference, else light.
-         Checks `dark` explicitly so no-preference falls through to light. --}}
-    <script>
+         Checks `dark` explicitly so no-preference falls through to light.
+         data-cfasync="false" keeps Cloudflare Rocket Loader from deferring this — otherwise it
+         runs after first paint and the default light theme flashes before flipping to dark. --}}
+    <script data-cfasync="false">
         document.documentElement.dataset.theme =
             localStorage.getItem('nta-theme')
             || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
