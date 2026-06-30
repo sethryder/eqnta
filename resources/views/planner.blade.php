@@ -288,7 +288,15 @@
                                     <template x-if="st.kind === 'depart'">
                                         <div>
                                             <div class="depart-label">Depart</div>
-                                            <div class="zone-name" x-text="st.label"></div>
+                                            <button type="button" class="zone-name zone-map-toggle"
+                                                    :class="{ open: openMap === st.zone }"
+                                                    @click="toggleMap(st)">
+                                                <span x-text="st.label"></span>
+                                                <span class="map-caret" aria-hidden="true">▸</span>
+                                            </button>
+                                            <div class="zone-map-panel" x-show="openMap === st.zone" x-cloak>
+                                                <div x-html="mapSvg[st.zone] || ''"></div>
+                                            </div>
                                         </div>
                                     </template>
                                     <template x-if="st.kind === 'leg'">

@@ -184,7 +184,8 @@ Alpine.data('planner', () => ({
         const color = (i) => (MODES[steps[i]?.type] || MODES.walk).color;
         const classLabel = (code) => this.classes.find((c) => c.code === code)?.label || code;
         const list = [{
-            label: this.zoneLabel(this.from), kind: 'depart',
+            label: this.zoneLabel(this.from), kind: 'depart', zone: this.from,
+            cameFrom: null, goingTo: steps[0]?.to || null,
             incoming: null, outgoing: color(0), color: color(0),
             icon: svgIcon(steps[0].type),
         }];
@@ -271,10 +272,26 @@ Alpine.data('planner', () => ({
             }
             return null;
         };
-        const dot = (sx, sy, fill) => `<circle cx="${sx}" cy="${sy}" r="${span / 42}" fill="${fill}" stroke="#fff" stroke-width="${sw * 1.6}"/>`;
+        // Clamp to the drawn map so an endpoint at a zone line beyond the Brewall geometry sits on
+        // the edge (showing direction) instead of flying off into empty space.
+        const dot = (sx, sy, fill) => {
+            const dx = Math.max(minX, Math.min(maxX, sx)), dy = Math.max(minY, Math.min(maxY, sy));
+            return `<circle cx="${dx}" cy="${dy}" r="${span / 42}" fill="${fill}" stroke="#fff" stroke-width="${sw * 1.6}"/>`;
+        };
         const runNote = (units, suffix) => {
             const m = Math.min(8, Math.max(0.3, units / RUN_UNITS_PER_MIN));
             return `<span class="map-note-dim">≈ ${m < 1 ? '<1' : Math.round(m)} min run across${suffix}</span>`;
+        };
+
+        // Where you enter from / exit toward a neighbour, taken from a baked path's endpoint so it's
+        // oriented onto the drawn map even where the Brewall map is mirrored (gate()'s raw zone-line
+        // is not). 'first' = enter from nbr (path nbr|*); 'last' = exit toward nbr (path *|nbr).
+        const bakedGate = (nbr, end) => {
+            const key = Object.keys(paths).find((k) => end === 'first' ? k.startsWith(`${nbr}|`) : k.endsWith(`|${nbr}`));
+            const ln = key && paths[key].line;
+            if (!ln || !ln.length) { return null; }
+            const p = end === 'first' ? ln[0] : ln[ln.length - 1];
+            return { sx: p[0], sy: p[1], dir: compass(p[0], p[1]) };
         };
 
         const dots = [], notes = [];
@@ -292,13 +309,14 @@ Alpine.data('planner', () => ({
             notes.push(`<span class="map-key exit">●</span> Exit ${compass(z[0], z[1])} toward ${this.zoneLabel(goingTo)}`);
             notes.push(runNote(baked.len, ' (charted path)'));
         } else {
-            // No baked path: mark whichever zone-line points fall on the drawn map; straight hint.
-            const enter = cameFrom && gate(cameFrom, ['enter', 'exit']);
+            // No baked path for this exact leg: place the enter/exit gates from any baked endpoint
+            // touching the neighbour (correctly oriented), falling back to the raw zone-line.
+            const enter = cameFrom && (bakedGate(cameFrom, 'first') || gate(cameFrom, ['enter', 'exit']));
             if (enter) {
                 dots.push(dot(enter.sx, enter.sy, '#3fb950'));
                 notes.push(`<span class="map-key enter">●</span> Enter from the ${enter.dir} (${this.zoneLabel(cameFrom)})`);
             }
-            const exit = goingTo && gate(goingTo, ['exit', 'enter']);
+            const exit = goingTo && (bakedGate(goingTo, 'last') || gate(goingTo, ['exit', 'enter']));
             if (exit) {
                 dots.push(dot(exit.sx, exit.sy, '#e3b341'));
                 notes.push(`<span class="map-key exit">●</span> Exit ${exit.dir} toward ${this.zoneLabel(goingTo)}`);
@@ -312,8 +330,11 @@ Alpine.data('planner', () => ({
             }
         }
 
-        const svg = `<svg class="zone-map" viewBox="${minX - pad} ${minY - pad} ${w + 2 * pad} ${h + 2 * pad}"`
-            + ` stroke-width="${sw}" stroke-linecap="round" preserveAspectRatio="xMidYMid meet">${lines.join('')}${path}${dots.join('')}</svg>`;
+        const vx = minX - pad, vy = minY - pad, vw = w + 2 * pad, vh = h + 2 * pad, clip = `mapclip-${zone}`;
+        const svg = `<svg class="zone-map" viewBox="${vx} ${vy} ${vw} ${vh}"`
+            + ` stroke-width="${sw}" stroke-linecap="round" preserveAspectRatio="xMidYMid meet">`
+            + `<clipPath id="${clip}"><rect x="${vx}" y="${vy}" width="${vw}" height="${vh}"/></clipPath>`
+            + `<g clip-path="url(#${clip})">${lines.join('')}${path}${dots.join('')}</g></svg>`;
         return svg + (notes.length ? `<div class="map-caption">${notes.join('<br>')}</div>` : '');
     },
     // Approximate door-to-door minutes: distance-based for walk legs where we know the zone-line

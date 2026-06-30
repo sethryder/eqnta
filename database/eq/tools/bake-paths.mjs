@@ -44,6 +44,42 @@ const FRAMES = [
   { name: 'swapneg', toMap: (x, y) => [-y, -x], toScreen: (px, pz) => [pz, px] },
 ];
 
+// The .map fixes how zone-lines snap onto the mesh, but the hand-drawn Brewall map a zone displays
+// can use a different reflection of the same axes. These four orientations cover the reflections; we
+// pick whichever lands the mesh on the actual drawing (below), independent of the snap frame.
+const ORIENTS = [
+  (px, pz) => [px, pz], (px, pz) => [-px, -pz], (px, pz) => [pz, px], (px, pz) => [-pz, -px],
+];
+const MAP_TXT_DIRS = [path.join(ROOT, 'storage/app/eq/maps'), path.join(ROOT, 'storage/app/eq/maps-goodurden')];
+
+// Drawn Brewall map bbox in the app's screen frame (screen = -file, as resources/js/app.js draws it),
+// or null when no map is on file. Used only to orient baked output onto the drawing.
+function brewallBbox(zone) {
+  for (const dir of MAP_TXT_DIRS) {
+    const f = path.join(dir, `${zone}.txt`);
+    if (!fs.existsSync(f) || fs.statSync(f).size === 0) { continue; }
+    let xn = Infinity, xx = -Infinity, yn = Infinity, yx = -Infinity, n = 0;
+    for (const row of fs.readFileSync(f, 'utf8').split('\n')) {
+      if (row[0] !== 'L') { continue; }
+      const p = row.slice(2).split(',');
+      const xs = [-parseFloat(p[0]), -parseFloat(p[3])], ys = [-parseFloat(p[1]), -parseFloat(p[4])];
+      if ([...xs, ...ys].some(Number.isNaN)) { continue; }
+      xn = Math.min(xn, ...xs); xx = Math.max(xx, ...xs); yn = Math.min(yn, ...ys); yx = Math.max(yx, ...ys);
+      n++;
+    }
+    if (n) { return { xn, xx, yn, yx }; }
+  }
+  return null;
+}
+
+// Intersection-over-union of two axis-aligned bboxes, for scoring orientation against the drawing.
+function bboxIoU(a, b) {
+  const ix = Math.max(0, Math.min(a.xx, b.xx) - Math.max(a.xn, b.xn));
+  const iy = Math.max(0, Math.min(a.yx, b.yx) - Math.max(a.yn, b.yn));
+  const inter = ix * iy, ua = (a.xx - a.xn) * (a.yx - a.yn), ub = (b.xx - b.xn) * (b.yx - b.yn);
+  return inter / (ua + ub - inter || 1);
+}
+
 // A candidate from a (x,y) pair: a point when both are set, else a wildcard *line* (one axis fixed,
 // the other was EQ's 999999 "anywhere along this edge" sentinel, nulled by the graph build).
 function candOf(x, y) {
@@ -177,6 +213,26 @@ for (const file of files) {
   const { fr, snap } = best;
   const names = Object.keys(snap);
 
+  // Choose the output orientation by overlap with the drawn map, seeded with the snap frame's own
+  // toScreen so zones already drawn correctly never change on a tie — only a clearly better overlap
+  // (a flipped/swapped Brewall map vs the .map) wins. No map on file → keep the snap frame.
+  const bb = brewallBbox(zone);
+  let toScreen = fr.toScreen, orient = fr.name;
+  if (bb) {
+    const meshBbox = (o) => {
+      const c = [o(xmn, ymn), o(xmn, ymx), o(xmx, ymn), o(xmx, ymx)];
+      return { xn: Math.min(...c.map((p) => p[0])), xx: Math.max(...c.map((p) => p[0])), yn: Math.min(...c.map((p) => p[1])), yx: Math.max(...c.map((p) => p[1])) };
+    };
+    // Only override on a decisive win, so a near-symmetric zone already drawn right never flips on
+    // bbox noise. ecommons-style flips beat the snap frame by ~0.4 IoU, far past this margin.
+    const baseIoU = bboxIoU(meshBbox(fr.toScreen), bb);
+    let bestIoU = baseIoU;
+    for (const o of ORIENTS) {
+      const s = bboxIoU(meshBbox(o), bb);
+      if (s > bestIoU && s > baseIoU + 0.12) { bestIoU = s; toScreen = o; orient = 'map-fit'; }
+    }
+  }
+
   const zonePathsArr = {};
   let pairs = 0;
   for (let i = 0; i < names.length; i++) {
@@ -187,15 +243,15 @@ for (const file of files) {
       if (!res.success || pts.length < 2) { continue; }
       let len = 0;
       for (let k = 1; k < pts.length; k++) { len += Math.hypot(pts[k].x - pts[k - 1].x, pts[k].y - pts[k - 1].y, pts[k].z - pts[k - 1].z); }
-      // Path points (recast x,z = map frame) → app screen frame via the detected frame.
-      const line = pts.map((p) => { const [sx, sy] = fr.toScreen(p.x, p.z); return [Math.round(sx), Math.round(sy)]; });
+      // Path points (recast x,z = map frame) → app screen frame, oriented onto the drawn map.
+      const line = pts.map((p) => { const [sx, sy] = toScreen(p.x, p.z); return [Math.round(sx), Math.round(sy)]; });
       zonePathsArr[`${names[i]}|${names[j]}`] = { len: Math.round(len), line };
       pairs++;
     }
   }
   navMesh.destroy();
   if (pairs) { result[zone] = zonePathsArr; }
-  console.log(`${zone}: ${pairs} paths, frame=${fr.name}, ${names.length}/${Object.keys(nbrs).length} snapped (${(JSON.stringify(zonePathsArr).length / 1024).toFixed(1)}KB)`);
+  console.log(`${zone}: ${pairs} paths, frame=${fr.name}, out=${orient}, ${names.length}/${Object.keys(nbrs).length} snapped (${(JSON.stringify(zonePathsArr).length / 1024).toFixed(1)}KB)`);
 }
 
 // Merge with any existing baked data so a partial run doesn't drop other zones.
