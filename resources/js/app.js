@@ -258,17 +258,26 @@ Alpine.data('planner', () => ({
             const ew = sx - cx < -w * 0.15 ? 'W' : sx - cx > w * 0.15 ? 'E' : '';
             return (ns + ew) || 'middle';
         };
+        // PEQ zone-line coords and the Brewall drawing don't share one frame across zones (the .map
+        // bake auto-detects this per zone). With no baked path to lean on, try the same orientations
+        // here — negate first so zones that already resolve never move — and take the first on-map.
+        const ORIENTS = [(x, y) => [-x, -y], (x, y) => [x, y], (x, y) => [-y, -x], (x, y) => [y, x]];
         // Resolve a neighbour to an on-map point, trying candidate coords in preference order and
         // taking the first that lands inside this map. Returns screen pos + compass label, or null.
         const gate = (short, prefer) => {
             const e = exits[short];
             if (!e) { return null; }
-            for (const which of prefer) {
-                const c = e[which];
-                if (!c) { continue; }
-                const sx = -c.x, sy = -c.y;
-                if (sx < minX || sx > maxX || sy < minY || sy > maxY) { continue; } // off map → next candidate
-                return { sx, sy, dir: compass(sx, sy) };
+            // Orientation outer, candidate inner: negate resolves every leg it can before any other
+            // frame is tried, so legs that already place a dot never move — only off-map ones improve.
+            for (const o of ORIENTS) {
+                for (const which of prefer) {
+                    const c = e[which];
+                    if (!c) { continue; }
+                    if (Math.abs(c.x) < 3 && Math.abs(c.y) < 3) { continue; } // PEQ 0,0,0 sentinel: zone line unknown, not the map origin
+                    const [sx, sy] = o(c.x, c.y);
+                    if (sx < minX || sx > maxX || sy < minY || sy > maxY) { continue; } // off map → next candidate/orientation
+                    return { sx, sy, dir: compass(sx, sy) };
+                }
             }
             return null;
         };
@@ -291,6 +300,7 @@ Alpine.data('planner', () => ({
             const ln = key && paths[key].line;
             if (!ln || !ln.length) { return null; }
             const p = end === 'first' ? ln[0] : ln[ln.length - 1];
+            if (Math.abs(p[0]) < 3 && Math.abs(p[1]) < 3) { return null; } // unresolved 0,0,0 zone line → not charted
             return { sx: p[0], sy: p[1], dir: compass(p[0], p[1]) };
         };
 
