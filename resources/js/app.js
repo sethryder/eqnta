@@ -227,7 +227,7 @@ Alpine.data('planner', () => ({
         try {
             const [g, x, p] = await Promise.all([
                 fetch(`/api/map/${zone}`).then((r) => { if (!r.ok) { throw new Error(); } return r.text(); }),
-                fetch(`/api/map/${zone}/exits`).then((r) => r.ok ? r.json() : {}),
+                fetch(`/api/map/${zone}/exits?server=${encodeURIComponent(this.server)}`).then((r) => r.ok ? r.json() : {}),
                 fetch(`/api/map/${zone}/paths`).then((r) => r.ok ? r.json() : {}),
             ]);
             text = g; exits = x; paths = p;

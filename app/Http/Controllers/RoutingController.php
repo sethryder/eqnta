@@ -198,14 +198,17 @@ class RoutingController extends Controller
      *
      * @return JsonResponse map of neighbourShort => array{exit?: array{x,y}, enter?: array{x,y}}
      */
-    public function mapExits(string $zone): JsonResponse
+    public function mapExits(Request $request, string $zone): JsonResponse
     {
         if (! preg_match('/^[a-z0-9_]+$/', $zone)) {
             abort(404);
         }
 
+        // Server-aware so delta-only zone lines (e.g. Legends custom zones) get their dots too.
+        $server = $this->resolveServer($request);
+
         $points = [];
-        foreach ($this->router->graph()['edges'] as $edge) {
+        foreach ($this->router->resolvedGraph($server['key'], $server['delta'])['edges'] as $edge) {
             if (($edge['type'] ?? 'walk') !== 'walk') {
                 continue;
             }

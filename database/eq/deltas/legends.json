@@ -25,8 +25,13 @@
         { "from": "qeynos2", "to": "qeytoqrg", "type": "walk", "_why": "stock zone line Legends removed/reworked" }
     ],
 
-    "zones": [],
+    "zones": [
+        { "id": 9001, "short": "newsebilis", "long": "New Sebilis Expedition" }
+    ],
     "add": [
+        { "from": "nro", "to": "newsebilis", "type": "walk", "expansion": 0, "x": -797, "y": 2423, "z": 6 },
+        { "from": "newsebilis", "to": "nro", "type": "walk", "expansion": 0, "tx": -797, "ty": 2423, "tz": 6 },
+
         { "from": "*", "to": "qrg",        "type": "teleport", "class": "DRU", "min_level": 15, "expansion": 0, "spell": "Ring of Surefall Glade" },
         { "from": "*", "to": "tox",        "type": "teleport", "class": "DRU", "min_level": 17, "expansion": 0, "spell": "Ring of Toxxulia" },
         { "from": "*", "to": "commons",    "type": "teleport", "class": "DRU", "min_level": 17, "expansion": 0, "spell": "Ring of West Commons" },
