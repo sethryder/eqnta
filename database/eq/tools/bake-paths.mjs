@@ -153,7 +153,12 @@ function sanitize(verts, indices) {
 
 await init();
 const graph = JSON.parse(fs.readFileSync(GRAPH));
-const points = zonePoints(graph.edges);
+// Per-server delta walk edges (e.g. Legends custom zones) bake too, so their legs get a charted
+// path instead of a straight line. Extra pairs are harmless on servers whose routes never use them.
+const DELTA_DIR = path.join(ROOT, 'database/eq/deltas');
+const deltaEdges = fs.readdirSync(DELTA_DIR).filter((f) => f.endsWith('.json'))
+  .flatMap((f) => JSON.parse(fs.readFileSync(path.join(DELTA_DIR, f))).add ?? []);
+const points = zonePoints([...graph.edges, ...deltaEdges]);
 
 const want = process.argv.slice(2);
 const files = (want.length ? want.map((z) => `${z}.map`) : fs.readdirSync(MAP_DIR).filter((f) => f.endsWith('.map')));
