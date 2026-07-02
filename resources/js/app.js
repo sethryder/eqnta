@@ -220,8 +220,8 @@ Alpine.data('planner', () => ({
     },
 
     // Parse a Brewall .txt (L = line segments, "x1,y1,z1,x2,y2,z2,r,g,b") into an SVG, plus
-    // entrance/exit dots from the zone's own walk-edge coords. EQ map convention: negate x and y
-    // so north is up and west is left — so on screen smaller y is North, smaller x is West.
+    // entrance/exit dots from the zone's own walk-edge coords. Map .txt coords are already in the
+    // client's screen frame (x=east, y=south, north up) — draw them raw, exactly as eqgame does.
     async buildMapSvg(zone, cameFrom, goingTo) {
         let text, exits = {}, paths = {};
         try {
@@ -240,7 +240,7 @@ Alpine.data('planner', () => ({
         for (const row of text.split('\n')) {
             if (row[0] !== 'L') { continue; }
             const p = row.slice(2).split(',');
-            const x1 = -parseFloat(p[0]), y1 = -parseFloat(p[1]), x2 = -parseFloat(p[3]), y2 = -parseFloat(p[4]);
+            const x1 = parseFloat(p[0]), y1 = parseFloat(p[1]), x2 = parseFloat(p[3]), y2 = parseFloat(p[4]);
             if ([x1, y1, x2, y2].some(Number.isNaN)) { continue; }
             lines.push(`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="rgb(${p[6] | 0},${p[7] | 0},${p[8] | 0})"/>`);
             minX = Math.min(minX, x1, x2); maxX = Math.max(maxX, x1, x2);
@@ -258,26 +258,20 @@ Alpine.data('planner', () => ({
             const ew = sx - cx < -w * 0.15 ? 'W' : sx - cx > w * 0.15 ? 'E' : '';
             return (ns + ew) || 'middle';
         };
-        // PEQ zone-line coords and the Brewall drawing don't share one frame across zones (the .map
-        // bake auto-detects this per zone). With no baked path to lean on, try the same orientations
-        // here — negate first so zones that already resolve never move — and take the first on-map.
-        const ORIENTS = [(x, y) => [-x, -y], (x, y) => [x, y], (x, y) => [-y, -x], (x, y) => [y, x]];
-        // Resolve a neighbour to an on-map point, trying candidate coords in preference order and
-        // taking the first that lands inside this map. Returns screen pos + compass label, or null.
+        // Resolve a neighbour to an on-map point, trying candidate coords in preference order.
+        // Graph zone-line coords are in the PEQ world frame; screen = -world, deterministically.
+        // Returns screen pos + compass label, or null when nothing lands near the drawn map.
         const gate = (short, prefer) => {
             const e = exits[short];
             if (!e) { return null; }
-            // Orientation outer, candidate inner: negate resolves every leg it can before any other
-            // frame is tried, so legs that already place a dot never move — only off-map ones improve.
-            for (const o of ORIENTS) {
-                for (const which of prefer) {
-                    const c = e[which];
-                    if (!c) { continue; }
-                    if (Math.abs(c.x) < 3 && Math.abs(c.y) < 3) { continue; } // PEQ 0,0,0 sentinel: zone line unknown, not the map origin
-                    const [sx, sy] = o(c.x, c.y);
-                    if (sx < minX || sx > maxX || sy < minY || sy > maxY) { continue; } // off map → next candidate/orientation
-                    return { sx, sy, dir: compass(sx, sy) };
-                }
+            const slack = span * 0.08; // a tunnel mouth can sit slightly past the drawn geometry
+            for (const which of prefer) {
+                const c = e[which];
+                if (!c) { continue; }
+                if (Math.abs(c.x) < 3 && Math.abs(c.y) < 3) { continue; } // PEQ 0,0,0 sentinel: zone line unknown, not the map origin
+                const sx = -c.x, sy = -c.y;
+                if (sx < minX - slack || sx > maxX + slack || sy < minY - slack || sy > maxY + slack) { continue; }
+                return { sx, sy, dir: compass(sx, sy) };
             }
             return null;
         };
@@ -292,9 +286,9 @@ Alpine.data('planner', () => ({
             return `<span class="map-note-dim">≈ ${m < 1 ? '<1' : Math.round(m)} min run across${suffix}</span>`;
         };
 
-        // Where you enter from / exit toward a neighbour, taken from a baked path's endpoint so it's
-        // oriented onto the drawn map even where the Brewall map is mirrored (gate()'s raw zone-line
-        // is not). 'first' = enter from nbr (path nbr|*); 'last' = exit toward nbr (path *|nbr).
+        // Where you enter from / exit toward a neighbour, taken from a baked path's endpoint — the
+        // navmesh-snapped spot is more accurate than the raw zone-line trigger box.
+        // 'first' = enter from nbr (path nbr|*); 'last' = exit toward nbr (path *|nbr).
         const bakedGate = (nbr, end) => {
             const key = Object.keys(paths).find((k) => end === 'first' ? k.startsWith(`${nbr}|`) : k.endsWith(`|${nbr}`));
             const ln = key && paths[key].line;

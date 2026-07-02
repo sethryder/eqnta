@@ -317,13 +317,17 @@ class BuildGraph extends Command
                     continue;
                 }
 
+                // Map .txt coords are in the client's screen frame (x=east, y=south); graph edges
+                // store the PEQ world frame (screen = -world), so negate to keep one convention.
+                $x = $this->coord((float) substr($parts[0], 2));
+                $y = $this->coord((float) $parts[1]);
                 $connections[] = [
                     'from' => $from,
                     'to' => $dest,
                     'type' => $this->classifyTransport($label),
                     'expansion' => $this->edgeExpansion($expansionByShort, $from, $dest),
-                    'x' => $this->coord((float) substr($parts[0], 2)),
-                    'y' => $this->coord((float) $parts[1]),
+                    'x' => $x === null ? null : -$x,
+                    'y' => $y === null ? null : -$y,
                     'z' => $this->coord((float) $parts[2]),
                 ];
             }

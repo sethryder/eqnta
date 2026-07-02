@@ -2,8 +2,8 @@
 // the walkable path between each pair of its zone-line points. Writes database/eq/paths.json:
 //   { "<zone>": { "<fromShort>|<toShort>": { "len": <units>, "line": [[x,y], ...] } } }
 //
-// Coordinates: graph zone-line points are in "world" frame; the app negates them for display, and
-// the .map geometry is already in that negated/screen frame. recast is Y-up, EQ/.map is Z-up, so
+// Coordinates: graph zone-line points are in the PEQ "world" frame; the app's screen frame is the
+// Brewall .txt / eqgame map frame (= -world), drawn raw. recast is Y-up, EQ/.map is Z-up, so
 // recast(x,y,z) = map(x, z, y). Output polylines are in screen frame → drop straight into the SVG.
 //
 // Usage: node database/eq/tools/bake-paths.mjs [zone ...]   (no args = every .map present)
@@ -52,8 +52,8 @@ const ORIENTS = [
 ];
 const MAP_TXT_DIRS = [path.join(ROOT, 'storage/app/eq/maps'), path.join(ROOT, 'storage/app/eq/maps-goodurden')];
 
-// Drawn Brewall map bbox in the app's screen frame (screen = -file, as resources/js/app.js draws it),
-// or null when no map is on file. Used only to orient baked output onto the drawing.
+// Drawn Brewall map bbox in the app's screen frame (screen = the .txt's own frame, drawn raw as
+// resources/js/app.js does), or null when no map is on file. Used only to orient baked output.
 function brewallBbox(zone) {
   for (const dir of MAP_TXT_DIRS) {
     const f = path.join(dir, `${zone}.txt`);
@@ -62,7 +62,7 @@ function brewallBbox(zone) {
     for (const row of fs.readFileSync(f, 'utf8').split('\n')) {
       if (row[0] !== 'L') { continue; }
       const p = row.slice(2).split(',');
-      const xs = [-parseFloat(p[0]), -parseFloat(p[3])], ys = [-parseFloat(p[1]), -parseFloat(p[4])];
+      const xs = [parseFloat(p[0]), parseFloat(p[3])], ys = [parseFloat(p[1]), parseFloat(p[4])];
       if ([...xs, ...ys].some(Number.isNaN)) { continue; }
       xn = Math.min(xn, ...xs); xx = Math.max(xx, ...xs); yn = Math.min(yn, ...ys); yx = Math.max(yx, ...ys);
       n++;
