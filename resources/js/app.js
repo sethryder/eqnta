@@ -487,6 +487,8 @@ Alpine.data('planner', () => ({
         clearTimeout(this._loadTimer);
         this._loadTimer = setTimeout(() => { this.loading = true; }, 200);
 
+        // Sequence token: rapid input changes fire overlapping requests; only the newest may land.
+        const seq = (this._computeSeq = (this._computeSeq || 0) + 1);
         try {
             const params = new URLSearchParams({ from: this.from, to: this.to, server: this.server, level: this.level, mode: this.mode });
             if (this.klass) { params.set('class', this.klass); }
@@ -496,13 +498,15 @@ Alpine.data('planner', () => ({
             if (this.server === 'tlp') { this.enabledExpansionIds().forEach((id) => params.append('expansions[]', id)); }
 
             const res = await fetch(`/api/route?${params}`);
+            if (seq !== this._computeSeq) { return; } // superseded by a newer request
             if (res.status === 404) { this.route = null; this.message = 'No charted route between these zones.'; return; }
             if (!res.ok) { this.route = null; this.message = 'Could not plan this trip.'; return; }
             this.route = await res.json();
             this.message = '';
+        } catch {
+            if (seq === this._computeSeq) { this.route = null; this.message = 'Could not plan this trip.'; }
         } finally {
-            clearTimeout(this._loadTimer);
-            this.loading = false;
+            if (seq === this._computeSeq) { clearTimeout(this._loadTimer); this.loading = false; }
         }
     },
 }));

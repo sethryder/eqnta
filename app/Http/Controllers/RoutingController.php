@@ -265,9 +265,10 @@ class RoutingController extends Controller
         $key = $request->input('server', config('eqrouter.default_server'));
         $servers = config('eqrouter.servers');
 
-        if (! isset($servers[$key])) {
+        // is_string guards a malformed `?server[]=` array param, which would TypeError on isset.
+        if (! is_string($key) || ! isset($servers[$key])) {
             throw ValidationException::withMessages([
-                'server' => 'Unknown server "'.$key.'".',
+                'server' => 'Unknown server.',
             ]);
         }
 
