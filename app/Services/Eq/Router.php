@@ -84,7 +84,9 @@ class Router
             fn (array $z) => [
                 'short' => $z['short'],
                 'long' => $z['long'],
-                'continent' => $continents[$z['short']] ?? null,
+                // A zone's own continent (delta-declared custom zones) wins over the derived map,
+                // which only knows base-graph zones.
+                'continent' => $z['continent'] ?? $continents[$z['short']] ?? null,
             ],
             $graph['zones'],
         );

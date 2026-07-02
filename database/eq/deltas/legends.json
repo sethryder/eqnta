@@ -4,7 +4,7 @@
     "_status": "Druid + Wizard teleport networks sourced from https://eqlwiki.com/Druid#Spells and https://eqlwiki.com/Wizard#Spells (Druid cross-checked against eqprogression.com/legends/druid-spells — identical). Legends gives both classes a fuller Classic-era port set than stock PEQ. Only gaps vs the base graph are listed below (destinations base lacks at expansion 0, or offers only at a higher level / under a later-expansion tag). Levels are the earliest single-target version (Druid 'Ring of X', Wizard 'X Gate'); group/Translocate/Zephyr variants reach the same zones at higher levels, so they add no new routing edges. Already correct in base at exp0, NOT re-added: Druid northkarana(15)/butcher(16)/steamfont(21)/feerrott(22)/lavastorm(22); Wizard northkarana(18)/gfaydark(20)/nektulos(22)/cazicthule(23)/'West Karana'=qey2hh1(23)/airplane+hateplaneb(46). Superseded base edges for added dests are all later-expansion (exp1/2/3/11/12), so they're already filtered out on Legends [0] — no `remove` needed except qrg (base Surefall is exp0 L26, dropped in favour of L15). Ritual access — any class casting these once a leveled Druid/Wizard hits 25 — is handled by the server `rituals` flag in config/eqrouter.php, which bypasses these min_levels.",
 
     "_conventions": [
-        "Custom zones go in `zones` as {id, short, long}. Use ids >= 9000 to avoid colliding with real EQ/EQEmu zone ids (which top out ~885, plus the 99x instanced range). If Legends reuses a stock zone (same short), DON'T re-add it — the base graph already has it; just add/remove its edges.",
+        "Custom zones go in `zones` as {id, short, long} plus an optional `continent` (groups the zone in the dropdowns; omitted = 'Other Zones'). Use ids >= 9000 to avoid colliding with real EQ/EQEmu zone ids (which top out ~885, plus the 99x instanced range). If Legends reuses a stock zone (same short), DON'T re-add it — the base graph already has it; just add/remove its edges.",
         "Edges go in `add` as {from, to, type, expansion}. Directional — add BOTH directions for two-way travel. type is one of walk | teleport | translocate | book | spire | boat | evac (custom teleport hubs/clickies = teleport; NPC ports = translocate; zone lines = walk).",
         "Tag every edge `expansion: 0` at launch — Legends opens at Classic, and its enabled set in config/eqrouter.php is [0], so only expansion-0 edges route. If Legends later unlocks expansions, bump that config set AND tag era-specific custom content with the matching ordinal.",
         "Drop stock connections Legends doesn't have via `remove`: {from, to} (optionally add `type` to be specific). A spec matches any generated edge where every listed key equals the edge's value.",
@@ -26,7 +26,7 @@
     ],
 
     "zones": [
-        { "id": 9001, "short": "newsebilis", "long": "New Sebilis Expedition" }
+        { "id": 9001, "short": "newsebilis", "long": "New Sebilis Expedition", "continent": "Antonica" }
     ],
     "add": [
         { "from": "nro", "to": "newsebilis", "type": "walk", "expansion": 0, "x": -797, "y": 2423, "z": 6 },
