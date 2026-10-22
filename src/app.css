@@ -1,7 +1,7 @@
 @import 'tailwindcss';
 
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../storage/framework/views/*.php';
+@source '../index.html';
+@source './app.js';
 
 /* Self-hosted fonts (latin subset, normal style), vendored from the @fontsource/oswald
    and @fontsource/jetbrains-mono packages into public/fonts/. woff2-only — universal since ~2016.
@@ -545,19 +545,6 @@ input.nta:focus {
 }
 .result-title .arrow {
     color: var(--tx3);
-}
-.planning {
-    color: var(--accent);
-    animation: nta-pulse 1s ease-in-out infinite;
-}
-@keyframes nta-pulse {
-    0%,
-    100% {
-        opacity: 1;
-    }
-    50% {
-        opacity: 0.4;
-    }
 }
 
 .service-card {
