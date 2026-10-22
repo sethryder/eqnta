@@ -13,7 +13,9 @@ script each; pushing the regenerated JSON triggers the deploy. No PHP at runtime
 - Phase 3 code done: `.github/workflows/deploy.yml` and `test.yml`. Remaining is the repo Pages
   setting (Source = GitHub Actions, custom domain) and the DNS change — manual, see Phase 3.
 - Phase 4 done: `scripts/refresh-peq.sh`.
-- Phase 5 not started (needs sign-off on deleting the replaced PHP tests).
+- Phase 5 done (2026-10-22): PHP runtime, Blade views, replaced PHP tests, Boost/Sail/Pail/Tinker
+  and the Laravel skeleton leftovers removed. PHP is now only the `eq:*` data pipeline; its config
+  keeps just the build-time keys, so `src/config.js` is the single runtime source.
 
 ## Why this is feasible
 

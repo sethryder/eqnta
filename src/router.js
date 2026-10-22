@@ -1,7 +1,7 @@
-// Browser port of app/Services/Eq/{Router,GraphDelta,FactionService}.php plus the request-shaping
-// bits of RoutingController.php. Pure: everything comes in through `data` (see data.js) so tests
-// can hand it fixtures. The graph is ~600 zones, so edges are filtered per call and the Dijkstra is
-// the same plain O(V²) scan as the PHP — identical tie-breaking, identical routes.
+// The planner's routing engine: delta layering, zone lists, Dijkstra with era/class/level gating,
+// KOS and level-danger flags, and map exits. Pure: everything comes in through `data` (see
+// data.js) so tests can hand it fixtures. The graph is ~600 zones, so edges are filtered per call
+// and the Dijkstra is a plain O(V²) scan. ponytail: reach for a heap only if it ever matters.
 import * as defaultConfig from './config.js';
 
 // ---- GraphDelta -----------------------------------------------------------------------------
@@ -56,7 +56,7 @@ export function utcToday() {
  */
 export function createRouter(data, config = defaultConfig) {
     const resolved = Object.create(null); // server key → delta-resolved graph
-    const factions = data.factions ?? { threshold: config.kosThreshold, factions: {}, zones: {}, levels: {} };
+    const factions = data.factions ?? { threshold: -750, factions: {}, zones: {}, levels: {} }; // threshold is baked by eq:build-factions
 
     /** Enabled expansions for a server today: static list, resolved unlock schedule, or null (caller picks). */
     function serverExpansions(server, today = utcToday()) {
@@ -68,7 +68,7 @@ export function createRouter(data, config = defaultConfig) {
         return enabled.sort((a, b) => a - b);
     }
 
-    /** The /api/servers payload: profiles, expansion catalog, and the race/class/deity pick lists. */
+    /** World metadata for the UI: server profiles (eras resolved for today), expansion catalog, and the race/class/deity pick lists. */
     function serversMeta(today = utcToday()) {
         const codeList = (map) => Object.entries(map).map(([code, e]) => (e.port ? { code, label: e.label, port: true } : { code, label: e.label }));
         return {
@@ -270,8 +270,8 @@ export function createRouter(data, config = defaultConfig) {
     }
 
     /**
-     * The /api/route request. Throws RangeError on invalid input (the old 422); returns null when
-     * no path exists (the old 404).
+     * Plan a trip. Throws RangeError on invalid input (the UI shows "could not plan"); returns null
+     * when no path exists ("no charted route").
      *
      * @param {{from:string, to:string, server?:string, expansions?:number[], class?:string, level?:number,
      *          mode?:'fastest'|'safest', race?:string, deity?:string, rituals?:string[]}} req

@@ -1,5 +1,5 @@
-// Port of tests/Feature/RoutingTest.php + EraIsolationTest.php + tests/Unit/DeltaMatchTest.php
-// + GraphIntegrityTest.php against the JS router. Fixtures are the same files the PHP tests use.
+// Behaviour tests for src/router.js: routing, eras, KOS/danger, deltas, maps, and integrity checks
+// against the committed graph. Fixtures live in tests/Fixtures (shared with the PHP build tests).
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
 import { applyDelta, deltaMatches, mergeDeltas, normalizeDelta, createRouter } from '../../src/router.js';

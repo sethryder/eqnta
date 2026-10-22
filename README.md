@@ -1,58 +1,85 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Norrath Transit Authority
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Zone trip planner for EverQuest emulator servers: https://eqnta.washclof.com
 
-## About Laravel
+A static site. Routing (Dijkstra over a typed zone graph, era/class/level gating, KOS and level
+danger from real PEQ faction data) runs in the browser over JSON committed under `database/eq/`.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Site
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
-
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
-
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
-
-```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+```
+npm ci
+npm run fetch:vmaps   # Brewall + Goodurden zone maps → storage/app/eq/ (gitignored, licensing)
+npm run dev           # Vite dev server
+npm test              # node --test tests/js
+npm run build         # dist/ (vite build + one map .txt per zone)
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+- `index.html`, `src/app.js` (Alpine UI), `src/router.js` (routing), `src/config.js` (servers,
+  eras, races/classes/deities, cost weights), `src/data.js` (bundled JSON).
+- Pushes to `main` deploy `dist/` to GitHub Pages via `.github/workflows/deploy.yml`.
 
-## Contributing
+## Data pipeline (PHP, offline only)
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+The graph and faction JSON under `database/eq/` are built from the ProjectEQ database dump by
+Artisan commands. Needs PHP 8.3, Composer, Docker (for the MariaDB the dump loads into), and Node.
+One-time setup:
 
-## Code of Conduct
+```
+composer install
+cp .env.example .env        # DB_* are the MariaDB credentials compose.yaml starts with
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Refresh everything from a new PEQ dump
 
-## Security Vulnerabilities
+```
+scripts/refresh-peq.sh
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+That runs, in order (each can also be run by hand):
 
-## License
+| Step | What it does | Needs |
+|---|---|---|
+| `docker compose up -d mariadb --wait` | the DB the dump loads into | Docker |
+| `npm run fetch:vmaps` | Brewall + Goodurden map packs → `storage/app/eq/` (gitignored) | network |
+| `php artisan eq:import-peq --build` | downloads the latest PEQ dump, loads the tables we use, then runs `eq:build-graph` + `eq:build-factions` | DB, network, maps |
+| `php artisan eq:build-continents` | zone → continent map, from `graph.json` | graph.json |
+| `php artisan eq:audit-graph` | reports walk edges that cross continents (fix via `overrides.json` and rerun) | graph.json |
+| `npm test` | graph integrity tests against the fresh JSON | — |
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Then review `git diff database/eq`, commit, push. The deploy workflow rebuilds the site.
+
+Individual commands:
+
+- `php artisan eq:import-peq [--file=dump.zip|.sql] [--build]` — `--file` skips the download.
+- `php artisan eq:build-graph` — zones + typed edges from `zone_points`, spells, and the Brewall maps
+  (boats, spires, books, zone-line coords). Skips the map-derived parts if the packs are absent.
+  Applies `overrides.json` and `postrof.json` on top; per-server differences go in `deltas/`.
+- `php artisan eq:build-factions` — per-zone guard factions and monster level medians for KOS and
+  danger flags.
+- `php artisan eq:build-continents`, `php artisan eq:audit-graph` — see table.
+- `php artisan test` — tests for the build commands.
+
+### Zone maps (site build)
+
+The site serves one Brewall/Goodurden `.txt` per zone. They are not committed (licensing);
+`npm run fetch:vmaps` downloads them and `npm run build` copies them into `dist/maps/`. The deploy
+workflow does the same, caching the packs monthly.
+
+### Navmesh run paths
+
+`database/eq/paths.json` holds walkable paths between zone lines, used for run-time estimates and
+the charted line on the inline maps. Only re-bake after zone-line changes in `graph.json`:
+
+```
+npm run fetch:maps                      # EQEmu collision .map files → storage/app/eq/eqmaps-base/
+npm run bake:paths                      # every zone with a .map (slow: builds a recast navmesh each)
+node database/eq/tools/bake-paths.mjs qeynos2 nektulos   # just these zones
+```
+
+### Hand corrections
+
+- `database/eq/overrides.json` — universal fixes baked into the base graph by `eq:build-graph`.
+- `database/eq/postrof.json` — hand-curated connectivity past Rain of Fear (PEQ stops there).
+- `database/eq/deltas/<server>.json` — per-server zones/edges, applied in the browser. Register the
+  server in `src/config.js`.
