@@ -66,7 +66,7 @@ class GraphDelta
      * @param  list<array>  $zones
      * @param  list<array>  $edges
      * @param  array{zones: list<array>, add: list<array>, remove: list<array>}  $delta
-     * @return array{0: list<array>, 1: list<array>}  [zones, edges]
+     * @return array{0: list<array>, 1: list<array>} [zones, edges]
      */
     public static function apply(array $zones, array $edges, array $delta): array
     {
