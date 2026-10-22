@@ -13,9 +13,7 @@ return [
     |
     */
 
-    'paths' => [
-        resource_path('views'),
-    ],
+    'paths' => [], // console-only app: no Blade views
 
     /*
     |--------------------------------------------------------------------------

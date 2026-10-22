@@ -2,11 +2,11 @@
 
 Named Time-Locked Progression servers in the Era picker. **Frostreaver** sits in the main server list
 (newest); the rest are grouped under a collapsible **"TLP Servers"** sub-list (`group: 'tlp'` in
-`config/eqrouter.php`).
+`src/config.js`).
 
 ## How the expansion set is determined
 
-Each server resolves its enabled expansions at request time (`RoutingController::serverExpansions`):
+Each server resolves its enabled expansions at request time (`serverExpansions()` in `src/router.js`):
 
 - **`unlocks` schedule** (actively-progressing servers): a map of expansion ordinal → unlock date.
   Classic is always on; each expansion auto-enables once its date passes. **No manual upkeep** — the

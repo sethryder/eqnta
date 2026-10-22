@@ -3,7 +3,7 @@
 How a player first reaches each post-RoF expansion from the rest of the world, and the hub zone
 the rest of the expansion branches off. Edges live in `database/eq/postrof.json` (CoTF in
 `overrides.json`); these are community-sourced and best-effort, so the Router flags any route
-crossing them as incomplete (`config: limited_data_expansion`).
+crossing them as incomplete (`limitedDataExpansion` in `src/config.js`).
 
 `from` zones below are existing graph nodes; the **hub** is the post-RoF zone you land in.
 

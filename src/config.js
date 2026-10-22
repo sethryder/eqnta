@@ -1,8 +1,9 @@
-// Router tuning + world catalog, formerly config/eqrouter.php. Values only; see that file's
-// comments (kept until Phase 5) for the rationale behind each knob. Build-time-only keys
-// (zone_point_hubs, boat_links, continent_anchors, kos_min_spawns, import tables) stay in PHP.
+// Router tuning + world catalog: the single source for everything the site routes with. The PHP
+// side (config/eqrouter.php) keeps only what the offline eq:* build commands read; `races` must
+// stay in sync between the two (same EQEmu ids).
 
-// Dijkstra edge cost per type — the "fastest" profile.
+// Dijkstra edge cost per type — the "fastest" profile. Lower = preferred. Teleports/evacs are
+// near-free; long runs are expensive; boats sit in between (dock wait).
 export const weights = {
     walk: 10,
     boat: 8,
@@ -13,7 +14,9 @@ export const weights = {
     evac: 1
 };
 
-// "Safest" profile: overland running is heavily penalised so boats/ports/books win.
+// "Safest" profile: overland running is where you get aggro, so it's heavily penalised — the
+// router then prefers boats, ports, and the PoK book even when that means more hops. There is no
+// per-zone danger data, so "safest" == "least overland exposure" plus the KOS/level penalties below.
 export const weightsSafe = {
     walk: 60,
     boat: 8,
@@ -24,7 +27,10 @@ export const weightsSafe = {
     evac: 1
 };
 
-// UI code → label + EQEmu id. Faction modifier keys are r<id>/c<id>/d<id>.
+// UI code → label + EQEmu id. KOS comes from real PEQ faction data (factions.json, built by
+// eq:build-factions): standing = faction base + the race/class/deity modifiers, KOS when it falls
+// to or below factions.json's threshold. These maps translate UI codes into the r<id>/c<id>/d<id>
+// modifier keys and drive the dropdowns. `port` marks the porting classes (✦ in the UI).
 export const races = {
     HUM: {
         label: "Human",
@@ -233,13 +239,24 @@ export const deities = {
     }
 };
 
-export const kosThreshold = -750;
+// Extra "safest"-mode cost for entering a zone that is KOS for the traveler. Large enough to
+// detour around it, but finite so a KOS-only destination still routes. (The KOS con threshold
+// itself, -750, is baked into factions.json by eq:build-factions.)
 export const kosPenalty = 200;
+
+// "Safest"-mode level-danger penalty. A zone's monster median (factions.json → levels) is the bar;
+// when it exceeds the traveler's level by more than dangerMargin, each level over adds
+// dangerPerLevel to the cost. Tuned so a ~20-level-over zone (~120) sits near kosPenalty; 0 disables.
 export const dangerMargin = 5;
 export const dangerPerLevel = 8;
+
+// Max selectable character level.
 export const maxLevel = 60;
 
-// Expansions at or past this ordinal have best-effort connectivity and no KOS data.
+// Expansions at or past this ordinal are sourced from client data + hand-curated connectivity
+// (PEQ stops at Rain of Fear), so their graph is best-effort and carries no KOS/faction data. Every
+// route leg in this range is flagged `incomplete` so the UI can disclose the gap. See the post-RoF
+// notes in docs/post-rof-travel.md and database/eq/postrof.json.
 export const limitedDataExpansion = 20;
 
 // EQEmu expansion ordinals. 99 = special/instanced content.
@@ -280,8 +297,14 @@ export const expansions = {
     "99": "Special"
 };
 
-// Server profiles. `expansions: null` = caller picks (generic TLP). `unlocks` = ordinal → unlock
-// date (Y-m-d), resolved against today's date by serverExpansions(). Add a server here — no code.
+// Server profiles: the expansions enabled there + any deltas (database/eq/deltas/<name>.json:
+// custom zones/edges) that make it differ from stock PEQ. `expansions: null` = the visitor picks
+// (generic TLP/custom). For time-locked progression servers give `unlocks` instead: ordinal →
+// unlock date (Y-m-d); Classic (0) is always on and each expansion enables once its date passes,
+// resolved against today's UTC date by serverExpansions() — no upkeep as servers progress.
+// `group: 'tlp'` folds a server into the collapsed TLP list. `rituals` lists classes whose ports a
+// Legends multiclasser can opt into regardless of active class/level (flat unlock, not per-spell).
+// Add a server here — no code changes. Dates: docs/tlp-servers.md.
 export const servers = {
     live: {
         label: "Live",
@@ -715,4 +738,6 @@ export const servers = {
     }
 };
 
+// Default server a first-time visitor lands on (no ?server= and no saved choice). Legends for its
+// 2026 launch window — the audience arriving right now is overwhelmingly Legends players.
 export const defaultServer = "legends";

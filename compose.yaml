@@ -4,19 +4,19 @@ services:
         image: 'mariadb:11.4'
         ports:
             - '${FORWARD_DB_PORT:-3306}:3306'
+        # Defaults line up with the `peq` connection in config/database.php (root, no password, db
+        # `peq`), so a bare .env works. Override with PEQ_DB_* in .env if you must.
         environment:
-            MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
-            MYSQL_ROOT_HOST: '%'
-            MYSQL_DATABASE: '${DB_DATABASE}'
-            MYSQL_USER: '${DB_USERNAME}'
-            MYSQL_PASSWORD: '${DB_PASSWORD}'
+            MYSQL_ROOT_PASSWORD: '${PEQ_DB_PASSWORD:-}'
             MYSQL_ALLOW_EMPTY_PASSWORD: 1
+            MYSQL_ROOT_HOST: '%'
+            MYSQL_DATABASE: '${PEQ_DB_DATABASE:-peq}'
         volumes:
-            - 'mariadb:/var/lib/mysql'
+            - 'sail-mariadb:/var/lib/mysql'   # name kept from the Sail days so an imported dump survives
         healthcheck:
             test: ['CMD', 'healthcheck.sh', '--connect', '--innodb_initialized']
             retries: 3
             timeout: 5s
 volumes:
-    mariadb:
+    sail-mariadb:
         driver: local

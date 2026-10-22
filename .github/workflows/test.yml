@@ -15,3 +15,16 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: npm run build
+
+  php:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          coverage: none
+      - run: composer install --no-interaction --prefer-dist
+      - run: cp .env.example .env
+      - run: php artisan test --compact
+      - run: vendor/bin/pint --test
