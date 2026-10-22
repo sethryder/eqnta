@@ -165,5 +165,5 @@ This project has domain-specific skills available in `**/skills/**`. You MUST ac
 # Deployment
 
 - The site is static: `npm run build` → `dist/`, published to GitHub Pages by `.github/workflows/deploy.yml` on every push to `main`. No PHP at runtime; `php artisan serve` no longer serves the site (the Artisan `eq:*` commands remain for data builds — see `scripts/refresh-peq.sh`).
-- DNS for `eqnta.com` is DNS-only (grey cloud) so GitHub's CDN serves it; there is no Cloudflare cache to purge. If the Cloudflare proxy is ever re-enabled, add a purge step at the end of `deploy.yml` — the old 24h edge-cached HTML would otherwise reference deleted hashed assets.
+- DNS for `eqnta.washclof.com` is DNS-only (grey cloud) so GitHub's CDN serves it; there is no Cloudflare cache to purge. If the Cloudflare proxy is ever re-enabled, add a purge step at the end of `deploy.yml` — the old 24h edge-cached HTML would otherwise reference deleted hashed assets.
 - Local dev: `npm run dev` (Vite). Maps need `npm run fetch:vmaps` once.

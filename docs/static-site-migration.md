@@ -1,6 +1,6 @@
 # Static site migration plan (GitHub Pages + Actions)
 
-Goal: eqnta.com becomes a static site built by Vite, deployed by a GitHub Actions workflow to
+Goal: eqnta.washclof.com (formerly eqnta.com) becomes a static site built by Vite, deployed by a GitHub Actions workflow to
 GitHub Pages. Data refreshes (PEQ import, graph/faction builds, navmesh bake) stay local, one
 script each; pushing the regenerated JSON triggers the deploy. No PHP at runtime.
 
@@ -101,10 +101,10 @@ the old deployed host from then on, which is what the rollback relies on.
 
 ### Phase 2 — Static build
 
-1. Move `planner.blade.php` → `index.html`. Replace: `@vite` → `<script type="module" src="/src/app.js">` and a `<link>` for the CSS; `url('/')`/`url('/og.png')` → literal `https://eqnta.com/…`; `{{ date('Y') }}` → a tiny `x-text` or hardcode; `{!! $jsonLd !!}` → inline the JSON-LD literal (it's static); the two `<x-zone-combobox field="…">` uses → inline the markup twice (it's ~30 lines) or an Alpine `x-component`-free copy. `app()->getLocale()` → `en`.
+1. Move `planner.blade.php` → `index.html`. Replace: `@vite` → `<script type="module" src="/src/app.js">` and a `<link>` for the CSS; `url('/')`/`url('/og.png')` → literal `https://eqnta.washclof.com/…`; `{{ date('Y') }}` → a tiny `x-text` or hardcode; `{!! $jsonLd !!}` → inline the JSON-LD literal (it's static); the two `<x-zone-combobox field="…">` uses → inline the markup twice (it's ~30 lines) or an Alpine `x-component`-free copy. `app()->getLocale()` → `en`.
 2. `vite.config.js`: drop `laravel-vite-plugin`, root stays repo root, `build.outDir = 'dist'`, keep `@tailwindcss/vite`. Remove `laravel-vite-plugin` and `concurrently` from devDependencies.
 3. `scripts/build-maps.sh`: for each `short` in `graph.json`, copy `storage/app/eq/maps/{short}.txt` if non-empty, else `storage/app/eq/maps-goodurden/{short}.txt`, into `dist/maps/`. Reuses `fetch-vmaps.sh` for the download. One-liner in `package.json`: `"build": "vite build && bash scripts/build-maps.sh"`.
-4. `public/`: delete `index.php` and `.htaccess`; add `CNAME` containing `eqnta.com`; keep favicons, `og.png`, `robots.txt`, `sitemap.xml`.
+4. `public/`: delete `index.php` and `.htaccess`; add `CNAME` containing `eqnta.washclof.com`; keep favicons, `og.png`, `robots.txt`, `sitemap.xml`.
 5. Local check: `npm run build && npx vite preview`.
 
 Done when: `dist/` served by any static server is the whole site.
@@ -138,7 +138,7 @@ jobs:
         uses: actions/deploy-pages@v4
 ```
 
-Repo settings: Pages → Source = GitHub Actions; custom domain `eqnta.com`; Enforce HTTPS.
+Repo settings: Pages → Source = GitHub Actions; custom domain `eqnta.washclof.com`; Enforce HTTPS.
 
 DNS (Cloudflare): `A @ → 185.199.108/109/110/111.153`, `CNAME www → <user>.github.io`, both
 **DNS-only (grey cloud)**. GitHub's CDN (Fastly) serves the site with HTTPS. This removes the
@@ -148,7 +148,7 @@ stale HTML harmless within that window.
 
 Cutover order: set the custom domain in Pages settings **before** the first deploy (the build uses
 root-absolute URLs, so the interim `<user>.github.io/<repo>/` URL would 404 its assets) → merge →
-the workflow deploys → switch DNS → verify `curl -sI https://eqnta.com/` shows `server: GitHub.com`
+the workflow deploys → switch DNS → verify `curl -sI https://eqnta.washclof.com/` shows `server: GitHub.com`
 → decommission the PHP host.
 
 Rollback: flip DNS back to the old host. Keep it up for a week.
