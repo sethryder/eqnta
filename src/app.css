@@ -546,19 +546,6 @@ input.nta:focus {
 .result-title .arrow {
     color: var(--tx3);
 }
-.planning {
-    color: var(--accent);
-    animation: nta-pulse 1s ease-in-out infinite;
-}
-@keyframes nta-pulse {
-    0%,
-    100% {
-        opacity: 1;
-    }
-    50% {
-        opacity: 0.4;
-    }
-}
 
 .service-card {
     background: var(--panel);

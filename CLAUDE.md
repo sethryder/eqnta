@@ -164,5 +164,6 @@ This project has domain-specific skills available in `**/skills/**`. You MUST ac
 
 # Deployment
 
-- **Purge the Cloudflare cache after every deploy.** The homepage (`/`) is served stateless and edge-cacheable (`s-maxage=86400` — see `routes/web.php`), so Cloudflare can hold the HTML for up to 24h. A deploy changes the hashed asset URLs in that HTML, so without a purge the edge keeps serving old HTML that references deleted `public/build` assets (browsers are safe — they revalidate). Use "Purge Everything" or wire a `cf` purge into the deploy.
-- Edge HTML caching requires a Cloudflare **Cache Rule** for `eqnta.com/` (Eligible for cache, Edge TTL = respect origin `cache-control`). CF does not cache `text/html` by default. Verify with `curl -sI https://eqnta.com/`: no `set-cookie`, `cache-control: public`, and `cf-cache-status: HIT` on a second hit.
+- The site is static: `npm run build` → `dist/`, published to GitHub Pages by `.github/workflows/deploy.yml` on every push to `main`. No PHP at runtime; `php artisan serve` no longer serves the site (the Artisan `eq:*` commands remain for data builds — see `scripts/refresh-peq.sh`).
+- DNS for `eqnta.com` is DNS-only (grey cloud) so GitHub's CDN serves it; there is no Cloudflare cache to purge. If the Cloudflare proxy is ever re-enabled, add a purge step at the end of `deploy.yml` — the old 24h edge-cached HTML would otherwise reference deleted hashed assets.
+- Local dev: `npm run dev` (Vite). Maps need `npm run fetch:vmaps` once.

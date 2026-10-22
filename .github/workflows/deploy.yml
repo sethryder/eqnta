@@ -12,9 +12,10 @@ permissions:
   pages: write
   id-token: write
 
+# Never cancel a Pages deployment mid-flight; queued runs wait their turn.
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   build:

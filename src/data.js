@@ -11,5 +11,6 @@ export const data = { graph, factions, continents, deltas: { p99, legends }, pat
 /** Load the baked navmesh paths into `data.paths` (once); resolves when they are available. */
 export function loadPaths() {
     return (loadPaths.promise ??= import('../database/eq/paths.json', { with: { type: 'json' } })
-        .then((m) => { data.paths = m.default; return data.paths; }));
+        .then((m) => { data.paths = m.default; return data.paths; })
+        .catch((e) => { loadPaths.promise = null; throw e; })); // let the next call retry
 }

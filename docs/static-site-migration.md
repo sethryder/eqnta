@@ -94,8 +94,10 @@ Each phase ships on its own; the site keeps working after every one.
    loading-timer code can go (routing is now synchronous); keep `message` handling identical.
    Map loading becomes one fetch (`/maps/${zone}.txt`) plus two local calls.
 
-Done when: `php artisan serve` still works and every planner interaction behaves the same with
-the PHP API no longer being called (verify in the Network tab: only `/maps/*.txt` requests).
+Done when: every planner interaction behaves the same with the PHP API no longer being called
+(verify in the Network tab: only `/maps/*.txt` requests). Note: once Phase 2 removes
+`public/index.php`, `php artisan serve` no longer boots — the PHP runtime is only reachable through
+the old deployed host from then on, which is what the rollback relies on.
 
 ### Phase 2 — Static build
 
@@ -144,9 +146,10 @@ Cloudflare Cache Rule and the "purge after every deploy" step from `CLAUDE.md` e
 GitHub Pages serves HTML with `cache-control: max-age=600`, and Vite's hashed asset names make
 stale HTML harmless within that window.
 
-Cutover order: merge Phase 2 → run the workflow once (site is live at `<user>.github.io/<repo>`
-until the custom domain is set) → set custom domain + DNS → verify
-`curl -sI https://eqnta.com/` shows `server: GitHub.com` → decommission the PHP host.
+Cutover order: set the custom domain in Pages settings **before** the first deploy (the build uses
+root-absolute URLs, so the interim `<user>.github.io/<repo>/` URL would 404 its assets) → merge →
+the workflow deploys → switch DNS → verify `curl -sI https://eqnta.com/` shows `server: GitHub.com`
+→ decommission the PHP host.
 
 Rollback: flip DNS back to the old host. Keep it up for a week.
 

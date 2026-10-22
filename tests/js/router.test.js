@@ -399,3 +399,29 @@ describe('graph integrity (committed database/eq/graph.json)', () => {
         assert.equal(new Set(keys).size, keys.length, 'Duplicate edges in graph.json');
     });
 });
+
+describe('review regressions', () => {
+    const committedRouter = () => createRouter(committedData());
+
+    test('treats a cleared level input as level 1 instead of rejecting it', () => {
+        const r = committedRouter();
+        assert.ok(r.findRoute({ from: 'qeynos2', to: 'freportw', server: 'live', level: '' }));
+    });
+
+    test('rejects prototype keys as server names', () => {
+        const r = committedRouter();
+        assert.throws(() => r.resolveServer('__proto__'), RangeError);
+        assert.throws(() => r.zones('constructor'), RangeError);
+    });
+
+    test('omits coordinate keys that are JSON null, like PHP isset()', () => {
+        const graph = {
+            zones: [{ short: 'a', long: 'A' }, { short: 'b', long: 'B' }],
+            edges: [{ from: 'a', to: 'b', type: 'walk', expansion: 0, x: null, y: null, tx: null, ty: null, class: null, spell: null }],
+        };
+        const r = createRouter({ graph, deltas: {} });
+        const step = r.findRoute({ from: 'a', to: 'b', server: 'live' }).steps[0];
+        assert.ok(!('tx' in step) && !('class' in step) && !('spell' in step));
+        assert.deepEqual(r.mapExits('live', 'a'), {});
+    });
+});

@@ -58,7 +58,6 @@ Alpine.data('planner', () => ({
     expansions: [],
     route: null, // { steps, hops, weight }
     message: '', // empty-state text (same-zone / no-route)
-    loading: false,
     openMap: null, // zone short of the currently expanded inline map, or null
     mapSvg: {}, // zone short -> rendered SVG markup (cached per route)
     classes: [], // [{ code, label, port? }] from router.serversMeta()
@@ -69,7 +68,6 @@ Alpine.data('planner', () => ({
         document.documentElement.setAttribute('data-theme', this.theme);
 
         const meta = router.serversMeta();
-        const pathsReady = loadPaths(); // baked navmesh lengths; awaited before the first route
         this.servers = meta.servers;
         this.expansions = meta.expansions;
         this.classes = meta.classes;
@@ -109,7 +107,6 @@ Alpine.data('planner', () => ({
         this.from = valid(url.get('from')) ? url.get('from') : '';
         this.to = valid(url.get('to')) ? url.get('to') : '';
 
-        await pathsReady.catch(() => {}); // routes still work without run lengths
         this.compute();
 
         // Recompute when any routing input changes; reload the zone list when the world changes.
@@ -122,6 +119,10 @@ Alpine.data('planner', () => ({
         ['from', 'to', 'klass', 'race', 'deity', 'level', 'mode'].forEach((k) => this.$watch(k, () => this.compute()));
         this.$watch('rituals', () => this.compute());
         this.$watch('customExp', () => { if (this.server === 'tlp') { this.loadZones(); this.compute(); } }, { deep: true });
+
+        // Baked navmesh run lengths arrive in a lazy chunk; recompute once so the ETA picks them up.
+        // Routes work without them, so a failed load is ignored (loadPaths retries on the next call).
+        loadPaths().then(() => this.compute(), () => {});
     },
 
     // --- derived ---

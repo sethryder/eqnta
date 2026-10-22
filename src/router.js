@@ -55,7 +55,7 @@ export function utcToday() {
  * @param {object} config  the config.js module (overridable for tests)
  */
 export function createRouter(data, config = defaultConfig) {
-    const resolved = {}; // server key → delta-resolved graph
+    const resolved = Object.create(null); // server key → delta-resolved graph
     const factions = data.factions ?? { threshold: config.kosThreshold, factions: {}, zones: {}, levels: {} };
 
     /** Enabled expansions for a server today: static list, resolved unlock schedule, or null (caller picks). */
@@ -85,8 +85,8 @@ export function createRouter(data, config = defaultConfig) {
 
     /** Server key → {key, config (with resolved expansions), delta}. Throws on an unknown key. */
     function resolveServer(key = config.defaultServer, today = utcToday()) {
-        const server = typeof key === 'string' ? config.servers[key] : undefined;
-        if (!server) { throw new RangeError('Unknown server.'); }
+        if (typeof key !== 'string' || !Object.hasOwn(config.servers, key)) { throw new RangeError('Unknown server.'); }
+        const server = config.servers[key];
         const delta = mergeDeltas(...(server.deltas ?? []).map((name) => normalizeDelta(data.deltas?.[name])));
         return { key, config: { ...server, expansions: serverExpansions(server, today) }, delta };
     }
@@ -173,7 +173,7 @@ export function createRouter(data, config = defaultConfig) {
         for (const edge of graph.edges) {
             if (!enabled.has(edge.expansion ?? 0)) { continue; }
             // Class/level gate (teleport-type edges). A ritual class bypasses both.
-            if (edge.class !== undefined && !rituals.includes(edge.class)) {
+            if (edge.class != null && !rituals.includes(edge.class)) {
                 if (klass !== edge.class || level < (edge.min_level ?? 0)) { continue; }
             }
             const sources = edge.from === '*' ? shorts : [edge.from];
@@ -193,9 +193,10 @@ export function createRouter(data, config = defaultConfig) {
                 from: hopFrom, to: node, type: edge.type, expansion: Number(edge.expansion ?? 0),
                 x: edge.x ?? null, y: edge.y ?? null, z: edge.z ?? null,
             };
-            if (edge.tx !== undefined && edge.ty !== undefined) { step.tx = edge.tx; step.ty = edge.ty; }
-            if (edge.spell !== undefined) { step.spell = edge.spell; }
-            if (edge.class !== undefined) { step.class = edge.class; }
+            // `!= null` mirrors PHP isset(): a JSON null is "absent", not a value.
+            if (edge.tx != null && edge.ty != null) { step.tx = edge.tx; step.ty = edge.ty; }
+            if (edge.spell != null) { step.spell = edge.spell; }
+            if (edge.class != null) { step.class = edge.class; }
             steps.push(step);
             node = hopFrom;
         }
@@ -277,7 +278,7 @@ export function createRouter(data, config = defaultConfig) {
      */
     function findRoute(req) {
         const server = resolveServer(req.server ?? config.defaultServer);
-        const shorts = new Set(zones(server.key, null).map((z) => z.short));
+        const shorts = new Set(resolvedGraph(server.key).zones.map((z) => z.short));
         const inKeys = (map, v) => v == null || v === '' || Object.hasOwn(map, v);
 
         if (!shorts.has(req.from) || !shorts.has(req.to)) { throw new RangeError('Unknown zone.'); }
@@ -286,7 +287,7 @@ export function createRouter(data, config = defaultConfig) {
         if (!inKeys(config.deities, req.deity)) { throw new RangeError('Unknown deity.'); }
         const mode = req.mode ?? 'fastest';
         if (!['fastest', 'safest'].includes(mode)) { throw new RangeError('Unknown mode.'); }
-        const level = req.level == null ? 1 : Number(req.level);
+        const level = req.level == null || req.level === '' ? 1 : Number(req.level); // a cleared input means "unset"
         if (!Number.isInteger(level) || level < 1 || level > config.maxLevel) { throw new RangeError('Level out of range.'); }
         if (req.expansions?.some((id) => !Object.hasOwn(config.expansions, id))) { throw new RangeError('Unknown expansion.'); }
         if ((req.rituals ?? []).some((c) => !Object.hasOwn(config.classes, c))) { throw new RangeError('Unknown ritual class.'); }
@@ -311,10 +312,10 @@ export function createRouter(data, config = defaultConfig) {
         const points = {};
         for (const edge of resolvedGraph(serverKey).edges) {
             if ((edge.type ?? 'walk') !== 'walk') { continue; }
-            if (edge.from === zone && edge.x !== undefined && edge.y !== undefined) {
+            if (edge.from === zone && edge.x != null && edge.y != null) {
                 (points[edge.to] ??= {}).exit = { x: edge.x, y: edge.y };
             }
-            if (edge.to === zone && edge.tx !== undefined && edge.ty !== undefined) {
+            if (edge.to === zone && edge.tx != null && edge.ty != null) {
                 (points[edge.from] ??= {}).enter = { x: edge.tx, y: edge.ty };
             }
         }
