@@ -1,4 +1,4 @@
 User-agent: *
 Disallow:
 
-Sitemap: https://eqnta.com/sitemap.xml
+Sitemap: https://eqnta.washclof.com/sitemap.xml
