@@ -1,4 +1,9 @@
 import Alpine from 'alpinejs';
+import { createRouter } from './router.js';
+import { data, loadPaths } from './data.js';
+
+// Routing runs in the browser over the bundled graph; the only network request left is a map file.
+const router = createRouter(data);
 
 // Travel mode (edge `type`) -> line color, label, and a 20x20 white icon path.
 // Colors are CSS vars (defined per-theme in app.css) so a light/dark toggle re-inks the lines
@@ -56,14 +61,15 @@ Alpine.data('planner', () => ({
     loading: false,
     openMap: null, // zone short of the currently expanded inline map, or null
     mapSvg: {}, // zone short -> rendered SVG markup (cached per route)
-    classes: [], // [{ code, label, port? }] from /api/servers
+    classes: [], // [{ code, label, port? }] from router.serversMeta()
     races: [],
     deities: [],
 
     async init() {
         document.documentElement.setAttribute('data-theme', this.theme);
 
-        const meta = await fetch('/api/servers').then((r) => r.json());
+        const meta = router.serversMeta();
+        const pathsReady = loadPaths(); // baked navmesh lengths; awaited before the first route
         this.servers = meta.servers;
         this.expansions = meta.expansions;
         this.classes = meta.classes;
@@ -96,25 +102,26 @@ Alpine.data('planner', () => ({
         const allowedRituals = this.serverConfig()?.rituals || [];
         this.rituals = (url.get('rituals') || '').split(',').filter((c) => allowedRituals.includes(c));
 
-        await this.loadZones();
+        this.loadZones();
         // From/to come from the URL when valid for this world; otherwise leave blank so a first-time
         // visitor lands on the intro instead of a pre-filled route they didn't ask for.
         const valid = (s) => s && this.zones.some((z) => z.short === s);
         this.from = valid(url.get('from')) ? url.get('from') : '';
         this.to = valid(url.get('to')) ? url.get('to') : '';
 
-        await this.compute();
+        await pathsReady.catch(() => {}); // routes still work without run lengths
+        this.compute();
 
         // Recompute when any routing input changes; reload the zone list when the world changes.
-        this.$watch('server', async () => {
+        this.$watch('server', () => {
             this.customExp = Object.fromEntries((this.serverConfig()?.expansions || []).map((id) => [id, true]));
             this.rituals = this.rituals.filter((c) => (this.serverConfig()?.rituals || []).includes(c));
-            await this.loadZones();
+            this.loadZones();
             this.compute();
         });
         ['from', 'to', 'klass', 'race', 'deity', 'level', 'mode'].forEach((k) => this.$watch(k, () => this.compute()));
         this.$watch('rituals', () => this.compute());
-        this.$watch('customExp', () => { if (this.server === 'tlp') { this.loadZones().then(() => this.compute()); } }, { deep: true });
+        this.$watch('customExp', () => { if (this.server === 'tlp') { this.loadZones(); this.compute(); } }, { deep: true });
     },
 
     // --- derived ---
@@ -223,17 +230,16 @@ Alpine.data('planner', () => ({
     // entrance/exit dots from the zone's own walk-edge coords. Map .txt coords are already in the
     // client's screen frame (x=east, y=south, north up) — draw them raw, exactly as eqgame does.
     async buildMapSvg(zone, cameFrom, goingTo) {
-        let text, exits = {}, paths = {};
+        let text;
         try {
-            const [g, x, p] = await Promise.all([
-                fetch(`/api/map/${zone}`).then((r) => { if (!r.ok) { throw new Error(); } return r.text(); }),
-                fetch(`/api/map/${zone}/exits?server=${encodeURIComponent(this.server)}`).then((r) => r.ok ? r.json() : {}),
-                fetch(`/api/map/${zone}/paths`).then((r) => r.ok ? r.json() : {}),
-            ]);
-            text = g; exits = x; paths = p;
+            const r = await fetch(`/maps/${zone}.txt`);
+            if (!r.ok) { throw new Error(); }
+            text = await r.text();
         } catch {
             return '<div class="map-note">No map on file for this zone.</div>';
         }
+        const exits = router.mapExits(this.server, zone);
+        const paths = router.mapPaths(zone);
 
         let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
         const lines = [];
@@ -439,10 +445,8 @@ Alpine.data('planner', () => ({
         return this.enabledExpansionIds().includes(id);
     },
 
-    async loadZones() {
-        const params = new URLSearchParams({ server: this.server });
-        if (this.server === 'tlp') { params.set('expansions', this.enabledExpansionIds().join(',')); }
-        this.zones = await fetch(`/api/zones?${params}`).then((r) => r.json());
+    loadZones() {
+        this.zones = router.zones(this.server, this.server === 'tlp' ? this.enabledExpansionIds() : undefined);
         // Drop selections that no longer exist in this world, falling back to the intro/empty state
         // rather than silently picking an arbitrary zone the user didn't choose.
         if (this.from && !this.zones.some((z) => z.short === this.from)) { this.from = ''; }
@@ -476,37 +480,24 @@ Alpine.data('planner', () => ({
         localStorage.setItem('nta-exp', this.server === 'tlp' ? this.enabledExpansionIds().filter((id) => id !== 0).join(',') : '');
     },
 
-    async compute() {
+    compute() {
         this.syncUrl();
         this.openMap = null; this.mapSvg = {}; // a new route invalidates any expanded maps
         if (!this.from || !this.to) { this.route = null; this.message = ''; return; }
         if (this.from === this.to) { this.route = null; this.message = "You're already there."; return; }
 
-        // Show the loading hint only if the request is slow enough to notice — avoids a flicker
-        // on the usual instant local response.
-        clearTimeout(this._loadTimer);
-        this._loadTimer = setTimeout(() => { this.loading = true; }, 200);
-
-        // Sequence token: rapid input changes fire overlapping requests; only the newest may land.
-        const seq = (this._computeSeq = (this._computeSeq || 0) + 1);
+        // Routing is synchronous and instant now — no loading state, no request sequencing.
         try {
-            const params = new URLSearchParams({ from: this.from, to: this.to, server: this.server, level: this.level, mode: this.mode });
-            if (this.klass) { params.set('class', this.klass); }
-            if (this.race) { params.set('race', this.race); }
-            if (this.deity) { params.set('deity', this.deity); }
-            this.rituals.forEach((c) => params.append('rituals[]', c));
-            if (this.server === 'tlp') { this.enabledExpansionIds().forEach((id) => params.append('expansions[]', id)); }
-
-            const res = await fetch(`/api/route?${params}`);
-            if (seq !== this._computeSeq) { return; } // superseded by a newer request
-            if (res.status === 404) { this.route = null; this.message = 'No charted route between these zones.'; return; }
-            if (!res.ok) { this.route = null; this.message = 'Could not plan this trip.'; return; }
-            this.route = await res.json();
+            const route = router.findRoute({
+                from: this.from, to: this.to, server: this.server, level: this.level, mode: this.mode,
+                class: this.klass, race: this.race, deity: this.deity, rituals: this.rituals,
+                expansions: this.server === 'tlp' ? this.enabledExpansionIds() : undefined,
+            });
+            if (route === null) { this.route = null; this.message = 'No charted route between these zones.'; return; }
+            this.route = route;
             this.message = '';
         } catch {
-            if (seq === this._computeSeq) { this.route = null; this.message = 'Could not plan this trip.'; }
-        } finally {
-            if (seq === this._computeSeq) { clearTimeout(this._loadTimer); this.loading = false; }
+            this.route = null; this.message = 'Could not plan this trip.';
         }
     },
 }));

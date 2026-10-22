@@ -1,7 +1,7 @@
 @import 'tailwindcss';
 
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../storage/framework/views/*.php';
+@source '../index.html';
+@source './app.js';
 
 /* Self-hosted fonts (latin subset, normal style), vendored from the @fontsource/oswald
    and @fontsource/jetbrains-mono packages into public/fonts/. woff2-only — universal since ~2016.
